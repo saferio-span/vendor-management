@@ -1,0 +1,14 @@
+.loginContainer{
+    min-height: '100vh';
+    /* margin-top: 100px; */
+}
+
+.innerContainer {
+    max-width: 450px;
+    width:100%;
+}
+
+.heading{
+    color: '#555';
+    letter-spacing: '1px';
+}
