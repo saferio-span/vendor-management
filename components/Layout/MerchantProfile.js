@@ -9,7 +9,8 @@ import { actionTypes } from "../../contexts/userReducer"
 
 const MerchantProfile = () => {
     var options = []
-    const [{ session_user,user_details }, dispatch] = useUserValue();
+    const [{ user_details }, dispatch] = useUserValue();
+    const [businessId,setBusinessID] = useState()
     const [values, setValues] = useState({
 		businessName:'',
         ein:'',
@@ -22,37 +23,20 @@ const MerchantProfile = () => {
         email: ''
 	});
 
-    const [passwordValues, setPasswordValues] = useState({
-        oldPassword: '',
-		newPassword: '',
-        confirmPassword:''
-	});
-    
-    useEffect(async()=>{
-        // console.log(`Modal Session Data`)
-        console.log(`User Details`)
-        console.log(user_details)
-        // console.log(bcrypt.compareSync("India@123", user_details.password))
-        console.log(`Pass Check`)
-        await axios.post('/api/merchant',{
-            password:"India@123",
-            hashPassword:user_details.password
-        }).then((response)=>{
-            console.log(response.data)
-        }).catch((err,response)=>{
-            console.log(`Error`)
-            console.log(err)
-            console.log(response)
-        })
-        const res = await axios.get('/api/merchant')
-        const userData = await res.data
-        console.log(`Profile object`)
-        console.log(userData)
-        if(userData.length)
+    // const [passwordValues, setPasswordValues] = useState({
+    //     oldPassword: '',
+	// 	newPassword: '',
+    //     confirmPassword:''
+	// });
+     
+
+    useEffect(()=>{
+        if(user_details)
         {
-            const data = userData[0]
+            const data = user_details
+            console.log(data.password)
             setValues({ 
-                ...values, 
+                ...values,
                 businessName: data.businessName,
                 ein: data.ein,
                 address1: data.address1,
@@ -63,20 +47,12 @@ const MerchantProfile = () => {
                 contactName: data.name,
                 email: data.email
             });
-        }
-        else
-        {
-            setValues({ 
-                ...values,
-                contactName: session_user.user.name,
-                email:session_user.user.email
-            });
-        }
-        console.log(`State values`)
-        console.log(values)
-    },[session_user])
 
-    const handleSubmit = (e)=>{
+            setBusinessID(data.businessID)
+        }
+    },[])
+
+    const handleSubmit =async (e)=>{
         e.preventDefault()
 
         const hasEmptyField = Object.values(values).some((element)=>element==='')
@@ -86,20 +62,63 @@ const MerchantProfile = () => {
             return false
         }
 
-        // if(passwordValues.oldPassword !== "")
+        const res = await axios.post(`/api/merchant/updateMerchant`,{
+            id: user_details._id,
+            update: {
+                businessName: values.businessName,
+                ein: values.ein,
+                address1: values.address1,
+                address2: values.address2,
+                city: values.city,
+                state: values.state,
+                zip: values.zip,
+                contactName: values.name,
+                email: values.email
+            }
+        })
+
+        const user = await res.data
+        console.log(`Success`)
+        console.log(user)
+        if(user)
+        {
+            toast("User updated successfully")
+            return true
+        }
+        else
+        {
+            toast("User cannot updated")
+            return false
+        }
+        
+
+
+        // if(passwordValues.oldPassword !== "" || passwordValues.newPassword !== "" || passwordValues.confirmPassword !== "")
         // {
-        //     bcrypt.compareSync(passwordValues.oldPassword, user_details.password).then(function(result) {
-        //         if(result)
-        //         {
-        //             user.password=null
-        //             res.send(user) 
-        //         }
-        //         else
-        //         {
-        //             toast.error("Password does not match with existing one")
-        //             return false
-        //         }
-        //     })
+        //     if(passwordValues.oldPassword !== "" && passwordValues.newPassword !== "" && passwordValues.confirmPassword !== "")
+        //     {
+        //         await axios.post('/api/comparePass',{
+        //             password:"India@123",
+        //             hashPassword:passwordValues.oldPassword
+        //         }).then((response)=>{
+        //             if(passwordValues.newPassword === passwordValues.confirmPassword)
+        //             {
+
+        //             }
+        //             else
+        //             {
+
+        //             }
+        //         }).catch((err,response)=>{
+        //             console.log(`Error`)
+        //             console.log(err)
+        //             console.log(response)
+        //         }) 
+        //     }
+        //     else
+        //     {
+        //         toast.error("Please provide Old password and new password to update the password")
+        //     }
         // }
 
     }
@@ -109,10 +128,10 @@ const MerchantProfile = () => {
 		setValues({ ...values, [name]: value });
 	};
 
-    const handlePasswordChange = (e) => {
-		const { name, value } = e.target;
-		setPasswordValues({ ...passwordValues, [name]: value });
-	};
+    // const handlePasswordChange = (e) => {
+	// 	const { name, value } = e.target;
+	// 	setPasswordValues({ ...passwordValues, [name]: value });
+	// };
 
     const handleSelectChange = (e)=>{
         if(e !== null)
@@ -142,11 +161,13 @@ const MerchantProfile = () => {
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                     <div className="modal-header">
+                        
                         <h5 className="modal-title" id="staticBackdropLabel">Profile</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div className="modal-body">
+                            <p >Business Id : <b className="text-primary">{businessId}</b></p>
                             <div className="row">
                                 <div className="col-6">
                                     <div className="row">
@@ -239,7 +260,7 @@ const MerchantProfile = () => {
                                     </div>
                                 </div>
                             </div>
-                            <h3 className="my-2">Update Password</h3>
+                            {/* <h3 className="my-2">Update Password</h3> 
                             <div className="row">
                                 <div className="col-6">
                                     <div className="form-group my-2">
@@ -260,7 +281,7 @@ const MerchantProfile = () => {
                                         <input type="password" className="form-control" id="confirmPassword" placeholder="Confirm Password" name="confirmPassword" onChange={handlePasswordChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             {/* <br />
                             <div className="row">
                                 <div className="offset-11 col-1">

@@ -27,7 +27,7 @@ export default NextAuth({
         
         // console.log(credentials.email)
         // console.log(credentials.password)
-        console.log(`${credentials.url}/api/merchant/login`)
+        // console.log(`${credentials.url}/api/merchant/login`)
         try {
           const res = await axios.post(`${credentials.url}/api/merchant/login`,{
               email: credentials.email,

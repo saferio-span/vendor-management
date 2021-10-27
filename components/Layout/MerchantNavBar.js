@@ -1,8 +1,29 @@
-import React from 'react'
-import { signOut } from "next-auth/client"
+import React,{useEffect} from 'react'
 import MerchantProfile from './MerchantProfile'
+import Router from 'next/router'
+import { useUserValue } from '../../contexts/UserContext'
+import { actionTypes } from "../../contexts/userReducer"
+import Link from "next/link";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const MerchantNavBar = () => {
+    const [{ user_details }, dispatch] = useUserValue();
+
+    const handleLogOut = ()=>{
+        localStorage.clear();
+        dispatch({
+            type: actionTypes.SET_USER_DETAILS,
+            data: null,
+        })
+        Router.push('/merchant/login')
+    }
+
+    useEffect(() => {
+        if(!user_details)
+        {
+            Router.push('/merchant/login')
+        }
+    }, [])
     return (
         <>
         <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
@@ -14,21 +35,14 @@ const MerchantNavBar = () => {
                 <div className="collapse navbar-collapse" id="navbarScroll">
                     <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">Active</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Link</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Link</a>
-                        </li>
-                        <li className="nav-item float-end">
-                            <a className="nav-link" href="#">Profile</a>
+                            <Link href='/merchant/home'>
+                                <a className="nav-link">Affiliates</a>
+                            </Link>
                         </li>
                     </ul>
 
-                    <button className="btn btn-outline-primary my-2 mx-2 float-end" data-bs-toggle="modal" data-bs-target="#merchantProfileModal" >Profile</button>
-                    <button className="btn btn-danger my-2 float-end" onClick={()=>signOut()}>Logout</button>
+                    <button className="btn btn-outline-primary my-2 mx-2 float-end" data-bs-toggle="modal" data-bs-target="#merchantProfileModal" ><i class="bi bi-person-circle"></i> Profile</button>
+                    <button className="btn btn-danger my-2 float-end" onClick={handleLogOut}>Logout <i class="bi bi-box-arrow-right"></i></button>
                 </div>
             </div>
         </nav>

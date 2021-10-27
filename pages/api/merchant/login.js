@@ -35,7 +35,6 @@ export default async function handler(req,res)
             comparePassword(req.body.password,user[0].password).then(function(result) {
                 if(result)
                 {
-                    user.password=null
                     res.send(user) 
                 }
                 else

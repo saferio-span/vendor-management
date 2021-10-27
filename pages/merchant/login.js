@@ -5,36 +5,68 @@ import LoginBtn from '../../components/LoginBtn'
 import Router from 'next/router'
 import Link from "next/link";
 import { toast,ToastContainer } from "react-toastify"
+import axios from "axios"
 import 'react-toastify/dist/ReactToastify.css';
+import { useUserValue } from '../../contexts/UserContext'
+import { actionTypes } from "../../contexts/userReducer"
 import absoluteUrl from 'next-absolute-url'
 
-const Login = ({providers,session,host}) => {
-    console.log({session,host})
+// const Login = ({providers,session,host}) => {
+const Login = () => {
+    // console.log({session,host})
     const [values, setValues] = useState({
         email: '',
 		password: ''
 	});
+    const [{user_details},dispatch] = useUserValue();
     
     useEffect(()=>{
-        if(session) Router.push('/merchant/home')
+
+        // const sess_email = localStorage.getItem('email')
+        if(user_details)
+        {
+            Router.push('/merchant/home')
+        }
+        // if(session) Router.push('/merchant/home')
     })
-    if(session) return null
+    // if(session) return null
 
     const handleSubmit = async (e)=>{
-        e.preventDefault()
-        console.log(values)
-        
+        e.preventDefault()      
         const hasEmptyField = Object.values(values).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
             return false
         }
-        signIn(providers.credentials.id,{
-            email: values.email,
-            password: values.password,
-            url: host
-        })
+
+        try {
+            const res = await axios.post(`/api/merchant/login`,{
+                email: values.email,
+                password: values.password,
+            })
+            const user = await res.data
+            if(user.length)
+            {
+                localStorage.setItem('email',user[0].email)
+                localStorage.setItem('name',user[0].name)
+                dispatch({
+                    type: actionTypes.SET_USER_DETAILS,
+                    data: user[0],
+                })
+                Router.push('/merchant/home')
+            }
+          } catch (error) {
+            console.log(error)
+            return null
+          }
+
+
+        // signIn(providers.credentials.id,{
+        //     email: values.email,
+        //     password: values.password,
+        //     url: host
+        // })
     }
 
     const handleInputChange = (e) => {
@@ -53,7 +85,7 @@ const Login = ({providers,session,host}) => {
                         Login
                     </h2>
 
-                    <LoginBtn 
+                    {/* <LoginBtn 
                         provider={providers.google}
                         bgColor='#f2573f'
                         txtColor="white"
@@ -63,7 +95,7 @@ const Login = ({providers,session,host}) => {
                         bgColor='#0404be'
                         txtColor="white"
                     />
-                    <hr />
+                    <hr /> */}
                     <form onSubmit={handleSubmit}>
                         <div className="form-group my-2">
                             <label htmlFor="email">Email</label>
@@ -86,14 +118,14 @@ const Login = ({providers,session,host}) => {
     )
 }
 
-Login.getInitialProps = async (context) => {
-    const { req, query, res, asPath, pathname } = context;
-    const { origin } = absoluteUrl(req)
-    return{
-        providers: await providers(context),
-        session: await getSession(context),
-        host: origin
-    }
-}
+// Login.getInitialProps = async (context) => {
+//     const { req, query, res, asPath, pathname } = context;
+//     const { origin } = absoluteUrl(req)
+//     return{
+//         providers: await providers(context),
+//         session: await getSession(context),
+//         host: origin
+//     }
+// }
 
 export default Login
