@@ -55,14 +55,14 @@ export default function Home(props) {
                 {affiliates && affiliates.map((details) => {
                     return (<tr key={details._id}>
                         <td>{details.name}</td>
-                        <td><i class="bi bi-currency-dollar"></i> 1000</td>
+                        <td><i className="bi bi-currency-dollar"></i> 1000</td>
                         <td>5</td>
                         <td>Pending</td>
                         <td>Pending</td>
                         <td>
-                          <button className="btn btn-sm btn-warning mx-1"><i class="bi bi-download"></i> W9</button>
-                          <button className="btn btn-sm btn-success mx-1"><i class="bi bi-currency-dollar"></i> Pay</button>
-                          <button className="btn btn-sm btn-primary mx-1"><i class="bi bi-eye"></i> 1099-NEC</button>
+                          <button className="btn btn-sm btn-warning mx-1"><i className="bi bi-download"></i> W9</button>
+                          <button className="btn btn-sm btn-success mx-1"><i className="bi bi-currency-dollar"></i> Pay</button>
+                          <button className="btn btn-sm btn-primary mx-1"><i className="bi bi-eye"></i> 1099-NEC</button>
                         </td>
                     </tr>)
                         }
