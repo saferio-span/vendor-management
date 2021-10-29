@@ -6,6 +6,7 @@ import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
 import { actionTypes } from "../../contexts/userReducer"
 import VendorNavbar from '../../components/Layout/VendorNavBar'
+import Link from "next/link";
 
 const MerchantProfile = () => {
     var options = []
@@ -262,9 +263,15 @@ const MerchantProfile = () => {
             <hr />
             <br />
             <div className="position-relative my-2">
-                <button className="btn btn-warning position-absolute top-50 start-50 translate-middle">Complete W9</button>         
+                {/* <Link href={{
+                    pathname: '/vendor/w9/[id]',
+                    query: { id: user_details._id },
+                    }}
+                > */}
+                <Link href={`/vendor/completeW9?id=${user_details._id}`}>
+                    <a className="btn btn-warning position-absolute top-50 start-50 translate-middle">Complete W9</a>
+                </Link>
             </div>
-              
         </>
     )
 }
