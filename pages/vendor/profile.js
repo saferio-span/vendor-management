@@ -12,6 +12,7 @@ const MerchantProfile = () => {
     var options = []
     const [{ user_details }, dispatch] = useUserValue();
     const [values, setValues] = useState({
+        id:"",
         name: '',
         email: '',
         address1: '',
@@ -20,6 +21,7 @@ const MerchantProfile = () => {
         state: '',
         zip: '',
 	});     
+    const [payeeRef,setPayeeRef] = useState('')
 
     useEffect(()=>{
         if(user_details)
@@ -27,6 +29,7 @@ const MerchantProfile = () => {
             const data = user_details
             setValues({ 
                 ...values,
+                id:data._id,
                 name: data.name,
                 email: data.email,
                 address1: data.address1,
@@ -35,9 +38,10 @@ const MerchantProfile = () => {
                 state: data.state,
                 zip: data.zip,
             });
+            setPayeeRef(data.payeeRef)
 
         }
-    },[])
+    },[user_details])
 
     const handleSubmit =async (e)=>{
         e.preventDefault()
@@ -63,8 +67,6 @@ const MerchantProfile = () => {
         })
 
         const user = await res.data
-        console.log(`Success`)
-        console.log(user)
         if(user)
         {
             toast("User updated successfully")
@@ -121,7 +123,6 @@ const MerchantProfile = () => {
     const handleSelectChange = (e)=>{
         if(e !== null)
         {
-            console.log(e.value)
             setValues({ ...values, state: e.value });
         }
         else
@@ -147,6 +148,7 @@ const MerchantProfile = () => {
             <div className="container bg-light my-3">
                 <form onSubmit={handleSubmit}>
                     <div className="row">
+                        <p className="my-2" >Payee Ref : <b className="text-primary">{payeeRef}</b></p>
                         <div className="col-6">
                             <div className="row">
                                 <div className="col">
@@ -268,8 +270,8 @@ const MerchantProfile = () => {
                     query: { id: user_details._id },
                     }}
                 > */}
-                <Link href={`/vendor/completeW9?id=${user_details._id}`}>
-                    <a className="btn btn-warning position-absolute top-50 start-50 translate-middle">Complete W9</a>
+                <Link href={`/vendor/completeWh?id=${values.id}`}>
+                    <a className="btn btn-warning position-absolute top-50 start-50 translate-middle">Complete Wh</a>
                 </Link>
             </div>
         </>

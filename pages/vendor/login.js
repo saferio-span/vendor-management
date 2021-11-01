@@ -47,6 +47,7 @@ const Login = () => {
             {
                 localStorage.setItem('email',user[0].email)
                 localStorage.setItem('name',user[0].name)
+                localStorage.setItem('id',user[0]._id)
                 dispatch({
                     type: actionTypes.SET_USER_DETAILS,
                     data: user[0],
@@ -79,7 +80,7 @@ const Login = () => {
                 <div className={`${style.innerContainer} border border-1 max-auto p-4 shadow`}>
                     
                     <h2 className={`${style.heading} text-center fw-bolder text-uppercase`}>
-                        Login
+                       Vendor Login
                     </h2>
 
                     {/* <LoginBtn 

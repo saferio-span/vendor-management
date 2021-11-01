@@ -15,11 +15,11 @@ export const getServerSideProps = async (context)=>{
     const { origin } = absoluteUrl(req)
   
     const affiliateRes = await axios.get(`${origin}/api/affiliate/${id}`)
-    const affiliateData = await affiliateRes.data
-    
-    console.log(affiliateData)
+    const result = await affiliateRes.data
+    const affiliateData = await result.user
+    const merchantData = await result.merchant
 
-    const res = await axios.post(`${origin}/api/affiliate/getW9Url`,
+    const res = await axios.post(`${origin}/api/affiliate/getWhUrl`,
     { 
         payeeId:affiliateData[0].payeeRef, 
         fullName:affiliateData[0].name, 
@@ -28,19 +28,23 @@ export const getServerSideProps = async (context)=>{
         city:affiliateData[0].city, 
         stateName:affiliateData[0].state, 
         zipCd:affiliateData[0].zip, 
-        tinMatch:true 
+        tinMatch:false,
+        businessId : merchantData.businessId,
+        payerRef : merchantData.payerRef
     })
 
-    const w9data = await res.data
+    const whdata = await res.data
 
     return {
-        props : {w9data}
+        props : {
+            whdata
+        }
       }
 
 }
 
 
-const CompleteW9 = ({w9data}) => {
+const CompleteWh = ({whdata}) => {
 
     const safariFix = (w9Url) => {
 		var is_safari = navigator.userAgent.indexOf('Safari') > -1;
@@ -65,13 +69,12 @@ const CompleteW9 = ({w9data}) => {
 		}
 	};
 
-    console.log(w9data)
     return (
         <>
             <VendorNavbar />
             <div className="container">
                 <div className="row">
-                    <div className="col-11"><h1>Complete your W9</h1></div>
+                    <div className="col-11"><h1>Complete your Wh</h1></div>
                     <div className="col">
                         <Link href={`/vendor/profile`}>
                             <a className="btn btn-danger my-2">Back</a>
@@ -79,21 +82,21 @@ const CompleteW9 = ({w9data}) => {
                     </div>
                 </div>
 
-            {w9data.W9Url && 
+            {whdata.Url && 
                 <>
                     <div><span className="badge rounded-pill bg-secondary px-2 py-2">To get a TIN Match failure, the last three digits of the TIN must
                                 be Zeroes (eg: 123-45-6000)</span></div>
                     
-                    <Link href={w9data.W9Url}>
-                        <a target="_blank">{w9data.W9Url}</a>
+                    <Link href={whdata.Url}>
+                        <a target="_blank">{whdata.Url}</a>
                     </Link>
 
-                    {safariFix(w9data.W9Url)}
-                    <iframe className="my-5" title="W9" width="100%" height="800" src={w9data.W9Url} />
+                    {safariFix(whdata.Url)}
+                    <iframe className="my-5" title="W9" width="100%" height="800" src={whdata.Url} />
                 </>
             }
 
-            {!w9data.W9Url && <>
+            {!whdata.Url && <>
                 <h1 className="my-5"> Cannot load W9 Form</h1>
             </>}
             
@@ -102,4 +105,4 @@ const CompleteW9 = ({w9data}) => {
     )
 }
 
-export default CompleteW9
+export default CompleteWh

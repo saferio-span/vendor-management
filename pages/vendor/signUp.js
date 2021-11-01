@@ -48,7 +48,6 @@ const SignUp = (props) => {
     const handleBusinessChange = (e)=>{
         if(e !== null)
         {
-            console.log(e.value)
             setValues({ ...values, merchantId: e.value });
         }
         else
@@ -60,7 +59,6 @@ const SignUp = (props) => {
     const handleSelectChange = (e)=>{
         if(e !== null)
         {
-            console.log(e.value)
             setValues({ ...values, state: e.value });
         }
         else
@@ -76,7 +74,6 @@ const SignUp = (props) => {
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
-        console.log(values)
         
         const hasEmptyField = Object.values(values).some((element)=>element==='')
         if(hasEmptyField) 
@@ -100,8 +97,6 @@ const SignUp = (props) => {
             })
     
             const user = await res.data
-            console.log(`Success`)
-            console.log(user)
             if(user)
             {
                 setValues({

@@ -28,7 +28,6 @@ const SignUp = () => {
     const handleSelectChange = (e)=>{
         if(e !== null)
         {
-            console.log(e.value)
             setValues({ ...values, state: e.value });
         }
         else
@@ -44,7 +43,6 @@ const SignUp = () => {
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
-        console.log(values)
         
         const hasEmptyField = Object.values(values).some((element)=>element==='')
         if(hasEmptyField) 

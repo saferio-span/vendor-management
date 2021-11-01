@@ -4,6 +4,7 @@ import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
 import Link from "next/link";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import axios from 'axios';
 
 const VendorNavbar = () => {
     const [{ user_details }, dispatch] = useUserValue();
@@ -17,11 +18,18 @@ const VendorNavbar = () => {
         Router.push('/vendor/login')
     }
 
-    useEffect(() => {
-        if(!user_details)
-        {
-            Router.push('/vendor/login')
-        }
+    useEffect(async() => {
+        // if(!user_details)
+        // {
+        //     Router.push('/vendor/login')
+        // }
+        var id = localStorage.getItem('id')
+        const affiliateRes = await axios.get(`/api/affiliate/${id}`)
+        // console.log(affiliateRes)
+        dispatch({
+            type: actionTypes.SET_USER_DETAILS,
+            data: affiliateRes.data.user[0],
+        })
     }, [])
     return (
         <>

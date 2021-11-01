@@ -34,7 +34,6 @@ const MerchantProfile = () => {
         if(user_details)
         {
             const data = user_details
-            console.log(data.password)
             setValues({ 
                 ...values,
                 businessName: data.businessName,
@@ -50,7 +49,7 @@ const MerchantProfile = () => {
 
             setBusinessID(data.businessID)
         }
-    },[])
+    },[user_details])
 
     const handleSubmit =async (e)=>{
         e.preventDefault()
@@ -78,8 +77,6 @@ const MerchantProfile = () => {
         })
 
         const user = await res.data
-        console.log(`Success`)
-        console.log(user)
         if(user)
         {
             toast("User updated successfully")
@@ -136,7 +133,6 @@ const MerchantProfile = () => {
     const handleSelectChange = (e)=>{
         if(e !== null)
         {
-            console.log(e.value)
             setValues({ ...values, state: e.value });
         }
         else
@@ -161,7 +157,7 @@ const MerchantProfile = () => {
             <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
             <div className="container bg-light my-3">
                 <form onSubmit={handleSubmit}>
-                    <p >Business Id : <b className="text-primary">{businessId}</b></p>
+                    <p >Taxbandits business Id : <b className="text-primary">{businessId}</b></p>
                     <div className="row">
                         <div className="col-6">
                             <div className="row">

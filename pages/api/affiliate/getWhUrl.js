@@ -7,8 +7,9 @@ connectDB()
 export default async function handler(req,res)
 {
 
-    const { payeeId, fullName, address1, address2, city, stateName, zipCd, tinMatch } =
+    const { payeeId, fullName, address1, address2, city, stateName, zipCd, tinMatch,businessId,payerRef  } =
     req.body;
+
 	const jwsToken = generateJws()
 
     const authOptions = {
@@ -41,36 +42,33 @@ export default async function handler(req,res)
 		},
 	};
 
-	const endPoint = `${process.env.apiUrl}/FormW9/RequestByUrl`;
+	const endPoint = `${process.env.apiUrl}/WhCertificate/RequestByUrl`;
 	console.log(endPoint);
 	try {
 		const output = await axios.post(
 			endPoint,
 			{
+				Requester: {
+				  PayerRef: null,
+				  BusinessId: req.body.businessId,
+				  TIN: null
+				},
 				Recipient: {
 					PayeeRef: payeeId,
-					Name: fullName,
-					Address: {
-						Address1: address1,
-						Address2: address2,
-						City: city,
-						State: stateName,
-						ZipCd: zipCd,
-					},
 					IsTINMatching: tinMatch,
 				},
 				Customization: {
-					BusinessLogoUrl:
-						'https://www.spanenterprises.com/Content/Images/span-logo.png',
+					BusinessLogoUrl:'https://www.spanenterprises.com/Content/Images/span-logo.png',
 				},
+				RedirectUrls: null
 			},
 			options
 		);
 
 		res.status(200).send(output.data);
 	} catch (err) {
-
-		res.status(err.response.data.StatusCode).send(`Cannot get w9 url`);
+		console.log(err)
+		res.status(err.response.status).send(`Cannot get wh url`);
 	}
 }
 

@@ -56,8 +56,6 @@ const AddAffiliates = () => {
         })
 
         const user = await res.data
-        console.log(`Success`)
-        console.log(user)
         if(user)
         {
             setValues({
@@ -94,7 +92,6 @@ const AddAffiliates = () => {
     const handleSelectChange = (e)=>{
         if(e !== null)
         {
-            console.log(e.value)
             setValues({ ...values, state: e.value });
         }
         else

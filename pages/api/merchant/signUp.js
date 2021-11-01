@@ -113,7 +113,7 @@ export default async function handler(req,res)
 }
 
 const generateJws = () => {
-	//setup the payload with Issuer, Subject, audience and Issued at.
+	// setup the payload with Issuer, Subject, audience and Issued at.
 	const payload = {
 		iss: process.env.clientID,
 		sub: process.env.clientID,

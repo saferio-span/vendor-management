@@ -49,6 +49,7 @@ const Login = () => {
             if(user.length)
             {
                 localStorage.setItem('email',user[0].email)
+                localStorage.setItem('id',user[0]._id)
                 localStorage.setItem('name',user[0].name)
                 dispatch({
                     type: actionTypes.SET_USER_DETAILS,
@@ -82,15 +83,15 @@ const Login = () => {
                 <div className={`${style.innerContainer} border border-1 max-auto p-4 shadow`}>
                     
                     <h2 className={`${style.heading} text-center fw-bolder text-uppercase`}>
-                        Login
+                       Merchant Login
                     </h2>
 
-                    {/* <LoginBtn 
+                    {/* <LoginBtn
                         provider={providers.google}
                         bgColor='#f2573f'
                         txtColor="white"
                     />
-                    <LoginBtn 
+                    <LoginBtn
                         provider={providers.facebook}
                         bgColor='#0404be'
                         txtColor="white"
