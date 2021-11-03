@@ -46,6 +46,11 @@ const MerchantNavBar = () => {
                                 <a className="nav-link">Affiliates</a>
                             </Link>
                         </li>
+                        <li className="nav-item">
+                            <Link href='/merchant/transactions'>
+                                <a className="nav-link">Transactions</a>
+                            </Link>
+                        </li>
                     </ul>
 
                     <Link href='/merchant/profile'>
