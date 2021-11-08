@@ -22,7 +22,7 @@ export default async function handler(req,res)
 
     affiliate.save((err, userCreated)=>{
         if (err) {
-            res.status(response.data.StatusCode).send(JSON.stringify(err.response.data.Errors));
+            res.status(401).send(JSON.stringify(err));
         } else {
             userCreated.password = undefined;
             res.status(200).send(userCreated);

@@ -8,6 +8,7 @@ import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
+import AddTransaction from "../../components/Layout/AddTransaction";
 
 export const getServerSideProps = async (context)=>{
   const { req } = context;
@@ -15,15 +16,21 @@ export const getServerSideProps = async (context)=>{
 
   const res = await axios.get(`${origin}/api/affiliate/getAll`)
   const affiliates = await res.data
+
+  const transRes = await axios.get(`${origin}/api/merchant/getAllTransactions`)
+  const transactions = await transRes.data
+
   return{
     props:{ 
-      affiliates
-     }
+      affiliates,
+      transactions
+    }
   }
 }
 
 export default function Home(props) {
   const affiliates = props.affiliates
+  const transactions = props.transactions
 
   return (
     <>
@@ -53,25 +60,44 @@ export default function Home(props) {
               </thead>
               <tbody>
                 {affiliates && affiliates.map((details) => {
-                    return (<tr key={details._id}>
+                    let amount = 0
+                    let transactionCount = 0
+
+                    transactions.forEach(option => {
+                        if(option.payeeRef === details.payeeRef)
+                        {
+                          amount += parseInt(option.txnAmt)
+                          transactionCount++
+                        }
+                    })
+
+                  
+                    return (
+                    <>
+                    <tr key={details._id}>
                         <td>{details.name}</td>
-                        <td><i className="bi bi-currency-dollar"></i> 1000</td>
-                        <td>5</td>
+                        <td><i className="bi bi-currency-dollar"></i> {amount}</td>
+                        <td>{transactionCount}</td>
                         <td>Pending</td>
                         <td>Pending</td>
                         <td>
                           <button className="btn btn-sm btn-warning mx-1"><i className="bi bi-download"></i> W9</button>
-                          <button className="btn btn-sm btn-success mx-1"><i className="bi bi-currency-dollar"></i> Pay</button>
+                          <button className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
                           <button className="btn btn-sm btn-primary mx-1"><i className="bi bi-eye"></i> 1099-NEC</button>
                         </td>
-                    </tr>)
+                    </tr>
+                    </>
+                    )
                         }
                             
                 )}
               </tbody>
             </table>
         </div>
-
+        {affiliates && affiliates.map((details) => {
+          return (<AddTransaction affiliates = {affiliates} defaultAffiliate = {details.payeeRef} /> )
+        }
+        )}                
     </>
   )
 }

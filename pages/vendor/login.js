@@ -22,7 +22,11 @@ const Login = () => {
         // const sess_email = localStorage.getItem('email')
         if(user_details)
         {
-            Router.push('/vendor/home')
+            Router.push(`/vendor/home/${user_details.payeeRef}`)
+            // Router.push({
+            //     pathname: '/vendor/home',
+            //     query: { user_details: user_details },
+            // })
         }
         // if(session) Router.push('/merchant/home')
     })
@@ -52,7 +56,10 @@ const Login = () => {
                     type: actionTypes.SET_USER_DETAILS,
                     data: user[0],
                 })
-                Router.push('/vendor/home')
+                Router.push({
+                    pathname: '/vendor/home',
+                    query: { user_details: user_details },
+                })
             }
           } catch (error) {
             console.log(error)

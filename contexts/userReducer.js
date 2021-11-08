@@ -1,13 +1,15 @@
 export const initialState = {
   session_user: null,
   user_details:null,
-  user_details_status:true
+  user_details_status:true,
+  transaction_details: null
 };
 
 export const actionTypes = {
   SET_SESSION_DATA: 'SET_SESSION_DATA',
   SET_USER_DETAILS: 'SET_USER_DETAILS',
   SET_USER_DETAILS_STATUS: 'SET_USER_DETAILS_STATUS',
+  SET_TRANSACTION_DETAILS: 'SET_TRANSACTION_DETAILS',
 };
 
 const reducer = (state, action) => {
@@ -28,6 +30,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         user_details_status: action.data,
+      };
+    case actionTypes.SET_TRANSACTION_DETAILS:
+      return {
+        ...state,
+        transaction_details: action.data,
       };
     default:
       return state;

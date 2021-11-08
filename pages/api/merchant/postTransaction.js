@@ -1,5 +1,5 @@
 import connectDB from "../../../config/connectDB";
-import Merchant from "../../../models/merchantModel"
+import Transactions from "../../../models/transactionsModel"
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
 import axios from 'axios'
@@ -10,7 +10,7 @@ export default async function handler(req,res)
 {
 
     const { amount,payeeRef,description,businessId,payerRef  } = req.body;
-	const random = Math.floor((Math.random() * 1000000000) + 1);
+	// const random = Math.floor((Math.random() * 1000000000) + 1);
     const jwsToken = generateJws()
 
     const authOptions = {
@@ -48,6 +48,7 @@ export default async function handler(req,res)
 	const endPoint = `${process.env.apiUrl}/Form1099Transactions`;
 	console.log(endPoint);
 	try {
+		const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
 		const output = await axios.post(
 			endPoint,
 			{
@@ -68,7 +69,7 @@ export default async function handler(req,res)
                         TIN: null,
                         Txns: [
                           {
-                            SequenceId: Math.floor((Math.random() * 1000000000) + 1),
+                            SequenceId: sequenceID,
                             TxnDate: moment().format("DD/MM/YYYY"),
                             TxnAmt: amount,
                             WHAmt: "0"
@@ -82,10 +83,30 @@ export default async function handler(req,res)
 			options
 		);
 
-		res.status(200).send(output.data);
+		// res.status(200).send(output.data);
+
+		const transaction = new Transactions()
+
+		transaction.sequenceId = sequenceID
+		transaction.txnAmt = amount
+		transaction.description = description
+		transaction.payeeRef = payeeRef
+		transaction.payerRef = payerRef
+		transaction.businessId = businessId
+		
+		transaction.save((err, trans)=>{
+			if (err) {
+				res.status(401).send(err);
+			} else {
+				res.status(200).send(trans);
+			}
+		});
+
+
+
 	} catch (err) {
 		console.log(err)
-		res.status(err.response.status).send(`Cannot post transactions`);
+		res.status(err.response.status).send(err);
 	}
 }
 

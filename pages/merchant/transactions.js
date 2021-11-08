@@ -16,15 +16,35 @@ export const getServerSideProps = async (context)=>{
   
     const res = await axios.get(`${origin}/api/affiliate/getAll`)
     const affiliates = await res.data
+
+    const transRes = await axios.get(`${origin}/api/merchant/getAllTransactions`)
+    const transactions = await transRes.data
+
     return{
-      props:{ 
-        affiliates
+      props:{
+        affiliates,
+        transactions
        }
     }
 }
 
 const Transactions = (props) => {
     const affiliates = props.affiliates
+    const transactions = props.transactions
+
+    console.log(`Affiliates`)
+    console.log(affiliates)
+    console.log(`Transactions`)
+    console.log(transactions)
+//     transactions.forEach((details) => {
+//     affiliates.forEach(option => {
+//         if(option.payeeRef === details.payeeRef)
+//         {
+//             console.log(`Name loop`)
+//             console.log(option.name)
+//         }
+//     })
+// })
   
     return (
         <>
@@ -40,7 +60,40 @@ const Transactions = (props) => {
                     </button>                    
                 </div>
             </div>
-            <AddTransaction affiliates = {affiliates} />
+            <div className="my-2 mx-2">
+                <table className="table table-hover table-striped table-responsive">
+                <thead>
+                    <tr>
+                    <th>Affiliate Name</th>
+                    <th>Money</th>
+                    <th>Description</th>
+                    <th>Unique Id</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {transactions && transactions.map((details) => {
+
+                        let name = ''
+                        affiliates.forEach(option => {
+                            console.log(details)
+                            if(option.payeeRef === details.payeeRef)
+                            {
+                                name = option.name
+                            }
+                        })
+                        return (<tr key={details._id}>
+                            <td>{name}</td>
+                            <td><i className="bi bi-currency-dollar"></i> {details.txnAmt}</td>
+                            <td>{details.description}</td>
+                            <td>{details.sequenceId}</td>
+                        </tr>)
+                            }
+                                
+                    )}
+                </tbody>
+                </table>
+            </div>
+            <AddTransaction affiliates = {affiliates} defaultAffiliate = "" />
         </>
         
     )

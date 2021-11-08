@@ -35,7 +35,7 @@ const VendorNavbar = () => {
         <>
         <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
             <div className="container-fluid">
-                <a className="navbar-brand" href="#">Vendor Management</a>
+                <a className="navbar-brand" href="#">{user_details && user_details.name}</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
