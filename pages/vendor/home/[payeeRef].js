@@ -47,7 +47,7 @@ export default function Home(props) {
                             <td>{details.sequenceId}</td>
                             <td><i className="bi bi-currency-dollar"></i> {details.txnAmt}</td>
                             <td>{details.description}</td>
-                            <td>{moment(details.createdAt).format("Do MMM YYYY")}</td>
+                            <td>{moment(details.date).format("Do MMM YYYY")}</td>
                         </tr>)
                             }
                                 

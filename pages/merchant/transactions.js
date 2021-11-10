@@ -9,11 +9,12 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
 import AddTransaction from "../../components/Layout/AddTransaction";
+import moment from 'moment'
 
 export const getServerSideProps = async (context)=>{
     const { req } = context;
     const { origin } = absoluteUrl(req)
-  
+
     const res = await axios.get(`${origin}/api/affiliate/getAll`)
     const affiliates = await res.data
 
@@ -31,20 +32,6 @@ export const getServerSideProps = async (context)=>{
 const Transactions = (props) => {
     const affiliates = props.affiliates
     const transactions = props.transactions
-
-    console.log(`Affiliates`)
-    console.log(affiliates)
-    console.log(`Transactions`)
-    console.log(transactions)
-//     transactions.forEach((details) => {
-//     affiliates.forEach(option => {
-//         if(option.payeeRef === details.payeeRef)
-//         {
-//             console.log(`Name loop`)
-//             console.log(option.name)
-//         }
-//     })
-// })
   
     return (
         <>
@@ -64,18 +51,18 @@ const Transactions = (props) => {
                 <table className="table table-hover table-striped table-responsive">
                 <thead>
                     <tr>
-                    <th>Affiliate Name</th>
-                    <th>Money</th>
-                    <th>Description</th>
-                    <th>Unique Id</th>
-                </tr>
+                        <th>Affiliate Name</th>
+                        <th>Money</th>
+                        <th>Description</th>
+                        <th>Unique Id</th>
+                        <th>Transaction Date</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {transactions && transactions.map((details) => {
 
                         let name = ''
                         affiliates.forEach(option => {
-                            console.log(details)
                             if(option.payeeRef === details.payeeRef)
                             {
                                 name = option.name
@@ -86,6 +73,7 @@ const Transactions = (props) => {
                             <td><i className="bi bi-currency-dollar"></i> {details.txnAmt}</td>
                             <td>{details.description}</td>
                             <td>{details.sequenceId}</td>
+                            <td>{moment(details.date).format("Do MMM YYYY")}</td>
                         </tr>)
                             }
                                 

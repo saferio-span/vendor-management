@@ -44,6 +44,13 @@ export default async function handler(req,res)
 
 	const endPoint = `${process.env.apiUrl}/WhCertificate/RequestByUrl`;
 	console.log(endPoint);
+	if(accessToken == null)
+	{
+		console.log(`Auth Options`)
+		console.log(authOptions)
+		res.status(401).send(`Access token not set`);
+	}
+
 	try {
 		const output = await axios.post(
 			endPoint,
@@ -67,7 +74,7 @@ export default async function handler(req,res)
 
 		res.status(200).send(output.data);
 	} catch (err) {
-		console.log(err)
+		// console.log(err)
 		res.status(err.response.status).send(`Cannot get wh url`);
 	}
 }

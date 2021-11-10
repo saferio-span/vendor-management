@@ -35,8 +35,8 @@ export default async function handler(req,res)
         accessToken = null
 	}
 
-	console.log(`Access Token : ${accessToken}`)
-
+	console.log(`Access token : ${accessToken}`)
+	
     const options = {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,

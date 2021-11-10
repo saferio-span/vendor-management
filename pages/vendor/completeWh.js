@@ -35,6 +35,15 @@ export const getServerSideProps = async (context)=>{
 
     const whdata = await res.data
 
+    if(res.status != 200)
+    {
+        const { res } = context;
+        res.setHeader("location", "/profile");
+        res.end();
+        return;
+    }
+
+
     return {
         props : {
             whdata
@@ -45,6 +54,11 @@ export const getServerSideProps = async (context)=>{
 
 
 const CompleteWh = ({whdata}) => {
+
+    if(whdata === "Access token not set")
+    {
+        Router.push(`/profile`)
+    }
 
     const safariFix = (w9Url) => {
 		var is_safari = navigator.userAgent.indexOf('Safari') > -1;
@@ -91,7 +105,7 @@ const CompleteWh = ({whdata}) => {
                         <a target="_blank">{whdata.Url}</a>
                     </Link>
 
-                    {safariFix(whdata.Url)}
+                    {/* {safariFix(whdata.Url)} */}
                     <iframe className="my-5" title="W9" width="100%" height="800" src={whdata.Url} />
                 </>
             }

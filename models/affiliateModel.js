@@ -34,6 +34,18 @@ const affiliateSchema = new mongoose.Schema({
   payeeRef: { 
     type: String
   },
+  w9Status : {
+    type: String,
+    default: '-'
+  },
+  tinMatchingStatus : {
+    type: String,
+    default: '-'
+  },
+  pdfUrl:{
+    type: String,
+    default: '-'
+  },
   
 }, { timestamps: true })
 

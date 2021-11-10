@@ -162,7 +162,7 @@ const MerchantProfile = () => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="address1">Address 1</label>
-                                        <textarea className="form-control" id="address1" name="address1" value={values.address1} rows="3" onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="address1" name="address1" value={values.address1} placeholder="Address 1" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@ const MerchantProfile = () => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="address2">Address 2</label>
-                                        <textarea className="form-control" id="address2" name="address2" rows="3" value={values.address1} onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="address2" name="address2" value={values.address2} placeholder="Address 2" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>

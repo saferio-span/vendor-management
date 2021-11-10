@@ -3,9 +3,11 @@ import moment from 'moment'
 import Select from 'react-select'
 import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
+import DatePicker from "react-datepicker";
 import { actionTypes } from "../../contexts/userReducer"
 import axios from 'axios'
 import { useRouter } from 'next/router';
+import "react-datepicker/dist/react-datepicker.css"
 import $ from 'jquery'; 
 
 const AddTransaction = ({affiliates,defaultAffiliate}) => {
@@ -25,14 +27,15 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 		amount:'',
         payeeRef : defaultAffiliate !== "" ? defaultAffiliate : '' ,
         description:'',
+        date: new Date(),
 	});
 
     // const [affiliateName,setName] = useState("")
 
-    for(const key in affiliates.affiliates )
+    for(const key in affiliates )
     {
         
-        options.push({ value: affiliates.affiliates[key].payeeRef, label: affiliates.affiliates[key].name })
+        options.push({ value: affiliates[key].payeeRef, label: affiliates[key].name })
 
         // if(defaultAffiliate !== "")
         // {
@@ -60,6 +63,12 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 		setValues({ ...values, [name]: value });
 	};
 
+    const handleDateChange = (e) => {
+		console.log(e)
+        setValues({ ...values, date: e });
+	};
+    
+
     const handleSubmit = async (e)=>{
         e.preventDefault()
         // console.log(values)
@@ -77,7 +86,8 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 payeeRef : values.payeeRef,
                 description : values.description,
                 businessId : user_details.businessID,
-                payerRef : user_details.payerRef
+                payerRef : user_details.payerRef,
+                date : values.date,
             })
             const result = await res.data
 
@@ -89,6 +99,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                     amount:'',
                     payeeRef : '',
                     description:'',
+                    date: new Date(),
                 })
 
                 router.replace(router.asPath);
@@ -103,9 +114,8 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 }
                 
                 $('.modal-backdrop').hide();
-                Router.push('/merchant/transactions')
             }
-            
+
           } catch (error) {
             console.log(error)
             return null
@@ -130,8 +140,9 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                         <div className="form-group my-2">
                                             {defaultAffiliate !== "" ?
                                             <>
-                                                <h5 className="mt-4 pt-3">
-                                                    Affiliate : {affiliateName}
+                                                <label htmlFor="amount">Affiliate</label>
+                                                <h5 className="mt-1">
+                                                    {affiliateName}
                                                 </h5>
                                             </>
                                             :
@@ -155,10 +166,10 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                         </div>
                                     </div>
                                     <div className="col-6">
-                                        <h5 className="mt-4 pt-3">
-                                            Date : {moment().format("DD-MM-YYYY")}
-                                        </h5>
-                                        
+                                        <div className="form-group my-2">
+                                            <label htmlFor="amount">Date</label>
+                                            <DatePicker selected={values.date } className="form-control" onChange={handleDateChange} />
+                                        </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="form-group my-2">

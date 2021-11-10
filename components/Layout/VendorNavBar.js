@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useEffect, useState} from 'react'
 import Router from 'next/router'
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const VendorNavbar = () => {
     const [{ user_details }, dispatch] = useUserValue();
-
+    const [payeeRef,setPayeeRef] = useState();
     const handleLogOut = ()=>{
         localStorage.clear();
         dispatch({
@@ -30,6 +30,8 @@ const VendorNavbar = () => {
             type: actionTypes.SET_USER_DETAILS,
             data: affiliateRes.data.user[0],
         })
+
+        setPayeeRef(affiliateRes.data.user[0].payeeRef)
     }, [])
     return (
         <>
@@ -42,7 +44,7 @@ const VendorNavbar = () => {
                 <div className="collapse navbar-collapse" id="navbarScroll">
                     <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                         <li className="nav-item">
-                            <Link href='/vendor/home'>
+                            <Link href={`/vendor/home/${payeeRef}`}>
                                 <a className="nav-link">Home</a>
                             </Link>
                         </li>

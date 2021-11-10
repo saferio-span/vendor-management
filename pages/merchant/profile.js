@@ -11,6 +11,7 @@ const MerchantProfile = () => {
     var options = []
     const [{ user_details }, dispatch] = useUserValue();
     const [businessId,setBusinessID] = useState()
+    const [payerRef,setPayerRef] = useState('')
     const [values, setValues] = useState({
 		businessName:'',
         ein:'',
@@ -46,7 +47,7 @@ const MerchantProfile = () => {
                 contactName: data.name,
                 email: data.email
             });
-
+            setPayerRef(data.payerRef)
             setBusinessID(data.businessID)
         }
     },[user_details])
@@ -157,9 +158,13 @@ const MerchantProfile = () => {
             <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
             <div className="container bg-light my-3">
                 <form onSubmit={handleSubmit}>
-                    <p >Taxbandits business Id : <b className="text-primary">{businessId}</b></p>
                     <div className="row">
                         <div className="col-6">
+                            <div className="row">
+                                <div className="col">
+                                    <p className="mt-2" >Taxbandits business Id : <b className="text-primary">{businessId}</b></p>
+                                </div>
+                            </div>
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -172,7 +177,7 @@ const MerchantProfile = () => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="address1">Address 1</label>
-                                        <textarea className="form-control" id="address1" name="address1" value={values.address1} rows="3" onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="address1" name="address1" value={values.address1} placeholder="Address 1" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -196,6 +201,11 @@ const MerchantProfile = () => {
                         <div className="col-6">
                             <div className="row">
                                 <div className="col">
+                                    <p className="mt-2" >Payer Ref: <b className="text-primary">{payerRef}</b></p>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="ein">EIN</label>
                                         <input type="text" className="form-control" id="ein" placeholder="EIN" name="ein" value={values.ein} onChange={handleInputChange} />
@@ -206,7 +216,7 @@ const MerchantProfile = () => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="address2">Address 2</label>
-                                        <textarea className="form-control" id="address2" name="address2" rows="3" value={values.address1} onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="address2" name="address2" value={values.address2} placeholder="Address 2" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>

@@ -78,7 +78,8 @@ export default async function handler(req,res)
 		const output = await axios.post(endPoint, businessObj, options);
 		businessID = output.data.BusinessId
 	} catch (err) {
-        res.status(err.response.data.StatusCode).send(`Cannot Set business`);
+		console.log(err)
+        res.status(err.response.status).send(`Cannot Set business`);
 	}
 
     
