@@ -91,30 +91,39 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
             })
             const result = await res.data
 
-            console.log(`Transaction Result`)
-            console.log(result)
-            if(result)
+            if(res.status == 200)
             {
-                setValues({
-                    amount:'',
-                    payeeRef : '',
-                    description:'',
-                    date: new Date(),
-                })
-
-                router.replace(router.asPath);
-
-                if(defaultAffiliate !== "")
+                console.log(`Transaction Result`)
+                console.log(result)
+                if(result)
                 {
-                    $(`#addPaymentModal${defaultAffiliate}`).hide();
+                    setValues({
+                        amount:'',
+                        payeeRef : '',
+                        description:'',
+                        date: new Date(),
+                    })
+
+                    router.replace(router.asPath);
+
+                    if(defaultAffiliate !== "")
+                    {
+                        $(`#addPaymentModal${defaultAffiliate}`).hide();
+                    }
+                    else
+                    {
+                        $(`#addPaymentModal`).hide();
+                    }
+                    
+                    $('.modal-backdrop').hide();
                 }
-                else
-                {
-                    $(`#addPaymentModal`).hide();
-                }
-                
-                $('.modal-backdrop').hide();
             }
+            else
+            {
+                toast.error(res.data)
+                return false
+            }
+            
 
           } catch (error) {
             console.log(error)

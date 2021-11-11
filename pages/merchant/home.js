@@ -9,6 +9,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
 import AddTransaction from "../../components/Layout/AddTransaction";
+import W9Pdf from "../../components/Layout/W9Pdf";
 
 export const getServerSideProps = async (context)=>{
   const { req } = context;
@@ -78,10 +79,10 @@ export default function Home(props) {
                         <td>{details.name}</td>
                         <td><i className="bi bi-currency-dollar"></i> {amount}</td>
                         <td>{transactionCount}</td>
-                        <td>Pending</td>
-                        <td>Pending</td>
+                        <td>{details.w9Status ? details.w9Status : "-"}</td>
+                        <td>{details.tinMatchingStatus ? details.tinMatchingStatus : "-"}</td>
                         <td>
-                          <button className="btn btn-sm btn-warning mx-1"><i className="bi bi-download"></i> W9</button>
+                          <button className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#w9Pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button>
                           <button className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
                           <button className="btn btn-sm btn-primary mx-1"><i className="bi bi-eye"></i> 1099-NEC</button>
                         </td>
@@ -95,7 +96,12 @@ export default function Home(props) {
             </table>
         </div>
         {affiliates && affiliates.map((details) => {
-          return (<AddTransaction affiliates = {affiliates} defaultAffiliate = {details.payeeRef} /> )
+          return (
+            <>
+              <AddTransaction affiliates = {affiliates} defaultAffiliate = {details.payeeRef} />
+              <W9Pdf url={details.pdfUrl} userId={details.payeeRef} />
+            </> 
+          )
         }
         )}                
     </>

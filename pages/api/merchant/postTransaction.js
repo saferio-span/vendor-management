@@ -14,7 +14,7 @@ export default async function handler(req,res)
     const jwsToken = generateJws()
 
     const authOptions = {
-		headers: {
+		headers : {
 			Authentication: jwsToken,
 		},
 	};
@@ -23,91 +23,115 @@ export default async function handler(req,res)
 	const authURL = process.env.authUrl
 	var accessToken = null
 
-	console.log(`Auth URL : ${authURL}`)
+
+	// const accessRes = await axios.get(authURL,authOptions);
+	// console.log(accessRes.data)
+	// accessToken = accessRes.data.AccessToken;
+
+	const response = await fetch(authURL, {
+		method: 'GET', // *GET, POST, PUT, DELETE, etc.
+		headers: {
+		  'Content-Type': 'application/json',
+		  'Authentication': jwsToken,
+		  // 'Content-Type': 'application/x-www-form-urlencoded',
+		}
+	});
+	console.log(response)
+	// accessToken = response.data.AccessToken;
 
 	//call the auth url using axios
-	try {
-		const res = await axios.get(authURL, authOptions);
-		accessToken = res.data.AccessToken;
-	} catch (err) {
-        console.log(`Access Token error`)
-		console.log(err);
-        accessToken = null
-	}
+	// try {
+	// 	console.log(`Auth URL : ${authURL}`)
+	// 	console.log(authOptions)
+	// 	const res = await axios.get(authURL,authOptions);
+	// 	accessToken = res.data.AccessToken;
+	// } catch (err) {
+    //     console.log(`Access Token error`)
+	// 	console.log(authOptions)
+    //     accessToken = null
+	// }
 
 	console.log(`Access token : ${accessToken}`)
 	
-    const options = {
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			'Content-Type': 'application/json',
-			Accept: 'application/json',
-		},
-	};
-
-	const endPoint = `${process.env.apiUrl}/Form1099Transactions`;
-	console.log(endPoint);
-	try {
-		const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
-		const output = await axios.post(
-			endPoint,
-			{
-                SubmissionId: null,
-                TxnData: [
-                  {
-                    Business: {
-                      PayerRef: null,
-                      BusinessId: businessId,
-                      TINType: null,
-                      TIN: null
-                    },
-                    Recipients: [
-                      {
-                        PayeeRef: payeeRef,
-                        RecipientId: null,
-                        TINType: null,
-                        TIN: null,
-                        Txns: [
-                          {
-                            SequenceId: sequenceID,
-                            TxnDate: moment().format("DD/MM/YYYY"),
-                            TxnAmt: amount,
-                            WHAmt: "0"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-			options
-		);
-
-		// res.status(200).send(output.data);
-
-		const transaction = new Transactions()
-
-		transaction.sequenceId = sequenceID
-		transaction.txnAmt = amount
-		transaction.description = description
-		transaction.payeeRef = payeeRef
-		transaction.payerRef = payerRef
-		transaction.businessId = businessId
-		
-		transaction.save((err, trans)=>{
-			if (err) {
-				res.status(401).send(err);
-			} else {
-				res.status(200).send(trans);
-			}
-		});
-
-
-
-	} catch (err) {
-		console.log(err)
-		res.status(err.response.status).send(err);
+	if(accessToken != null)
+	{
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+			},
+		};
+	
+		const endPoint = `${process.env.apiUrl}/Form1099Transactions`;
+		console.log(endPoint);
+		try {
+			const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
+			const output = await axios.post(
+				endPoint,
+				{
+					SubmissionId: null,
+					TxnData: [
+					  {
+						Business: {
+						  PayerRef: null,
+						  BusinessId: businessId,
+						  TINType: null,
+						  TIN: null
+						},
+						Recipients: [
+						  {
+							PayeeRef: payeeRef,
+							RecipientId: null,
+							TINType: null,
+							TIN: null,
+							Txns: [
+							  {
+								SequenceId: sequenceID,
+								TxnDate: moment().format("DD/MM/YYYY"),
+								TxnAmt: amount,
+								WHAmt: "0"
+							  }
+							]
+						  }
+						]
+					  }
+					]
+				  },
+				options
+			);
+	
+			// res.status(200).send(output.data);
+	
+			const transaction = new Transactions()
+	
+			transaction.sequenceId = sequenceID
+			transaction.txnAmt = amount
+			transaction.description = description
+			transaction.payeeRef = payeeRef
+			transaction.payerRef = payerRef
+			transaction.businessId = businessId
+			
+			transaction.save((err, trans)=>{
+				if (err) {
+					res.status(401).send(err);
+				} else {
+					res.status(200).send(trans);
+				}
+			});
+	
+	
+	
+		} catch (err) {
+			console.log(err)
+			res.status(err.response.status).send(err);
+		}
 	}
+	else{
+		res.status(401).send(`Access token is null`);
+	}
+
+    
 }
 
 const generateJws = () => {
