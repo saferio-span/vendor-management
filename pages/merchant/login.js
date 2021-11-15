@@ -53,6 +53,7 @@ const Login = () => {
                     type: actionTypes.SET_USER_DETAILS,
                     data: user[0],
                 })
+                console.log(user[0])
                 Router.push('/merchant/home')
             }
           } catch (error) {

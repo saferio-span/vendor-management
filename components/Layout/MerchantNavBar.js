@@ -7,7 +7,7 @@ import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const MerchantNavBar = () => {
-    const [{ user_details }, dispatch] = useUserValue();
+    
 
     const handleLogOut = ()=>{
         localStorage.clear();
@@ -18,22 +18,27 @@ const MerchantNavBar = () => {
         Router.push('/merchant/login')
     }
 
-    useEffect(() => {
+    const fetchdata = async ()=>{
+        var id = localStorage.getItem('id')
+        const res = await axios.get(`/api/merchant/${id}`)
+        const details = res.data
 
-        const fetchdata = async ()=>{
-            var id = localStorage.getItem('id')
-            const res = await axios.get(`/api/merchant/${id}`)
-            return res.data
-        }
-        
-        const user = fetchdata()
+        console.log(details)
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
-            data: user[0],
+            data: details[0],
         })
+    }
+
+    useEffect(() => {
+
+        fetchdata()
 
         //eslint-disable-next-line
     }, [])
+
+    const [{ user_details }, dispatch] = useUserValue();
+
     return (
         <>
         <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">

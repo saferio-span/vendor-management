@@ -79,8 +79,8 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
             toast.error("Please fill in all fields")
             return false
         }
-
         try {
+            
             const res = await axios.post(`/api/merchant/postTransaction`,{
                 amount: values.amount,
                 payeeRef : values.payeeRef,

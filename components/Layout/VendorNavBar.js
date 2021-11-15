@@ -18,27 +18,25 @@ const VendorNavbar = () => {
         Router.push('/vendor/login')
     }
 
+    const fetchdata = async ()=>{
+        var id = localStorage.getItem('id')
+        const affiliateRes = await axios.get(`/api/affiliate/${id}`)
+        const details = affiliateRes.data
+
+        dispatch({
+            type: actionTypes.SET_USER_DETAILS,
+            data: details[0],
+        })
+
+        setPayeeRef(details[0].payeeRef)
+    }
+
     useEffect(() => {
         // if(!user_details)
         // {
         //     Router.push('/vendor/login')
         // }
-
-        const fetchdata = async ()=>{
-            var id = localStorage.getItem('id')
-            const affiliateRes = await axios.get(`/api/affiliate/${id}`)
-            return affiliateRes.data
-        }
-        
-        const user = fetchdata()
-
-        // console.log(affiliateRes)
-        dispatch({
-            type: actionTypes.SET_USER_DETAILS,
-            data: affiliateRes.data.user[0],
-        })
-
-        setPayeeRef(user.user[0].payeeRef)
+        fetchdata()
         //eslint-disable-next-line
     }, [])
     return (
