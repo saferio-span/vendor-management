@@ -29,6 +29,7 @@ const Login = () => {
             // })
         }
         // if(session) Router.push('/merchant/home')
+        //eslint-disable-next-line
     })
     // if(session) return null
 
@@ -113,9 +114,9 @@ const Login = () => {
                         <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
                     </form>
                     <hr />
-                    Don't have an account ? -<Link href='/vendor/signUp'>
+                    <span>Don{`'`}t have an account ? -<Link href='/vendor/signUp'>
                         <a className="btn btn-link">Sign Up !</a>
-                    </Link>
+                    </Link></span>
                 </div>
             </div>
         </>

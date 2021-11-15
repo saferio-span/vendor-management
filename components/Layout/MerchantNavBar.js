@@ -18,18 +18,21 @@ const MerchantNavBar = () => {
         Router.push('/merchant/login')
     }
 
-    useEffect(async() => {
-        var id = localStorage.getItem('id')
-        const res = await axios.get(`/api/merchant/${id}`)
-        const user = res.data
+    useEffect(() => {
+
+        const fetchdata = async ()=>{
+            var id = localStorage.getItem('id')
+            const res = await axios.get(`/api/merchant/${id}`)
+            return res.data
+        }
+        
+        const user = fetchdata()
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
             data: user[0],
         })
-        // if(!user_details)
-        // {
-        //     Router.push('/merchant/login')
-        // }
+
+        //eslint-disable-next-line
     }, [])
     return (
         <>
@@ -41,12 +44,12 @@ const MerchantNavBar = () => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarScroll">
                     <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-                        <li className="nav-item">
+                        <li key="home" className="nav-item">
                             <Link href='/merchant/home'>
                                 <a className="nav-link">Affiliates</a>
                             </Link>
                         </li>
-                        <li className="nav-item">
+                        <li key="transactions" className="nav-item">
                             <Link href='/merchant/transactions'>
                                 <a className="nav-link">Transactions</a>
                             </Link>

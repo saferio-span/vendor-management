@@ -18,20 +18,28 @@ const VendorNavbar = () => {
         Router.push('/vendor/login')
     }
 
-    useEffect(async() => {
+    useEffect(() => {
         // if(!user_details)
         // {
         //     Router.push('/vendor/login')
         // }
-        var id = localStorage.getItem('id')
-        const affiliateRes = await axios.get(`/api/affiliate/${id}`)
+
+        const fetchdata = async ()=>{
+            var id = localStorage.getItem('id')
+            const affiliateRes = await axios.get(`/api/affiliate/${id}`)
+            return affiliateRes.data
+        }
+        
+        const user = fetchdata()
+
         // console.log(affiliateRes)
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
             data: affiliateRes.data.user[0],
         })
 
-        setPayeeRef(affiliateRes.data.user[0].payeeRef)
+        setPayeeRef(user.user[0].payeeRef)
+        //eslint-disable-next-line
     }, [])
     return (
         <>
@@ -43,7 +51,7 @@ const VendorNavbar = () => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarScroll">
                     <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-                        <li className="nav-item">
+                        <li key="Home" className="nav-item">
                             <Link href={`/vendor/home/${payeeRef}`}>
                                 <a className="nav-link">Home</a>
                             </Link>

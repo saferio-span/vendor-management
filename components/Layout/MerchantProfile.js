@@ -50,6 +50,7 @@ const MerchantProfile = () => {
 
             setBusinessID(data.businessID)
         }
+        //eslint-disable-next-line
     },[])
 
     const handleSubmit =async (e)=>{

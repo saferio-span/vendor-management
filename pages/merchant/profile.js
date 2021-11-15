@@ -4,7 +4,6 @@ import {states,statesShort} from "../../config/variables"
 import axios from 'axios'
 import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
-import { actionTypes } from "../../contexts/userReducer"
 import MerchantNavBar from "../../components/Layout/MerchantNavBar"
 
 const MerchantProfile = () => {
@@ -50,6 +49,7 @@ const MerchantProfile = () => {
             setPayerRef(data.payerRef)
             setBusinessID(data.businessID)
         }
+        //eslint-disable-next-line
     },[user_details])
 
     const handleSubmit =async (e)=>{

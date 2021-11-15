@@ -1,7 +1,6 @@
-import React,{useState} from 'react'
+import React from 'react'
 import Link from "next/link";
 import axios from 'axios';
-import { toast,ToastContainer } from "react-toastify"
 import Router from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'

@@ -4,7 +4,6 @@ import absoluteUrl from 'next-absolute-url'
 import axios from 'axios'
 import moment from 'moment'
 
-
 export const getServerSideProps = async (context)=>{
     const { params,req } = context;
     console.log(params)

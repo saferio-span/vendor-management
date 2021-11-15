@@ -5,6 +5,7 @@ import moment from 'moment'
 import axios from 'axios'
 
 connectDB()
+// accessToken()
 
 export default async function handler(req,res)
 {
@@ -15,6 +16,8 @@ export default async function handler(req,res)
 
     const authOptions = {
 		headers : {
+			Connection :"keep-alive",
+            Accept: "*/*",
 			Authentication: jwsToken,
 		},
 	};
@@ -28,30 +31,33 @@ export default async function handler(req,res)
 	// console.log(accessRes.data)
 	// accessToken = accessRes.data.AccessToken;
 
-	const response = await fetch(authURL, {
-		method: 'GET', // *GET, POST, PUT, DELETE, etc.
-		headers: {
-		  'Content-Type': 'application/json',
-		  'Authentication': jwsToken,
-		  // 'Content-Type': 'application/x-www-form-urlencoded',
-		}
-	});
-	console.log(response)
+	// const response = await fetch(authURL, {
+	// 	method: 'GET',
+	// 	headers: {
+	// 	  'Access-Control-Allow-Origin': '*',
+	// 	  'Access-Control-Allow-Headers': '*',
+	// 	  'Content-Type': 'application/json',
+	// 	  'Authentication': jwsToken,
+	// 	}
+	// });
+	// console.log(response)
 	// accessToken = response.data.AccessToken;
 
 	//call the auth url using axios
-	// try {
-	// 	console.log(`Auth URL : ${authURL}`)
-	// 	console.log(authOptions)
-	// 	const res = await axios.get(authURL,authOptions);
-	// 	accessToken = res.data.AccessToken;
-	// } catch (err) {
-    //     console.log(`Access Token error`)
-	// 	console.log(authOptions)
-    //     accessToken = null
-	// }
+	try {
+		console.log(`Auth URL : ${authURL}`)
+		console.log(authOptions)
+		const accessRes = await axios.get("https://testoauth.expressauth.net/v2/tbsauth",authOptions);
+		accessToken = accessRes.data.AccessToken;
+		console.log(accessToken)
+	} catch (err) {
+        console.log(`Access Token error`)
+		console.log(authOptions)
+        accessToken = null
+	}
 
-	console.log(`Access token : ${accessToken}`)
+	// console.log(`Access token : ${accessToken}`)
+	
 	
 	if(accessToken != null)
 	{
@@ -136,11 +142,12 @@ export default async function handler(req,res)
 
 const generateJws = () => {
 	//setup the payload with Issuer, Subject, audience and Issued at.
+	console.log(`IAT :${Math.floor(new Date().getTime() / 1000)}`)
 	const payload = {
 		iss: process.env.clientID,
 		sub: process.env.clientID,
 		aud: process.env.userToken,
-		iat: Math.floor(new Date().getTime() / 1000),
+		iat: Math.floor(new Date().getTime() / 1000)
 	};
 
 	return jwt.sign(payload, process.env.clientSectet, {

@@ -1,8 +1,6 @@
 import React from "react"
 import MerchantNavBar from "../../components/Layout/MerchantNavBar"
 import Link from "next/link";
-import { useUserValue } from '../../contexts/UserContext'
-import { actionTypes } from "../../contexts/userReducer"
 import { ToastContainer } from "react-toastify"
 import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -82,9 +80,9 @@ export default function Home(props) {
                         <td>{details.w9Status ? details.w9Status : "-"}</td>
                         <td>{details.tinMatchingStatus ? details.tinMatchingStatus : "-"}</td>
                         <td>
-                          <button className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#w9Pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button>
-                          <button className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
-                          <button className="btn btn-sm btn-primary mx-1"><i className="bi bi-eye"></i> 1099-NEC</button>
+                          <button key={`${details._id}w9`} className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#w9Pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button>
+                          <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
+                          <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1"><i className="bi bi-eye"></i> 1099-NEC</button>
                         </td>
                     </tr>
                     </>

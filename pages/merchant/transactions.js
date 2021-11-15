@@ -1,8 +1,5 @@
 import React from "react"
 import MerchantNavBar from "../../components/Layout/MerchantNavBar"
-import Link from "next/link";
-import { useUserValue } from '../../contexts/UserContext'
-import { actionTypes } from "../../contexts/userReducer"
 import { ToastContainer } from "react-toastify"
 import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";

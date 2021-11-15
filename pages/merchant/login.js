@@ -1,7 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import {providers,getSession,signIn} from "next-auth/client"
 import style from "../../styles/Login.module.css"
-import LoginBtn from '../../components/LoginBtn'
 import Router from 'next/router'
 import Link from "next/link";
 import { toast,ToastContainer } from "react-toastify"
@@ -9,7 +7,6 @@ import axios from "axios"
 import 'react-toastify/dist/ReactToastify.css';
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
-import absoluteUrl from 'next-absolute-url'
 
 // const Login = ({providers,session,host}) => {
 const Login = () => {
@@ -28,7 +25,8 @@ const Login = () => {
             Router.push('/merchant/home')
         }
         // if(session) Router.push('/merchant/home')
-    })
+        //eslint-disable-next-line  
+    },[])
     // if(session) return null
 
     const handleSubmit = async (e)=>{
@@ -109,7 +107,7 @@ const Login = () => {
                         <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
                     </form>
                     <hr />
-                    Don't have an account ? -<Link href='/merchant/signUp'>
+                    Don{`'`}t have an account ? -<Link href='/merchant/signUp'>
                         <a className="btn btn-link">Sign Up !</a>
                     </Link>
                 </div>

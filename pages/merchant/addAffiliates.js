@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import Select from 'react-select'
 import {states,statesShort} from "../../config/variables"
-import Link from "next/link";
 import Router from 'next/router'
 import axios from 'axios';
 import { toast,ToastContainer } from "react-toastify"
@@ -31,6 +30,7 @@ const AddAffiliates = () => {
         {
             setMerchantID(user_details)
         }
+        //eslint-disable-next-line
     },[])
 
     const handleSubmit =async (e)=>{

@@ -4,7 +4,6 @@ import {states,statesShort} from "../../config/variables"
 import axios from 'axios'
 import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
-import { actionTypes } from "../../contexts/userReducer"
 import VendorNavbar from '../../components/Layout/VendorNavBar'
 import Link from "next/link";
 
@@ -41,6 +40,7 @@ const MerchantProfile = () => {
             setPayeeRef(data.payeeRef)
 
         }
+        //eslint-disable-next-line
     },[user_details])
 
     const handleSubmit =async (e)=>{
