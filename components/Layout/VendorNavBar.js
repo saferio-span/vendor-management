@@ -23,12 +23,14 @@ const VendorNavbar = () => {
         const affiliateRes = await axios.get(`/api/affiliate/${id}`)
         const details = affiliateRes.data
 
+        // console.log(details)
+
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
-            data: details[0],
+            data: details.user[0],
         })
 
-        setPayeeRef(details[0].payeeRef)
+        setPayeeRef(details.user[0].payeeRef)
     }
 
     useEffect(() => {

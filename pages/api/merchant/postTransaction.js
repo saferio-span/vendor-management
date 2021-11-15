@@ -94,7 +94,7 @@ export default async function handler(req,res)
 							Txns: [
 							  {
 								SequenceId: sequenceID,
-								TxnDate: moment().format("DD/MM/YYYY"),
+								TxnDate: moment().format("MM/DD/YYYY"),
 								TxnAmt: amount,
 								WHAmt: "0"
 							  }
