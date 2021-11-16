@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
 import AddTransaction from "../../components/Layout/AddTransaction";
 import W9Pdf from "../../components/Layout/W9Pdf";
+import ReactPaginate from "react-paginate"
 
 export const getServerSideProps = async (context)=>{
   const { req } = context;
@@ -34,11 +35,39 @@ export default function Home(props) {
   const optionAff = props.affiliates
   const [affiliates,setAffilites] =  useState([])
   const [payeeRef,setPayeeRef] =  useState("")
+  const [limitAffiliates,setLimitAffiliates] =  useState([])
+  const [pageNum,setPageNum] = useState(1)
+  const [pageCount,setPageCount] = useState()
   const transactions = props.transactions
+  // const pageCount = 5;
   for(const key in props.affiliates )
   {
       options.push({ value: optionAff[key].payeeRef, label: optionAff[key].name })
   }
+
+  useEffect(()=>{
+    setLimitAffiliates([])
+    if(payeeRef === "")
+    {
+        setAffilites(props.affiliates)
+        console.log(`Affiliates after initial setup`)
+        setPageCount(Math.ceil(props.affiliates.length / 5))
+    }
+    else
+    {
+        setAffilites([])
+        const result = props.affiliates.filter(aff => aff.payeeRef === payeeRef);
+        setAffilites(result)
+        setPageCount(Math.ceil(result.length / 5))
+    }
+
+    const sortedResult = affiliates.slice((pageNum*5)-5, pageNum*5);
+    setLimitAffiliates(sortedResult)
+
+    //eslint-disable-next-line
+  },[payeeRef,pageNum,pageCount])
+  console.log(`After use effect`)
+  console.log(affiliates)
 
   const handleSelectChange = (e)=>{
     if(e !== null)
@@ -49,23 +78,12 @@ export default function Home(props) {
     {
       setPayeeRef("")
     }
+    setPageNum(1)
   }
 
-  useEffect(()=>{
-    if(payeeRef === "")
-    {
-      setAffilites(props.affiliates)
-    }
-    else
-    {
-      setAffilites([])
-      console.log(affiliates)
-
-      const result = props.affiliates.filter(aff => aff.payeeRef === payeeRef);
-      setAffilites(result)
-    }
-    //eslint-disable-next-line
-  },[payeeRef])
+  const handlePageClick = (data)=>{
+    setPageNum(data.selected + 1)
+  }
 
   return (
     <>
@@ -111,7 +129,7 @@ export default function Home(props) {
                 </tr>
               </thead>
               <tbody>
-                {affiliates && affiliates.map((details) => {
+                {limitAffiliates && limitAffiliates.map((details) => {
                     let amount = 0
                     let transactionCount = 0
 
@@ -149,7 +167,30 @@ export default function Home(props) {
               </tbody>
             </table>
         </div>
-        {affiliates && affiliates.map((details) => {
+        <div className="row">
+            <div className="col offset-s4">
+                <ReactPaginate
+                    previousLabel={"<"}
+                    nextLabel={">"}
+                    breakLabel={"..."}
+                    pageCount={pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={3}
+                    onPageChange={handlePageClick}
+                    containerClassName={"pagination justify-content-center"}
+                    pageClassName={"page-item"}
+                    pageLinkClassName={"page-link"}
+                    previousClassName={"page-item"}
+                    previousLinkClassName={"page-link"}
+                    nextClassName={"page-item"}
+                    nextLinkClassName={"page-link"}
+                    breakClassName={"page-item"}
+                    breakLinkClassName={"page-link"}
+                    activeClassName={"active"}
+                />
+            </div>
+        </div>
+        {limitAffiliates && limitAffiliates.map((details) => {
           return (
             <>
               <AddTransaction affiliates = {optionAff} defaultAffiliate = {details.payeeRef} />

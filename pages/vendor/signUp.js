@@ -267,7 +267,7 @@ const SignUp = (props) => {
                 </form>
                 <br /><hr />
                 <div className="mb-5">
-                    Already have an account ? -<Link href='/merchant/login'>
+                    Already have an account ? -<Link href='/vendor/login'>
                         <a className="btn btn-link">Sign In !</a>
                     </Link>
                 </div>

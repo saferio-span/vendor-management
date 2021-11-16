@@ -10,8 +10,7 @@ connectDB()
 export default async function handler(req,res)
 {
 
-    const { amount,payeeRef,description,businessId,payerRef  } = req.body;
-	// const random = Math.floor((Math.random() * 1000000000) + 1);
+    const { amount,payeeRef,description,businessId,payerRef,date } = req.body;
     const jwsToken = generateJws()
 
     const authOptions = {
@@ -47,9 +46,8 @@ export default async function handler(req,res)
 	try {
 		console.log(`Auth URL : ${authURL}`)
 		console.log(authOptions)
-		const accessRes = await axios.get("https://testoauth.expressauth.net/v2/tbsauth",authOptions);
+		const accessRes = await axios.get(authURL,authOptions);
 		accessToken = accessRes.data.AccessToken;
-		console.log(accessToken)
 	} catch (err) {
         console.log(`Access Token error`)
 		console.log(authOptions)
@@ -94,7 +92,7 @@ export default async function handler(req,res)
 							Txns: [
 							  {
 								SequenceId: sequenceID,
-								TxnDate: moment().format("MM/DD/YYYY"),
+								TxnDate: moment(date).format("MM/DD/YYYY"),
 								TxnAmt: amount,
 								WHAmt: "0"
 							  }
@@ -107,8 +105,6 @@ export default async function handler(req,res)
 				options
 			);
 	
-			// res.status(200).send(output.data);
-	
 			const transaction = new Transactions()
 	
 			transaction.sequenceId = sequenceID
@@ -117,6 +113,7 @@ export default async function handler(req,res)
 			transaction.payeeRef = payeeRef
 			transaction.payerRef = payerRef
 			transaction.businessId = businessId
+			transaction.date = moment(date).format("MM/DD/YYYY"),
 			
 			transaction.save((err, trans)=>{
 				if (err) {

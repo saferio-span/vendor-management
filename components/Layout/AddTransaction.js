@@ -1,14 +1,12 @@
 import React,{useState} from 'react'
-import moment from 'moment'
 import Select from 'react-select'
 import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
 import DatePicker from "react-datepicker";
-import { actionTypes } from "../../contexts/userReducer"
 import axios from 'axios'
 import { useRouter } from 'next/router';
 import "react-datepicker/dist/react-datepicker.css"
-import $ from 'jquery'; 
+import $ from 'jquery';
 
 const AddTransaction = ({affiliates,defaultAffiliate}) => {
 
@@ -64,7 +62,6 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 	};
 
     const handleDateChange = (e) => {
-		console.log(e)
         setValues({ ...values, date: e });
 	};
     

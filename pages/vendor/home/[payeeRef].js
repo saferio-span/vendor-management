@@ -1,8 +1,9 @@
-import React from 'react'
+import React,{useState,useEffect} from "react"
 import VendorNavbar from '../../../components/Layout/VendorNavBar'
 import absoluteUrl from 'next-absolute-url'
 import axios from 'axios'
 import moment from 'moment'
+import ReactPaginate from "react-paginate"
 
 export const getServerSideProps = async (context)=>{
     const { params,req } = context;
@@ -21,6 +22,22 @@ export const getServerSideProps = async (context)=>{
   
 export default function Home(props) {
     const transactions = props.transactions
+    const [limitTransactions,setLimitTrans] =  useState([])
+    const [pageNum,setPageNum] = useState(1)
+    const [pageCount,setPageCount] = useState()
+
+    const handlePageClick = (data)=>{
+        setPageNum(data.selected + 1)
+    }
+
+    useEffect(()=>{
+        setLimitTrans([])
+        setPageCount(Math.ceil(transactions.length / 5))
+        const sortedResult = transactions.slice((pageNum*5)-5, pageNum*5);
+        setLimitTrans(sortedResult)
+    
+        //eslint-disable-next-line
+      },[pageNum,pageCount])
 
     return (
         <>
@@ -41,7 +58,7 @@ export default function Home(props) {
                 </tr>
                 </thead>
                 <tbody>
-                    {transactions && transactions.map((details) => {
+                    {limitTransactions && limitTransactions.map((details) => {
                         return (<tr key={details._id}>
                             <td>{details.sequenceId}</td>
                             <td><i className="bi bi-currency-dollar"></i> {details.txnAmt}</td>
@@ -51,6 +68,29 @@ export default function Home(props) {
                     )}
                 </tbody>
                 </table>
+            </div>
+            <div className="row">
+                <div className="col offset-s4">
+                    <ReactPaginate
+                        previousLabel={"<"}
+                        nextLabel={">"}
+                        breakLabel={"..."}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName={"pagination justify-content-center"}
+                        pageClassName={"page-item"}
+                        pageLinkClassName={"page-link"}
+                        previousClassName={"page-item"}
+                        previousLinkClassName={"page-link"}
+                        nextClassName={"page-item"}
+                        nextLinkClassName={"page-link"}
+                        breakClassName={"page-item"}
+                        breakLinkClassName={"page-link"}
+                        activeClassName={"active"}
+                    />
+                </div>
             </div>
         </>
     )
