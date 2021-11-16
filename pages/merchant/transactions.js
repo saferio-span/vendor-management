@@ -72,7 +72,7 @@ const Transactions = (props) => {
         // console.log(limitTransactions)
 
         //eslint-disable-next-line
-    },[payeeRef,pageNum,pageCount])
+    },[transactions,payeeRef,pageNum,pageCount])
 
     const handleSelectChange = (e)=>{
         if(e !== null)
@@ -87,7 +87,6 @@ const Transactions = (props) => {
     }
 
     const handlePageClick = (data)=>{
-        console.log(`Page num clicked ${data.selected + 1}`)
         setPageNum(data.selected + 1)
     }
 

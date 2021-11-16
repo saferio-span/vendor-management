@@ -50,7 +50,6 @@ export default function Home(props) {
     if(payeeRef === "")
     {
         setAffilites(props.affiliates)
-        console.log(`Affiliates after initial setup`)
         setPageCount(Math.ceil(props.affiliates.length / 5))
     }
     else
@@ -65,9 +64,7 @@ export default function Home(props) {
     setLimitAffiliates(sortedResult)
 
     //eslint-disable-next-line
-  },[payeeRef,pageNum,pageCount])
-  console.log(`After use effect`)
-  console.log(affiliates)
+  },[affiliates,payeeRef,pageNum,pageCount])
 
   const handleSelectChange = (e)=>{
     if(e !== null)

@@ -7,7 +7,6 @@ import ReactPaginate from "react-paginate"
 
 export const getServerSideProps = async (context)=>{
     const { params,req } = context;
-    console.log(params)
     const { origin } = absoluteUrl(req)
 
     const transRes = await axios.get(`${origin}/api/affiliate/getTransaction/${params.payeeRef}`)
