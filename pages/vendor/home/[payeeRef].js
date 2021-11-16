@@ -13,7 +13,7 @@ export const getServerSideProps = async (context)=>{
     const transactions = await transRes.data
   
     return{
-      props:{ 
+      props:{
         transactions
       }
     }
@@ -31,7 +31,7 @@ export default function Home(props) {
                 </div>
             </div>
             <div className="my-2 mx-2">
-                <table className="table table-hover table-striped table-responsive">
+                <table className="table table-hover table-striped table-responsive" id="vendorTransTable">
                 <thead>
                     <tr>
                     <th>Unique Id</th>
@@ -47,9 +47,7 @@ export default function Home(props) {
                             <td><i className="bi bi-currency-dollar"></i> {details.txnAmt}</td>
                             <td>{details.description}</td>
                             <td>{moment(details.date).format("Do MMM YYYY")}</td>
-                        </tr>)
-                            }
-                                
+                        </tr>)}
                     )}
                 </tbody>
                 </table>
