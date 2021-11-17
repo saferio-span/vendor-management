@@ -50,17 +50,17 @@ export default function Home(props) {
     if(payeeRef === "")
     {
         setAffilites(props.affiliates)
-        setPageCount(Math.ceil(props.affiliates.length / 5))
+        setPageCount(Math.ceil(props.affiliates.length / 10))
     }
     else
     {
         setAffilites([])
         const result = props.affiliates.filter(aff => aff.payeeRef === payeeRef);
         setAffilites(result)
-        setPageCount(Math.ceil(result.length / 5))
+        setPageCount(Math.ceil(result.length / 10))
     }
 
-    const sortedResult = affiliates.slice((pageNum*5)-5, pageNum*5);
+    const sortedResult = affiliates.slice((pageNum*10)-10, pageNum*10);
     setLimitAffiliates(sortedResult)
 
     //eslint-disable-next-line
@@ -145,7 +145,7 @@ export default function Home(props) {
                         <td>{details.name}</td>
                         <td><i className="bi bi-currency-dollar"></i> {amount}</td>
                         <td>
-                          <Link href='/merchant/transactions'>
+                          <Link href={{ pathname: '/merchant/transactions', query: { payeeRef: details.payeeRef } }} >
                             <a className="btn btn-link">{transactionCount}</a>
                           </Link></td>
                         <td>{details.w9Status ? details.w9Status : "-"}</td>

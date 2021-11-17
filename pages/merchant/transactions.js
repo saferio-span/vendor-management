@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react"
+import React,{useState,useEffect,useCallback} from "react"
 import MerchantNavBar from "../../components/Layout/MerchantNavBar"
 import { ToastContainer } from "react-toastify"
 import axios from "axios";
@@ -9,6 +9,7 @@ import AddTransaction from "../../components/Layout/AddTransaction";
 import moment from 'moment'
 import Select from 'react-select'
 import ReactPaginate from "react-paginate"
+import { useRouter } from 'next/router'
 
 export const getServerSideProps = async (context)=>{
     const { req } = context;
@@ -30,10 +31,12 @@ export const getServerSideProps = async (context)=>{
 
 const Transactions = (props) => {
 
+    const router = useRouter()
+    const paramPayeeRef = router.query.payeeRef ? router.query.payeeRef : ""
     const options = []
     const optionAff = props.affiliates
     const [transactions,setTrans] =  useState([])
-    const [payeeRef,setPayeeRef] =  useState("")
+    const [payeeRef,setPayeeRef] =  useState(paramPayeeRef)
     // const transactions = props.transactions
     const [limitTransactions,setLimitTrans] =  useState([])
     const [pageNum,setPageNum] = useState(1)
@@ -43,35 +46,96 @@ const Transactions = (props) => {
     {
         options.push({ value: optionAff[key].payeeRef, label: optionAff[key].name })
     }
+    
+    // const emptyTrans = useCallback(()=>{
+    //     setLimitTrans([])
+    // })
 
-    useEffect(()=>{
+    const updateTransaction = (trans)=>{
+        setTrans(trans)
+    }
+
+    const updatepageCount = (count)=>{
+        setPageCount(count)
+    }
+
+    const updateLimitedTransaction = (trans)=>{
+        setLimitTrans(trans)
+    }
+    
+    const changeTrans = useCallback(()=>{
         setLimitTrans([])
         if(payeeRef === "")
         {
             setTrans(props.transactions)
-            setPageCount(Math.ceil(props.transactions.length / 5))
+            setPageCount(Math.ceil(props.transactions.length / 10))
         }
         else
         {
             setTrans([])
             const result = props.transactions.filter(trans => trans.payeeRef === payeeRef);
             setTrans(result)
-            setPageCount(Math.ceil(result.length / 5))
+            setPageCount(Math.ceil(result.length / 10))
         }
-
-        // console.log(`Calculated pages`)
-        // console.log(Math.ceil(transactions.length / 5))
-        // console.log(transactions.length)
-        const sortedResult = transactions.slice((pageNum*5)-5, pageNum*5);
+        const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
         // console.log(`Sorted result`)
         setLimitTrans(sortedResult)
-        
-        
-        // console.log(`Pages : ${pageCount}`)
-        // console.log(`Limited transactions`)
-        // console.log(limitTransactions)
+    })
 
-        //eslint-disable-next-line
+    // useEffect(()=>{
+    //     // if(router.query.payeeRef)
+    //     // {
+    //     //     setPayeeRef(router.query.payeeRef)
+    //     // }
+    //     setLimitTrans([])
+    //     if(payeeRef === "")
+    //     {
+    //         setTrans(props.transactions)
+    //         setPageCount(Math.ceil(props.transactions.length / 10))
+    //     }
+    //     else
+    //     {
+    //         setTrans([])
+    //         const result = props.transactions.filter(trans => trans.payeeRef === payeeRef);
+    //         setTrans(result)
+    //         setPageCount(Math.ceil(result.length / 10))
+    //     }
+
+    //     // console.log(`Calculated pages`)
+    //     // console.log(Math.ceil(transactions.length / 10))
+    //     // console.log(transactions.length)
+    //     const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
+    //     // console.log(`Sorted result`)
+    //     setLimitTrans(sortedResult)
+        
+        
+    //     // console.log(`Pages : ${pageCount}`)
+    //     // console.log(`Limited transactions`)
+    //     // console.log(limitTransactions)
+
+    //     //eslint-disable-next-line
+    // },[transactions,payeeRef,pageNum,pageCount])
+
+    useEffect(()=>{
+        updateLimitedTransaction([])
+        if(payeeRef === "")
+        {
+            updateTransaction(props.transactions)
+            updatepageCount(Math.ceil(props.transactions.length / 10))
+        }
+        else
+        {
+            updateTransaction([])
+            const result = props.transactions.filter(trans => trans.payeeRef === payeeRef);
+            updateTransaction(result)
+            updatepageCount(Math.ceil(result.length / 10))
+        }
+        // console.log(`Calculated pages`)
+        // console.log(Math.ceil(transactions.length / 10))
+        // console.log(transactions.length)
+        const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
+        // console.log(`Sorted result`)
+        updateLimitedTransaction(sortedResult)
     },[transactions,payeeRef,pageNum,pageCount])
 
     const handleSelectChange = (e)=>{
@@ -110,6 +174,10 @@ const Transactions = (props) => {
                 </div>
                 <div className="col-3">
                     <Select
+                        value = {
+                            options.filter(option => 
+                            option.value === payeeRef)
+                        }
                         className="basic-single"
                         classNamePrefix="select"
                         defaultValue="0"
