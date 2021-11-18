@@ -25,7 +25,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 		amount:'',
         payeeRef : defaultAffiliate !== "" ? defaultAffiliate : '' ,
         description:'',
-        date: new Date(),
+        date: '',
 	});
 
     // const [affiliateName,setName] = useState("")
@@ -84,7 +84,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 description : values.description,
                 businessId : user_details.businessID,
                 payerRef : user_details.payerRef,
-                date : values.date,
+                selectedDate : values.date,
             })
             const result = await res.data
 

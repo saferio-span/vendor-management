@@ -62,6 +62,16 @@ export default async function handler(req,res)
 				},
 				Recipient: {
 					PayeeRef: payeeId,
+					Name: fullName,
+					IsForeign: false,
+					USAddress: {
+						Address1: address1,
+						Address2: address2,
+						City: city,
+						State: stateName,
+						ZipCd: zipCd
+					},
+					ForeignAddress: null,
 					IsTINMatching: tinMatch,
 				},
 				Customization: {

@@ -21,7 +21,7 @@ const transactionSchema = new mongoose.Schema({
   businessID:{
     type: String,
   },
-  date:{
+  transactionDate:{
     type: Date,
   }
 }, { timestamps: true })

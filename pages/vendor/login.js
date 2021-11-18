@@ -63,6 +63,7 @@ const Login = () => {
                 })
             }
           } catch (error) {
+            toast.error("Invalid Email Id or Password")
             console.log(error)
             return null
           }

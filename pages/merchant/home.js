@@ -38,6 +38,7 @@ export default function Home(props) {
   const [limitAffiliates,setLimitAffiliates] =  useState([])
   const [pageNum,setPageNum] = useState(1)
   const [pageCount,setPageCount] = useState()
+  const [searchValue,setSearchValue] = useState("")
   const transactions = props.transactions
   // const pageCount = 5;
   for(const key in props.affiliates )
@@ -60,11 +61,46 @@ export default function Home(props) {
         setPageCount(Math.ceil(result.length / 10))
     }
 
-    const sortedResult = affiliates.slice((pageNum*10)-10, pageNum*10);
-    setLimitAffiliates(sortedResult)
+    if(affiliates && searchValue != "")
+    {
+        const searchResult = []
+        affiliates.forEach(searchAff => {
+          let amount = 0
+          let transactionCount = 0
+
+          let w9Status = searchAff.w9Status ? searchAff.w9Status : ""
+          let tinStatus = searchAff.tinMatchingStatus ? searchAff.tinMatchingStatus : ""
+
+          transactions.forEach(option => {
+              if(option.payeeRef === searchAff.payeeRef)
+              {
+                amount += parseInt(option.txnAmt)
+                transactionCount++
+              }
+          })
+          amount = String(amount)
+          transactionCount = String(transactionCount)
+
+
+          if(searchAff.name.includes(searchValue) || amount.includes(searchValue) || transactionCount.includes(searchValue) || w9Status.includes(searchValue) || tinStatus.includes(searchValue) )
+          {
+              searchResult.push(searchAff)
+          }               
+        })
+        const sortedResult = searchResult.slice((pageNum*10)-10, pageNum*10);
+        setLimitAffiliates(sortedResult)
+        setPageCount(Math.ceil(sortedResult.length / 10))
+    }
+    else
+    {
+        const sortedResult = affiliates.slice((pageNum*10)-10, pageNum*10);
+        setLimitAffiliates(sortedResult)
+    }
+
+    
 
     //eslint-disable-next-line
-  },[affiliates,payeeRef,pageNum,pageCount])
+  },[affiliates,payeeRef,pageNum,pageCount,searchValue])
 
   const handleSelectChange = (e)=>{
     if(e !== null)
@@ -80,6 +116,10 @@ export default function Home(props) {
 
   const handlePageClick = (data)=>{
     setPageNum(data.selected + 1)
+  }
+
+  const handleSearchChange = (e)=>{
+      setSearchValue(e.target.value)
   }
 
   return (
@@ -98,7 +138,7 @@ export default function Home(props) {
         </div>
         <div className="row mx-2 mb-3">
           <div className="col-2">
-            <h6>Sort by affiliate</h6>
+            <h6 className="pt-2">Sort by affiliate</h6>
           </div>
           <div className="col-3">
             <Select
@@ -111,6 +151,14 @@ export default function Home(props) {
                 options={options}
                 onChange={handleSelectChange}
             />
+          </div>
+          <div className="col-2 offset-2 d-flex align-items-end flex-column">
+              <h6 className="text-right pt-2">Search</h6>
+          </div>
+          <div className="col-3">
+              <div className="form-group">
+                  <input type="text" className="form-control" id="search" placeholder="Search" onChange={handleSearchChange} />
+              </div>
           </div>
         </div>
         <div className="my-2 mx-2">

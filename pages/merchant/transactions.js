@@ -41,6 +41,7 @@ const Transactions = (props) => {
     const [limitTransactions,setLimitTrans] =  useState([])
     const [pageNum,setPageNum] = useState(1)
     const [pageCount,setPageCount] = useState()
+    const [searchValue,setSearchValue] = useState("")
 
     for(const key in props.affiliates )
     {
@@ -62,62 +63,11 @@ const Transactions = (props) => {
     const updateLimitedTransaction = (trans)=>{
         setLimitTrans(trans)
     }
-    
-    const changeTrans = useCallback(()=>{
-        setLimitTrans([])
-        if(payeeRef === "")
-        {
-            setTrans(props.transactions)
-            setPageCount(Math.ceil(props.transactions.length / 10))
-        }
-        else
-        {
-            setTrans([])
-            const result = props.transactions.filter(trans => trans.payeeRef === payeeRef);
-            setTrans(result)
-            setPageCount(Math.ceil(result.length / 10))
-        }
-        const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
-        // console.log(`Sorted result`)
-        setLimitTrans(sortedResult)
-    })
-
-    // useEffect(()=>{
-    //     // if(router.query.payeeRef)
-    //     // {
-    //     //     setPayeeRef(router.query.payeeRef)
-    //     // }
-    //     setLimitTrans([])
-    //     if(payeeRef === "")
-    //     {
-    //         setTrans(props.transactions)
-    //         setPageCount(Math.ceil(props.transactions.length / 10))
-    //     }
-    //     else
-    //     {
-    //         setTrans([])
-    //         const result = props.transactions.filter(trans => trans.payeeRef === payeeRef);
-    //         setTrans(result)
-    //         setPageCount(Math.ceil(result.length / 10))
-    //     }
-
-    //     // console.log(`Calculated pages`)
-    //     // console.log(Math.ceil(transactions.length / 10))
-    //     // console.log(transactions.length)
-    //     const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
-    //     // console.log(`Sorted result`)
-    //     setLimitTrans(sortedResult)
-        
-        
-    //     // console.log(`Pages : ${pageCount}`)
-    //     // console.log(`Limited transactions`)
-    //     // console.log(limitTransactions)
-
-    //     //eslint-disable-next-line
-    // },[transactions,payeeRef,pageNum,pageCount])
 
     useEffect(()=>{
+        
         updateLimitedTransaction([])
+        updateTransaction([])
         if(payeeRef === "")
         {
             updateTransaction(props.transactions)
@@ -125,18 +75,42 @@ const Transactions = (props) => {
         }
         else
         {
-            updateTransaction([])
             const result = props.transactions.filter(trans => trans.payeeRef === payeeRef);
             updateTransaction(result)
             updatepageCount(Math.ceil(result.length / 10))
         }
-        // console.log(`Calculated pages`)
-        // console.log(Math.ceil(transactions.length / 10))
-        // console.log(transactions.length)
-        const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
-        // console.log(`Sorted result`)
-        updateLimitedTransaction(sortedResult)
-    },[transactions,payeeRef,pageNum,pageCount])
+
+        if(transactions && searchValue != "")
+        {
+            const searchResult = []
+            transactions.forEach(trans => {
+                let affname = ''
+                optionAff.forEach(option => {
+                    if(option.payeeRef === trans.payeeRef)
+                    {
+                        affname = option.name
+                    }
+                })
+
+                const transactionDate = trans.transactionDate ? trans.transactionDate : trans.createdAt
+
+                if(trans.sequenceId.includes(searchValue) || affname.includes(searchValue) || trans.txnAmt.includes(searchValue) || moment(transactionDate).format("Do MMM YYYY").includes(searchValue) || trans.description.includes(searchValue) )
+                {
+                    searchResult.push(trans)
+                }               
+            })
+            const sortedResult = searchResult.slice((pageNum*10)-10, pageNum*10);
+            updateLimitedTransaction(sortedResult)
+            updatepageCount(Math.ceil(sortedResult.length / 10))
+        }
+        else
+        {
+            const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
+            updateLimitedTransaction(sortedResult)
+        }
+        
+        //eslint-disable-next-line
+    },[transactions,payeeRef,pageNum,pageCount,searchValue])
 
     const handleSelectChange = (e)=>{
         if(e !== null)
@@ -152,6 +126,10 @@ const Transactions = (props) => {
 
     const handlePageClick = (data)=>{
         setPageNum(data.selected + 1)
+    }
+
+    const handleSearchChange = (e)=>{
+        setSearchValue(e.target.value)
     }
 
     return (
@@ -170,7 +148,7 @@ const Transactions = (props) => {
             </div>
             <div className="row mx-2 mb-3">
                 <div className="col-2">
-                    <h6>Sort by affiliate</h6>
+                    <h6 className="text-right pt-2">Sort by affiliate</h6>
                 </div>
                 <div className="col-3">
                     <Select
@@ -187,6 +165,14 @@ const Transactions = (props) => {
                         options={options}
                         onChange={handleSelectChange}
                     />
+                </div>
+                <div className="col-2 offset-2 d-flex align-items-end flex-column">
+                    <h6 className="text-right pt-2">Search</h6>
+                </div>
+                <div className="col-3">
+                    <div className="form-group">
+                        <input type="text" className="form-control" id="search" placeholder="Search" onChange={handleSearchChange} />
+                    </div>
                 </div>
             </div>
             <div className="row my-2 mx-2">
@@ -215,7 +201,7 @@ const Transactions = (props) => {
                             <td><i className="bi bi-currency-dollar"></i> {details.txnAmt}</td>
                             <td>{details.description}</td>
                             <td>{details.sequenceId}</td>
-                            <td>{moment(details.date).format("Do MMM YYYY")}</td>
+                            <td>{details.transactionDate ? moment(details.transactionDate).format("Do MMM YYYY") : moment(details.createdAt).format("Do MMM YYYY")}</td>
                         </tr>)
                     })}
                 </tbody>

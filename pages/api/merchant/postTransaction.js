@@ -10,7 +10,7 @@ connectDB()
 export default async function handler(req,res)
 {
 
-    const { amount,payeeRef,description,businessId,payerRef,date } = req.body;
+    const { amount,payeeRef,description,businessId,payerRef,selectedDate } = req.body;
     const jwsToken = generateJws()
 
     const authOptions = {
@@ -92,7 +92,7 @@ export default async function handler(req,res)
 							Txns: [
 							  {
 								SequenceId: sequenceID,
-								TxnDate: moment(date).format("MM/DD/YYYY"),
+								TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
 								TxnAmt: amount,
 								WHAmt: "0"
 							  }
@@ -113,7 +113,7 @@ export default async function handler(req,res)
 			transaction.payeeRef = payeeRef
 			transaction.payerRef = payerRef
 			transaction.businessId = businessId
-			transaction.date = moment(date).format("MM/DD/YYYY"),
+			transaction.transactionDate = moment(selectedDate).format("MM/DD/YYYY"),
 			
 			transaction.save((err, trans)=>{
 				if (err) {
