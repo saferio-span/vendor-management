@@ -17,7 +17,7 @@ export const getServerSideProps = async (context)=>{
         transactions
       }
     }
-  }
+}
   
 export default function Home(props) {
     const transactions = props.transactions

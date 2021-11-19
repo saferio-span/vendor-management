@@ -56,6 +56,11 @@ const VendorNavbar = () => {
                                 <a className="nav-link">Home</a>
                             </Link>
                         </li>
+                        <li key="Home" className="nav-item">
+                            <Link href={`/vendor/viewForms/${payeeRef}`}>
+                                <a className="nav-link">View Completed Form</a>
+                            </Link>
+                        </li>
                     </ul>
 
                     <Link href='/vendor/profile'>
