@@ -7,6 +7,7 @@ import accessToken from "../../../config/generateAccessToken"
 
 connectDB()
 // accessToken()
+var accessTokenKey = accessToken()
 
 export default async function handler(req,res)
 {
@@ -24,13 +25,14 @@ export default async function handler(req,res)
 	
 	// const authURL = process.env.authUrl
 
-	var accessToken = null
-	try {
-		accessToken = accessToken()
-	} catch (err) {
+	console.log(`Access Token : ${accessTokenKey}`)
+	
+	// try {
+	// 	accessToken = accessToken()
+	// } catch (err) {
         
-        accessToken = null
-	}
+    //     accessToken = null
+	// }
 
 	// const accessRes = await axios.get(authURL,authOptions);
 	// console.log(accessRes.data)
@@ -62,11 +64,11 @@ export default async function handler(req,res)
 
 	// console.log(`Access token : ${accessToken}`)
 	
-	if(accessToken != null)
+	if(accessTokenKey != null)
 	{
 		const options = {
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
+				Authorization: `Bearer ${accessTokenKey}`,
 				'Content-Type': 'application/json',
 				Accept: 'application/json',
 			},
