@@ -174,7 +174,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                     <div className="col-6">
                                         <div className="form-group my-2">
                                             <label htmlFor="amount">Date</label>
-                                            <DatePicker selected={values.date } className="form-control" onChange={handleDateChange} />
+                                            <DatePicker selected={values.date } className="form-control" onChange={handleDateChange} maxDate={new Date()} />
                                         </div>
                                     </div>
                                     <div className="col-6">
