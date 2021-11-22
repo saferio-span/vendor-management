@@ -68,7 +68,7 @@ export default async function handler(req,res)
 	{
 		const options = {
 			headers: {
-				Authorization: `Bearer ${accessTokenKey}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 				Accept: 'application/json',
 			},
