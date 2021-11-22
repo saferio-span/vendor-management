@@ -3,6 +3,7 @@ import Transactions from "../../../models/transactionsModel"
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
 import axios from 'axios'
+import accessToken from "../../../config/generateAccessToken"
 
 connectDB()
 // accessToken()
@@ -11,20 +12,25 @@ export default async function handler(req,res)
 {
 
     const { amount,payeeRef,description,businessId,payerRef,selectedDate } = req.body;
-    const jwsToken = generateJws()
+    // const jwsToken = generateJws()
 
-    const authOptions = {
-		headers : {
-			Connection :"keep-alive",
-            Accept: "*/*",
-			Authentication: jwsToken,
-		},
-	};
+    // const authOptions = {
+	// 	headers : {
+	// 		Connection :"keep-alive",
+    //         Accept: "*/*",
+	// 		Authentication: jwsToken,
+	// 	},
+	// };
 	
+	// const authURL = process.env.authUrl
 
-	const authURL = process.env.authUrl
 	var accessToken = null
-
+	try {
+		accessToken = accessToken()
+	} catch (err) {
+        
+        accessToken = null
+	}
 
 	// const accessRes = await axios.get(authURL,authOptions);
 	// console.log(accessRes.data)
@@ -43,19 +49,18 @@ export default async function handler(req,res)
 	// accessToken = response.data.AccessToken;
 
 	//call the auth url using axios
-	try {
-		console.log(`Auth URL : ${authURL}`)
-		console.log(authOptions)
-		const accessRes = await axios.get(authURL,authOptions);
-		accessToken = accessRes.data.AccessToken;
-	} catch (err) {
-        console.log(`Access Token error`)
-		console.log(authOptions)
-        accessToken = null
-	}
+	// try {
+	// 	console.log(`Auth URL : ${authURL}`)
+	// 	console.log(authOptions)
+	// 	const accessRes = await axios.get(authURL,authOptions);
+	// 	accessToken = accessRes.data.AccessToken;
+	// } catch (err) {
+    //     console.log(`Access Token error`)
+	// 	console.log(authOptions)
+    //     accessToken = null
+	// }
 
 	// console.log(`Access token : ${accessToken}`)
-	
 	
 	if(accessToken != null)
 	{
@@ -123,8 +128,6 @@ export default async function handler(req,res)
 				}
 			});
 	
-	
-	
 		} catch (err) {
 			console.log(err)
 			res.status(err.response.status).send(err);
@@ -137,17 +140,17 @@ export default async function handler(req,res)
     
 }
 
-const generateJws = () => {
-	//setup the payload with Issuer, Subject, audience and Issued at.
-	console.log(`IAT :${Math.floor(new Date().getTime() / 1000)}`)
-	const payload = {
-		iss: process.env.clientID,
-		sub: process.env.clientID,
-		aud: process.env.userToken,
-		iat: Math.floor(new Date().getTime() / 1000)
-	};
+// const generateJws = () => {
+// 	//setup the payload with Issuer, Subject, audience and Issued at.
+// 	console.log(`IAT :${Math.floor(new Date().getTime() / 1000)}`)
+// 	const payload = {
+// 		iss: process.env.clientID,
+// 		sub: process.env.clientID,
+// 		aud: process.env.userToken,
+// 		iat: Math.floor(new Date().getTime() / 1000)
+// 	};
 
-	return jwt.sign(payload, process.env.clientSectet, {
-		expiresIn: 216000,
-	});
-};
+// 	return jwt.sign(payload, process.env.clientSectet, {
+// 		expiresIn: 216000,
+// 	});
+// };
