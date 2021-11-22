@@ -16,53 +16,27 @@ export default async function handler(req,res)
     const jwsToken = generateJws()
 
     const authOptions = {
-		headers : {
-			Connection :"keep-alive",
-            Accept: "*/*",
+		headers: {
 			Authentication: jwsToken,
 		},
 	};
 	
 	const authURL = process.env.authUrl
+	var accessToken = null
 
-	// console.log(`Access Token : ${accessTokenKey}`)
-
-	// try {
-	// 	accessToken = accessToken()
-	// } catch (err) {
-        
-    //     accessToken = null
-	// }
-
-	// const accessRes = await axios.get(authURL,authOptions);
-	// console.log(accessRes.data)
-	// accessToken = accessRes.data.AccessToken;
-
-	// const response = await fetch(authURL, {
-	// 	method: 'GET',
-	// 	headers: {
-	// 	  'Access-Control-Allow-Origin': '*',
-	// 	  'Access-Control-Allow-Headers': '*',
-	// 	  'Content-Type': 'application/json',
-	// 	  'Authentication': jwsToken,
-	// 	}
-	// });
-	// console.log(response)
-	// accessToken = response.data.AccessToken;
-
-	var accessToken = null;
+	console.log(`Auth URL : ${authURL}`)
 
 	//call the auth url using axios
 	try {
-		// console.log(`Auth URL : ${authURL}`)
-		// console.log(authOptions)
-		const accessRes = await axios.get(authURL,authOptions);
-		accessToken = accessRes.data.AccessToken;
+		const res = await axios.get(authURL, authOptions);
+		accessToken = res.data.AccessToken;
 	} catch (err) {
+        console.log(`Access Token error`)
+		console.log(err);
         accessToken = null
 	}
 
-	// console.log(`Access token : ${accessToken}`)
+	console.log(`Access token : ${accessToken}`)
 	
 	if(accessToken != null)
 	{
@@ -138,8 +112,6 @@ export default async function handler(req,res)
 	else{
 		res.status(401).send(`Access token is null`);
 	}
-
-    
 }
 
 const generateJws = () => {

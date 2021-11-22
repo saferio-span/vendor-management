@@ -28,7 +28,7 @@ const ViewForms = (props) => {
             <div className="container">
                 <h1>Completed WhCertificate </h1>
                 <Link href={url}>
-                                    <a target="_blank">{url}</a>
+                  <a target="_blank">{url}</a>
                 </Link>
                 <iframe className="my-1" title="wh" width="100%" height="600" src={url} />
             </div>

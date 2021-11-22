@@ -30,6 +30,8 @@ export default async function handler({ query: { payeeRef } },res)
         accessToken = null
 	}
 
+	console.log(`Access token : ${accessToken}`)
+
     const options = {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
