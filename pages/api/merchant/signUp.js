@@ -8,6 +8,9 @@ connectDB()
 
 export default async function handler(req,res)
 {
+	const apiUrl = global.localStorage.getItem('apiUrl')
+	const authUrl = global.localStorage.getItem('authUrl')
+	const envName = global.localStorage.getItem('environmentName')
     const random = Math.floor((Math.random() * 1000000000) + 1);
 
     var businessID = "";
@@ -21,14 +24,14 @@ export default async function handler(req,res)
 	};
 	
 
-	const authURL = process.env.authUrl
+	// const authURL = process.env.authUrl
 	var accessToken = null
 
-	console.log(`Auth URL : ${authURL}`)
+	// console.log(`Auth URL : ${authUrl}`)
 
 	//call the auth url using axios
 	try {
-		const res = await axios.get(authURL, authOptions);
+		const res = await axios.get(authUrl, authOptions);
 		accessToken = res.data.AccessToken;
 	} catch (err) {
         console.log(`Access Token error`)
@@ -36,7 +39,7 @@ export default async function handler(req,res)
         accessToken = null
 	}
 
-    const endPoint = `${process.env.apiUrl}/Business/Create`;
+    const endPoint = `${apiUrl}/Business/Create`;
 	const {
 		businessName,
 		ein,
@@ -97,6 +100,9 @@ export default async function handler(req,res)
     merchant.email = req.body.email
     merchant.password = bcrypt.hashSync(req.body.password, 10)
     merchant.payerRef = `Pr${random}`
+	merchant.environment = envName
+
+	
 
     merchant.save((err, userCreated)=>{
         if (err) {
@@ -116,13 +122,13 @@ export default async function handler(req,res)
 const generateJws = () => {
 	// setup the payload with Issuer, Subject, audience and Issued at.
 	const payload = {
-		iss: process.env.clientID,
-		sub: process.env.clientID,
-		aud: process.env.userToken,
-		iat: Math.floor(new Date().getTime() / 1000),
+		iss: global.localStorage.getItem('clientId'),
+		sub: global.localStorage.getItem('clientId'),
+		aud: global.localStorage.getItem('userToken'),
+		iat: Math.floor(new Date().getTime() / 1000)
 	};
 
-	return jwt.sign(payload, process.env.clientSectet, {
+	return jwt.sign(payload, global.localStorage.getItem('clientSecret'), {
 		expiresIn: 216000,
 	});
 };

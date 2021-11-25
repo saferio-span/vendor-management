@@ -25,6 +25,16 @@ const AddAffiliates = () => {
         password: ''
 	});
 
+    const [validateValues, setValidateValues] = useState({
+        name:'',
+        address1:'',
+        city:'',
+        state:'',
+        zip:'',
+        email: '',
+		password: '',
+	});
+
     useEffect(()=>{
         if(user_details)
         {
@@ -36,52 +46,68 @@ const AddAffiliates = () => {
     const handleSubmit =async (e)=>{
         e.preventDefault()
 
-        const hasEmptyField = Object.values(values).some((element)=>element==='')
+        const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
-            toast.error("Please fill in all fields")
+            toast.error("Please fill in all fields which are mandatory(*)")
             return false
         }
 
-        const res = await axios.post(`/api/affiliate/signUp`,{
-            merchantID: merchantID,
-            name: values.name,
-            address1: values.address1,
-            address2: values.address2,
-            city: values.city,
-            state: values.state,
-            zip: values.zip,
-            email: values.email,
-            password: values.password
-        })
+        const availablity = await axios.get(`/api/affiliate/findByEmail/${values.email}`)
 
-        const user = await res.data
-        if(user)
+        if(availablity.data.length > 0)
         {
-            setValues({
-                name:'',
-                address1:'',
-                address2:'',
-                city:'',
-                state:'',
-                zip:'',
-                email: '',
-                password: ''
-            })
-            toast("Affiliate created successfully")
-            Router.push('/merchant/home')
-            return true
+            toast.error("Email has been used already. Please try again using another email")
+            return false
         }
         else
         {
-            toast("Affiliate cannot be created")
-            return false
+
+            const res = await axios.post(`/api/affiliate/signUp`,{
+                merchantID: merchantID,
+                name: values.name,
+                address1: values.address1,
+                address2: values.address2,
+                city: values.city,
+                state: values.state,
+                zip: values.zip,
+                email: values.email,
+                password: values.password
+            })
+
+            const user = await res.data
+            if(user)
+            {
+                setValues({
+                    name:'',
+                    address1:'',
+                    address2:'',
+                    city:'',
+                    state:'',
+                    zip:'',
+                    email: '',
+                    password: ''
+                })
+                toast("Affiliate created successfully")
+                Router.push('/merchant/home')
+                return true
+            }
+            else
+            {
+                toast("Affiliate cannot be created")
+                return false
+            }
         }
     }
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
+
+        if(name !== "address2")
+        {
+            setValidateValues({ ...validateValues, [name]: value });
+        }
 	};
 
     // const handlePasswordChange = (e) => {
@@ -93,10 +119,12 @@ const AddAffiliates = () => {
         if(e !== null)
         {
             setValues({ ...values, state: e.value });
+            setValidateValues({ ...validateValues, state: e.value });
         }
         else
         {
             setValues({ ...values, state: "" });
+            setValidateValues({ ...validateValues, state: "" });
         }
     }
 
@@ -122,7 +150,7 @@ const AddAffiliates = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="businessName">Name</label>
+                                        <label htmlFor="businessName">Name<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="name" name="name" placeholder="Name" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -138,7 +166,7 @@ const AddAffiliates = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="state">State </label>
+                                        <label htmlFor="state">State<span className="text-danger font-weight-bold">*</span> </label>
                                         <Select
                                             className="basic-single"
                                             classNamePrefix="select"
@@ -157,7 +185,7 @@ const AddAffiliates = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="contactEmail">Email</label>
+                                        <label htmlFor="contactEmail">Email<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="email" className="form-control" id="email" placeholder="Email" name="email" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -167,7 +195,7 @@ const AddAffiliates = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="address1">Address 1</label>
+                                        <label htmlFor="address1">Address 1<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="address1" name="address1" placeholder="Address 1" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -175,7 +203,7 @@ const AddAffiliates = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="city">City </label>
+                                        <label htmlFor="city">City<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="city" name="city" placeholder="City" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -183,7 +211,7 @@ const AddAffiliates = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="zip">ZIP </label>
+                                        <label htmlFor="zip">ZIP<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="zip" name="zip" placeholder="ZIP" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -191,7 +219,7 @@ const AddAffiliates = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="password">Password</label>
+                                        <label htmlFor="password">Password<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="password" className="form-control" id="password" placeholder="Password" name="password" onChange={handleInputChange} />
                                     </div>
                                 </div>

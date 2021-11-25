@@ -8,14 +8,15 @@ export default async function handler({ query: { payeeRef } },res)
 {
 
 	const jwsToken = generateJws()
-
+	const apiUrl = global.localStorage.getItem('apiUrl')
+	const authURL = global.localStorage.getItem('authUrl')
     const authOptions = {
 		headers: {
 			Authentication: jwsToken,
 		},
 	};
 	
-	const authURL = process.env.authUrl
+	// const authURL = process.env.authUrl
 	var accessToken = null
 
 	console.log(`Auth URL : ${authURL}`)
@@ -40,7 +41,7 @@ export default async function handler({ query: { payeeRef } },res)
 		},
 	};
 
-	const endPoint = `${process.env.apiUrl}/WhCertificate/Get?PayeeRef=${payeeRef}`;
+	const endPoint = `${apiUrl}/WhCertificate/Get?PayeeRef=${payeeRef}`;
 	console.log(endPoint);
 	if(accessToken == null)
 	{
@@ -65,13 +66,13 @@ export default async function handler({ query: { payeeRef } },res)
 const generateJws = () => {
 	//setup the payload with Issuer, Subject, audience and Issued at.
 	const payload = {
-		iss: process.env.clientID,
-		sub: process.env.clientID,
-		aud: process.env.userToken,
-		iat: Math.floor(new Date().getTime() / 1000),
+		iss: global.localStorage.getItem('clientId'),
+		sub: global.localStorage.getItem('clientId'),
+		aud: global.localStorage.getItem('userToken'),
+		iat: Math.floor(new Date().getTime() / 1000)
 	};
 
-	return jwt.sign(payload, process.env.clientSectet, {
+	return jwt.sign(payload, global.localStorage.getItem('clientSecret'), {
 		expiresIn: 216000,
 	});
 };

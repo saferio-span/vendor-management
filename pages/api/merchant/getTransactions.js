@@ -9,6 +9,8 @@ connectDB()
 export default async function handler(req,res)
 {
 
+	const apiUrl = global.localStorage.getItem('apiUrl')
+	const authUrl = global.localStorage.getItem('authUrl')
     const { businessId } = req.body;
     const jwsToken = generateJws()
 
@@ -19,14 +21,14 @@ export default async function handler(req,res)
 	};
 	
 
-	const authURL = process.env.authUrl
+	// const authURL = process.env.authUrl
 	var accessToken = null
 
-	console.log(`Auth URL : ${authURL}`)
+	console.log(`Auth URL : ${authUrl}`)
 
 	//call the auth url using axios
 	try {
-		const res = await axios.get(authURL, authOptions);
+		const res = await axios.get(authUrl, authOptions);
 		accessToken = res.data.AccessToken;
 	} catch (err) {
         console.log(`Access Token error`)
@@ -44,7 +46,7 @@ export default async function handler(req,res)
 		},
 	};
 
-	const endPoint = `${process.env.apiUrl}/Form1099Transactions?BusinessId=${businessId}&TaxYear=2020&Page=1&PageSize=10&TxnFromDate=01-01-2020&TxnToDate=12-30-2021`;
+	const endPoint = `${apiUrl}/Form1099Transactions?BusinessId=${businessId}&TaxYear=2020&Page=1&PageSize=10&TxnFromDate=01-01-2020&TxnToDate=12-30-2021`;
 	console.log(endPoint);
 	try {
 		const output = await axios.get(endPoint,options);
@@ -59,13 +61,13 @@ export default async function handler(req,res)
 const generateJws = () => {
 	//setup the payload with Issuer, Subject, audience and Issued at.
 	const payload = {
-		iss: process.env.clientID,
-		sub: process.env.clientID,
-		aud: process.env.userToken,
-		iat: Math.floor(new Date().getTime() / 1000),
+		iss: global.localStorage.getItem('clientId'),
+		sub: global.localStorage.getItem('clientId'),
+		aud: global.localStorage.getItem('userToken'),
+		iat: Math.floor(new Date().getTime() / 1000)
 	};
 
-	return jwt.sign(payload, process.env.clientSectet, {
+	return jwt.sign(payload, global.localStorage.getItem('clientSecret'), {
 		expiresIn: 216000,
 	});
 };

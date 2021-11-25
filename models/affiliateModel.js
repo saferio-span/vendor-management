@@ -46,6 +46,9 @@ const affiliateSchema = new mongoose.Schema({
     type: String,
     default: '-'
   },
+  environment: { 
+    type: String
+  },
   
 }, { timestamps: true })
 

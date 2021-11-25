@@ -115,16 +115,22 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                     $('.modal-backdrop').hide();
                 }
             }
-            else
-            {
-                toast.error(res.data)
-                return false
-            }
-            
+            // else
+            // {
+            //     toast.error(res.data)
+            //     return false
+            // }
 
+            // if(res.status != 200)
+            // {
+            //     console.log(`401 Res`)
+            //     console.log(res)
+            // }
           } catch (error) {
             console.log(error)
-            return null
+            toast.error(error)
+            return false
+            // return null
           }
 
     }
@@ -174,7 +180,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                     <div className="col-6">
                                         <div className="form-group my-2">
                                             <label htmlFor="amount">Date</label>
-                                            <DatePicker selected={values.date } className="form-control" onChange={handleDateChange} maxDate={new Date()} />
+                                            <DatePicker selected={values.date } className="form-control" onChange={handleDateChange} />
                                         </div>
                                     </div>
                                     <div className="col-6">

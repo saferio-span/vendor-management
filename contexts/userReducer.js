@@ -2,7 +2,8 @@ export const initialState = {
   session_user: null,
   user_details:null,
   user_details_status:true,
-  transaction_details: null
+  transaction_details: null,
+  environment:null,
 };
 
 export const actionTypes = {
@@ -10,9 +11,13 @@ export const actionTypes = {
   SET_USER_DETAILS: 'SET_USER_DETAILS',
   SET_USER_DETAILS_STATUS: 'SET_USER_DETAILS_STATUS',
   SET_TRANSACTION_DETAILS: 'SET_TRANSACTION_DETAILS',
+  SET_ENVIRONMENT_DETAILS: 'SET_ENVIRONMENT_DETAILS',
 };
 
 const reducer = (state, action) => {
+  // console.log("Context Console -------------")
+  // console.log(action)
+  // console.log("Context Console -------------")
   switch (action.type) {
     case actionTypes.SET_SESSION_DATA:
       // console.log(`Session Data from Reducer`)
@@ -35,6 +40,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         transaction_details: action.data,
+      };
+    case actionTypes.SET_ENVIRONMENT_DETAILS:
+      return {
+        ...state,
+        environment: action.data,
       };
     default:
       return state;

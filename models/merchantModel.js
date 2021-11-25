@@ -40,6 +40,9 @@ const merchantSchema = new mongoose.Schema({
   payerRef: { 
     type: String
   },
+  environment: { 
+    type: String
+  },
   
 }, { timestamps: true })
 

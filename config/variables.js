@@ -410,8 +410,41 @@ const countries = {
     785:"Saint Barthelemy"
 }
 
+const credentials = [
+    {
+        name:"Saferio Sandbox",
+        clientId:"a0f968c860d96f60",
+        clientSecret:"TnUW4joWp3JnyJegUHAQ",
+        userToken:"b736720e7db84229a72c4fbbdc72b807",
+        environment:"sandbox"
+    },
+    {
+        name:"Saferio Staging",
+        clientId:"a770ea413cb45cbc",
+        clientSecret:"KBE0d9YevBwcFPqi6I7y6A",
+        userToken:"fc534b324bd0462ea8a27ca735619759",
+        environment:"staging"
+    },
+    {
+        name:"Naga Sandbox",
+        clientId:"a0f968c860d96f60",
+        clientSecret:"TnUW4joWp3JnyJegUHAQ",
+        userToken:"b736720e7db84229a72c4fbbdc72b807",
+        environment:"sandbox"
+    }
+]
+
+const urls = {
+    authUrlSandbox: "https://testoauth.expressauth.net/v2/tbsauth",
+	apiUrlSandbox: "https://testapi.taxbandits.com/v1.6.1",
+	authUrlStaging: "https://oauth.expressauth.net/v2/tbsauth",
+	apiUrlStaging: "https://api.taxbandits.com/v1.6.1",
+}
+
 module.exports = {
     states,
     statesShort,
-    countries
+    countries,
+    credentials,
+    urls
 }

@@ -7,6 +7,7 @@ connectDB()
 export default async function handler(req,res)
 {
     const random = Math.floor((Math.random() * 1000000000) + 1);
+    const envName = global.localStorage.getItem('environmentName')
     // res.status(200).send(businessID);
     const affiliate = new Affiliate()
 	affiliate.name = req.body.name
@@ -19,6 +20,7 @@ export default async function handler(req,res)
     affiliate.email = req.body.email
     affiliate.password = bcrypt.hashSync(req.body.password, 10)
     affiliate.payeeRef = `Pe${random}`
+    affiliate.environment = envName
 
     affiliate.save((err, userCreated)=>{
         if (err) {
@@ -28,9 +30,4 @@ export default async function handler(req,res)
             res.status(200).send(userCreated);
         }
     });
-
-    // console.log(`Pr${random}`)
-    // console.log(`Sign Up`)
-    // console.log(merchant)
-    // res.status(200).send(merchant);
 }

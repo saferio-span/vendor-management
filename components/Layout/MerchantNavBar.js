@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useState,useEffect} from 'react'
 import Router from 'next/router'
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
@@ -8,13 +8,17 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 const MerchantNavBar = () => {
     
-
+    const [payerRef,setPayerRef]=useState()
     const handleLogOut = ()=>{
         localStorage.clear();
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
             data: null,
         })
+        // dispatch({
+        //     type: actionTypes.SET_ENVIRONMENT_DETAILS,
+        //     data: null,
+        // })
         Router.push('/merchant/login')
     }
 
@@ -23,7 +27,8 @@ const MerchantNavBar = () => {
         const res = await axios.get(`/api/merchant/${id}`)
         const details = res.data
 
-        console.log(details)
+        setPayerRef(details[0].payerRef)
+
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
             data: details[0],
@@ -33,7 +38,6 @@ const MerchantNavBar = () => {
     useEffect(() => {
 
         fetchdata()
-
         //eslint-disable-next-line
     }, [])
 
@@ -55,8 +59,13 @@ const MerchantNavBar = () => {
                             </Link>
                         </li>
                         <li key="transactions" className="nav-item">
-                            <Link href='/merchant/transactions'>
+                            <Link href={`/merchant/transactions/${payerRef}`}>
                                 <a className="nav-link">Transactions</a>
+                            </Link>
+                        </li>
+                        <li key="webhook" className="nav-item">
+                            <Link href='/merchant/webHook'>
+                                <a className="nav-link">Webhook</a>
                             </Link>
                         </li>
                     </ul>

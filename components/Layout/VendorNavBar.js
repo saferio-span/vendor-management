@@ -9,12 +9,17 @@ import axios from 'axios';
 const VendorNavbar = () => {
     const [{ user_details }, dispatch] = useUserValue();
     const [payeeRef,setPayeeRef] = useState();
+    const [pdfUrl,setPdfUrl] = useState(null);
     const handleLogOut = ()=>{
         localStorage.clear();
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
             data: null,
         })
+        // dispatch({
+        //     type: actionTypes.SET_ENVIRONMENT_DETAILS,
+        //     data: null,
+        // })
         Router.push('/vendor/login')
     }
 
@@ -24,6 +29,10 @@ const VendorNavbar = () => {
         const details = affiliateRes.data
 
         // console.log(details)
+        if(details.user[0].pdfUrl !== "-")
+        {
+            setPdfUrl(details.user[0].pdfUrl)
+        }
 
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
@@ -56,15 +65,20 @@ const VendorNavbar = () => {
                                 <a className="nav-link">Home</a>
                             </Link>
                         </li>
-                        <li key="Home" className="nav-item">
-                            <Link href={`/vendor/viewForms/${payeeRef}`}>
-                                <a className="nav-link">View Completed Form</a>
-                            </Link>
-                        </li>
+                        {
+                            pdfUrl && <>
+                                <li key="completedForm" className="nav-item">
+                                    <Link href={`/vendor/viewForms/${payeeRef}`}>
+                                        <a className="nav-link">View Completed Form</a>
+                                    </Link>
+                                </li>
+                            </>
+                        }
+                        
                     </ul>
 
                     <Link href='/vendor/profile'>
-                            <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
+                        <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>
                     <button className="btn btn-danger my-2 float-end" onClick={handleLogOut}>Logout <i className="bi bi-box-arrow-right"></i></button>
                 </div>

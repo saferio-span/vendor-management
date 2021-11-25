@@ -7,6 +7,7 @@ import { toast,ToastContainer } from "react-toastify"
 import Router from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
+import { useUserValue } from '../../contexts/UserContext'
 
 export const getServerSideProps = async (context)=>{
     const { req } = context;
@@ -31,7 +32,7 @@ export const getServerSideProps = async (context)=>{
 const SignUp = (props) => {
 
     var options = []
-
+    const [{user_details,environment},dispatch] = useUserValue();
     const [values, setValues] = useState({
 		merchantId:'',
         name:'',
@@ -45,14 +46,28 @@ const SignUp = (props) => {
         confirmPassword:''
 	});
 
+    const [validateValues, setValidateValues] = useState({
+		merchantId:'',
+        name:'',
+        address1:'',
+        city:'',
+        state:'',
+        zip:'',
+        email: '',
+		password: '',
+        confirmPassword:''
+	});
+
     const handleBusinessChange = (e)=>{
         if(e !== null)
         {
             setValues({ ...values, merchantId: e.value });
+            setValidateValues({ ...validateValues, merchantId: e.value });
         }
         else
         {
             setValues({ ...values, merchantId: "" });
+            setValidateValues({ ...validateValues, merchantId: "" });
         }
     }
 
@@ -60,71 +75,88 @@ const SignUp = (props) => {
         if(e !== null)
         {
             setValues({ ...values, state: e.value });
+            setValidateValues({ ...validateValues, state: e.value });
         }
         else
         {
             setValues({ ...values, state: "" });
-        }
+            setValidateValues({ ...validateValues, state: "" });
+        } 
     }
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
+
+        if(name !== "address2")
+        {
+            setValidateValues({ ...validateValues, [name]: value });
+        }
 	};
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
         
-        const hasEmptyField = Object.values(values).some((element)=>element==='')
+        const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
-            toast.error("Please fill in all fields")
+            toast.error("Please fill in all fields which are mandatory(*)")
             return false
         }
 
-        if(values.password === values.confirmPassword)
+        const availablity = await axios.get(`/api/affiliate/findByEmail/${values.email}`)
+
+        if(availablity.data.length > 0)
         {
-            const res = await axios.post(`/api/affiliate/signUp`,{
-                merchantID: values.merchantId,
-                name: values.name,
-                address1: values.address1,
-                address2: values.address2,
-                city: values.city,
-                state: values.state,
-                zip: values.zip,
-                email: values.email,
-                password: values.password
-            })
-    
-            const user = await res.data
-            if(user)
-            {
-                setValues({
-                    merchantID: '',
-                    name:'',
-                    address1:'',
-                    address2:'',
-                    city:'',
-                    state:'',
-                    zip:'',
-                    email: '',
-                    password: '',
-                    confirmPassword:''
-                })
-                toast("Account created successfully")
-                Router.push('/vendor/login')
-                return true
-            }
-            else
-            {
-                toast("Account cannot be created")
-                return false
-            }
+            toast.error("Email has been used already. Please try again using another email")
+            return false
         }
         else
         {
-            toast.error("Password does not match !")
-            return false
+            if(values.password === values.confirmPassword)
+            {
+                const res = await axios.post(`/api/affiliate/signUp`,{
+                    merchantID: values.merchantId,
+                    name: values.name,
+                    address1: values.address1,
+                    address2: values.address2,
+                    city: values.city,
+                    state: values.state,
+                    zip: values.zip,
+                    email: values.email,
+                    password: values.password,
+                })
+        
+                const user = await res.data
+                if(user)
+                {
+                    setValues({
+                        merchantID: '',
+                        name:'',
+                        address1:'',
+                        address2:'',
+                        city:'',
+                        state:'',
+                        zip:'',
+                        email: '',
+                        password: '',
+                        confirmPassword:''
+                    })
+                    toast("Account created successfully")
+                    Router.push('/vendor/login')
+                    return true
+                }
+                else
+                {
+                    toast("Account cannot be created")
+                    return false
+                }
+            }
+            else
+            {
+                toast.error("Password does not match !")
+                return false
+            }
         }
     }
     if(states)
@@ -147,7 +179,7 @@ const SignUp = (props) => {
                     <div className="row">
                         <div className="col-6">
                             <div className="form-group my-2">
-                                <label htmlFor="business">Business </label>
+                                <label htmlFor="business">Business<span className="text-danger font-weight-bold">*</span> </label>
                                 <Select
                                     className="basic-single"
                                     classNamePrefix="select"
@@ -167,7 +199,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="name">Name</label>
+                                        <label htmlFor="name">Name<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="name" placeholder="Name" name="name" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -175,15 +207,15 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="address1">Address 1</label>
-                                        <textarea className="form-control" id="address1" name="address1" rows="3" onChange={handleInputChange}></textarea>
+                                        <label htmlFor="address1">Address 1<span className="text-danger font-weight-bold">*</span></label>
+                                        <input type="text" className="form-control" id="address1" name="address1" placeholder="Address 1" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="city">City </label>
+                                        <label htmlFor="city">City <span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="city" name="city" placeholder="City" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -191,7 +223,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="zip">ZIP </label>
+                                        <label htmlFor="zip">ZIP <span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="zip" name="zip" placeholder="ZIP" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -201,7 +233,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="email">Email</label>
+                                        <label htmlFor="email">Email<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="email" className="form-control" id="email" placeholder="Email" name="email" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -210,14 +242,14 @@ const SignUp = (props) => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="address2">Address 2</label>
-                                        <textarea className="form-control" id="address2" name="address2" rows="3" onChange={handleInputChange} ></textarea>
+                                        <input type="text" className="form-control" id="address2" name="address2" placeholder="Address 2" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="state">State </label>
+                                        <label htmlFor="state">State<span className="text-danger font-weight-bold">*</span> </label>
                                         <Select
                                             className="basic-single"
                                             classNamePrefix="select"
@@ -241,7 +273,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="password">Password</label>
+                                        <label htmlFor="password">Password<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="password" className="form-control" id="password" placeholder="Password" name="password" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -251,7 +283,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="confirmPassword">Confirm Password</label>
+                                        <label htmlFor="confirmPassword">Confirm Password<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="password" className="form-control" id="confirmPassword" placeholder="Confirm Password" name="confirmPassword" onChange={handleInputChange} />
                                     </div>
                                 </div>

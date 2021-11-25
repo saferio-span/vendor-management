@@ -7,15 +7,17 @@ import axios from "axios"
 import 'react-toastify/dist/ReactToastify.css';
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
+import { credentials,urls } from '../../config/variables';
 
 // const Login = ({providers,session,host}) => {
 const Login = () => {
     // console.log({session,host})
+    var options = []
     const [values, setValues] = useState({
         email: '',
-		password: ''
+		password: '',
 	});
-    const [{user_details},dispatch] = useUserValue();
+    const [{user_details,environment},dispatch] = useUserValue();
     
     useEffect(()=>{
 
@@ -28,7 +30,11 @@ const Login = () => {
             //     query: { user_details: user_details },
             // })
         }
-        // if(session) Router.push('/merchant/home')
+        if(environment===null)
+        {
+            Router.push('/')
+        }
+
         //eslint-disable-next-line
     })
     // if(session) return null
@@ -43,9 +49,30 @@ const Login = () => {
         }
 
         try {
+            // const cred = credentials.filter((user)=>user.name===environment.environment)
+            // let authUrl = ""
+            // let apiUrl = ""
+            // console.log("Assigned Credentials")
+            // console.log(cred)
+
+            // if(cred[0].environment === "sandbox")
+            // {
+            //     apiUrl= urls.apiUrlSandbox
+            //     authUrl= urls.authUrlSandbox
+            // }
+
+            // if(cred[0].environment === "staging")
+            // {
+            //     apiUrl= urls.apiUrlStaging
+            //     authUrl= urls.authUrlStaging
+            // }
+
             const res = await axios.post(`/api/affiliate/login`,{
                 email: values.email,
                 password: values.password,
+                // environment: cred[0],
+                // apiUrl,
+                // authUrl
             })
             const user = await res.data
             if(user.length)
@@ -57,10 +84,11 @@ const Login = () => {
                     type: actionTypes.SET_USER_DETAILS,
                     data: user[0],
                 })
-                Router.push({
-                    pathname: '/vendor/home',
-                    query: { user_details: user_details },
-                })
+                // Router.push({
+                //     pathname: '/vendor/home',
+                //     query: { user_details: user_details },
+                // })
+                Router.push(`/vendor/home/${user[0].payeeRef}`)
             }
           } catch (error) {
             toast.error("Invalid Email Id or Password")
@@ -80,17 +108,35 @@ const Login = () => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
 	};
+
+
+    if(credentials)
+    {   
+        for(const key in credentials )
+        {
+            options.push({ value: credentials[key].name, label: credentials[key].name })
+        }
+    }
  
     return (
         <>
             <ToastContainer />
-            <h1 className="d-flex justify-content-center align-items-center my-5 "> Vendor Management</h1>
+            {/* <h1 className="d-flex justify-content-center align-items-center my-5 "> Vendor Management</h1> */}
             <div className={`${style.loginContainer} d-flex justify-content-center align-items-center my-5`}>
                 <div className={`${style.innerContainer} border border-1 max-auto p-4 shadow`}>
                     
-                    <h2 className={`${style.heading} text-center fw-bolder text-uppercase`}>
-                       Vendor Login
-                    </h2>
+                <div className="row">
+                        <div className="col-10">
+                            <h3 className={`${style.heading} fw-bolder text-center text-uppercase`}>
+                                     Vendor Login
+                            </h3>
+                        </div>
+                        <div className="col-2">
+                            <Link href='/'>
+                                <a className="btn btn-warning">Back</a>
+                            </Link>
+                        </div>
+                    </div>
 
                     {/* <LoginBtn 
                         provider={providers.google}
