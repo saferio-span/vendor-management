@@ -3,7 +3,7 @@ export const initialState = {
   user_details:null,
   user_details_status:true,
   transaction_details: null,
-  environment:null,
+  environment:{},
 };
 
 export const actionTypes = {

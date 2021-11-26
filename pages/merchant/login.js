@@ -32,7 +32,7 @@ const Login = () => {
         }
 
         console.log(environment)
-        if(environment===null)
+        if(Object.keys(environment).length === 0)
         {
             Router.push('/')
         }

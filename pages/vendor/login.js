@@ -23,7 +23,7 @@ const Login = () => {
 
         // const sess_email = localStorage.getItem('email')
         console.log(environment)
-        if(environment===null)
+        if(Object.keys(environment).length === 0)
         {
             Router.push('/')
             return false
