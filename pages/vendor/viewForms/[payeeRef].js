@@ -6,7 +6,7 @@ import Link from "next/link";
 import moment from 'moment'
 
 export const getServerSideProps = async (context)=>{
-    const { params,req } = context;
+    const { params,req,query } = context;
     const { origin } = absoluteUrl(req)
 
     // const formsRes = await axios.get(`${origin}/api/affiliate/getCompletedForms/${params.payeeRef}`)
