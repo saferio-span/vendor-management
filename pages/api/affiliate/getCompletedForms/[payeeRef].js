@@ -5,7 +5,7 @@ import {credentials} from "../../../../config/variables"
 
 connectDB()
 
-export default async function handler({ query: { payeeRef } },res)
+export default async function handler(req,res)
 {
 
 	const cred = credentials.filter((user)=>user.name===req.body.envName)
@@ -50,7 +50,7 @@ export default async function handler({ query: { payeeRef } },res)
 		},
 	};
 
-	const endPoint = `${apiUrl}/WhCertificate/Get?PayeeRef=${payeeRef}`;
+	const endPoint = `${apiUrl}/WhCertificate/Get?PayeeRef=${req.query.payeeRef}`;
 	console.log(endPoint);
 	if(accessToken == null)
 	{
