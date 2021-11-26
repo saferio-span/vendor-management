@@ -1,6 +1,7 @@
 import connectDB from "../../../config/connectDB";
 import Merchant from "../../../models/merchantModel"
 import bcrypt from 'bcrypt';
+import {credentials} from "../../../config/variables"
 // import { LocalStorage } from "node-localstorage";
 
 connectDB()
@@ -17,8 +18,15 @@ export default async function handler(req,res)
 {
     // console.log(`In login handler`)
     // console.log(req.body)
+    // const envName = global.localStorage.getItem('environmentName')
+    
+    const envName = req.body.env.name
+    const cred = credentials.filter((user)=>user.name===envName)
+    console.log(cred)
+
     await Merchant.find({
-        email: req.body.email
+        email: req.body.email,
+        environment:envName
     }, (err, user)=>{
       if (err){
         return res.status(401).send('User not found. Please Sign in.');
@@ -36,7 +44,7 @@ export default async function handler(req,res)
             comparePassword(req.body.password,user[0].password).then(function(result) {
                 if(result)
                 {
-                    res.send(user) 
+                    res.send(user)
                 }
                 else
                 {
@@ -47,5 +55,4 @@ export default async function handler(req,res)
         }
       }     
     }).clone().catch(function(err){ console.log(err)})
-    
 }

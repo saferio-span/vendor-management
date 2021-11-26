@@ -10,10 +10,12 @@ import absoluteUrl from 'next-absolute-url'
 import { useUserValue } from '../../contexts/UserContext'
 
 export const getServerSideProps = async (context)=>{
-    const { req } = context;
+    const { req,query } = context;
     const { origin } = absoluteUrl(req)
   
-    const res = await axios.get(`${origin}/api/merchant/getAll`)
+    const res = await axios.post(`${origin}/api/merchant/getAll`,{
+        envName:query.envName
+    })
     const merchantsData = await res.data
 
     const merchants = []
@@ -33,6 +35,7 @@ const SignUp = (props) => {
 
     var options = []
     const [{user_details,environment},dispatch] = useUserValue();
+    console.log(environment)
     const [values, setValues] = useState({
 		merchantId:'',
         name:'',
@@ -113,8 +116,36 @@ const SignUp = (props) => {
         }
         else
         {
+
             if(values.password === values.confirmPassword)
             {
+                console.log(
+                    {
+                        merchantID: values.merchantId,
+                        name: values.name,
+                        address1: values.address1,
+                        address2: values.address2,
+                        city: values.city,
+                        state: values.state,
+                        zip: values.zip,
+                        email: values.email,
+                        password: values.password,
+                        envName: environment.name
+                    }
+                )
+                // const res = await axios.post(`/api/affiliate/signUp`,{
+                //     merchantID: values.merchantId,
+                //     name: values.name,
+                //     address1: values.address1,
+                //     address2: values.address2,
+                //     city: values.city,
+                //     state: values.state,
+                //     zip: values.zip,
+                //     email: values.email,
+                //     password: values.password,
+                //     envName: environment.envName
+                // })
+
                 const res = await axios.post(`/api/affiliate/signUp`,{
                     merchantID: values.merchantId,
                     name: values.name,
@@ -125,6 +156,7 @@ const SignUp = (props) => {
                     zip: values.zip,
                     email: values.email,
                     password: values.password,
+                    envName: environment.name
                 })
         
                 const user = await res.data

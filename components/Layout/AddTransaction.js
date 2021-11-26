@@ -12,7 +12,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 
     const router = useRouter();
     const options = []
-    const [{ user_details }, dispatch] = useUserValue();
+    const [{ user_details,environment }, dispatch] = useUserValue();
 
     let affiliateName = affiliates.map(affiliate =>{
         if(affiliate.payeeRef === defaultAffiliate)
@@ -85,6 +85,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 businessId : user_details.businessID,
                 payerRef : user_details.payerRef,
                 selectedDate : values.date,
+                envName: environment.name
             })
             const result = await res.data
 

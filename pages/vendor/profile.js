@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const MerchantProfile = () => {
     var options = []
-    const [{ user_details }, dispatch] = useUserValue();
+    const [{ user_details,environment}, dispatch] = useUserValue();
     const [values, setValues] = useState({
         id:"",
         name: '',
@@ -38,7 +38,6 @@ const MerchantProfile = () => {
                 zip: data.zip,
             });
             setPayeeRef(data.payeeRef)
-
         }
         //eslint-disable-next-line
     },[user_details])
@@ -270,7 +269,16 @@ const MerchantProfile = () => {
                     query: { id: user_details._id },
                     }}
                 > */}
-                <Link href={`/vendor/completeWh?id=${values.id}`}>
+                {/* <Link href={`/vendor/completeWh?id=${values.id}`}> */}
+                <Link href={
+                    { 
+                        pathname: `/vendor/completeWh`, 
+                        query: {
+                            id: values.id,
+                            envName: environment.name
+                        }
+                    }
+                }>
                     <a className="btn btn-warning position-absolute top-50 start-50 translate-middle">Complete Wh</a>
                 </Link>
             </div>

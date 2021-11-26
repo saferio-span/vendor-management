@@ -8,14 +8,20 @@ connectDB()
 
 export default async function handler(req,res)
 {
-	const apiUrl = global.localStorage.getItem('apiUrl')
-	const authUrl = global.localStorage.getItem('authUrl')
-	const envName = global.localStorage.getItem('environmentName')
+	
     const random = Math.floor((Math.random() * 1000000000) + 1);
 
     var businessID = "";
 
-    const jwsToken = generateJws()
+
+	const apiUrl = req.body.apiUrl
+	const authUrl = req.body.authUrl
+	const envName = req.body.env.name
+	const clientId = req.body.env.clientId
+	const clientSecret = req.body.env.clientSecret
+	const userToken = req.body.env.userToken
+
+    const jwsToken = generateJws(clientId,clientSecret,userToken)
 
     const authOptions = {
 		headers: {
@@ -102,8 +108,6 @@ export default async function handler(req,res)
     merchant.payerRef = `Pr${random}`
 	merchant.environment = envName
 
-	
-
     merchant.save((err, userCreated)=>{
         if (err) {
             res.status(401).send(JSON.stringify(err));
@@ -119,16 +123,16 @@ export default async function handler(req,res)
     // res.status(200).send(merchant);
 }
 
-const generateJws = () => {
+const generateJws = (clientId,clientSecret,userToken) => {
 	// setup the payload with Issuer, Subject, audience and Issued at.
 	const payload = {
-		iss: global.localStorage.getItem('clientId'),
-		sub: global.localStorage.getItem('clientId'),
-		aud: global.localStorage.getItem('userToken'),
+		iss: clientId,
+		sub: clientId,
+		aud: userToken,
 		iat: Math.floor(new Date().getTime() / 1000)
 	};
 
-	return jwt.sign(payload, global.localStorage.getItem('clientSecret'), {
+	return jwt.sign(payload, clientSecret, {
 		expiresIn: 216000,
 	});
 };

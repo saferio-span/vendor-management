@@ -416,21 +416,27 @@ const credentials = [
         clientId:"a0f968c860d96f60",
         clientSecret:"TnUW4joWp3JnyJegUHAQ",
         userToken:"b736720e7db84229a72c4fbbdc72b807",
-        environment:"sandbox"
+        environment:"sandbox",
+        authUrl: "https://testoauth.expressauth.net/v2/tbsauth",
+	    apiUrl: "https://testapi.taxbandits.com/v1.6.1",
     },
     {
         name:"Saferio Staging",
         clientId:"a770ea413cb45cbc",
         clientSecret:"KBE0d9YevBwcFPqi6I7y6A",
         userToken:"fc534b324bd0462ea8a27ca735619759",
-        environment:"staging"
+        environment:"staging",
+        authUrl: "https://oauth.expressauth.net/v2/tbsauth",
+	    apiUrl: "https://api.taxbandits.com/v1.6.1",
     },
     {
         name:"Naga Sandbox",
         clientId:"a0f968c860d96f60",
         clientSecret:"TnUW4joWp3JnyJegUHAQ",
         userToken:"b736720e7db84229a72c4fbbdc72b807",
-        environment:"sandbox"
+        environment:"sandbox",
+        authUrl: "https://testoauth.expressauth.net/v2/tbsauth",
+	    apiUrl: "https://testapi.taxbandits.com/v1.6.1",
     }
 ]
 

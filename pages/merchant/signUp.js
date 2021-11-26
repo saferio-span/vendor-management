@@ -13,7 +13,7 @@ const SignUp = () => {
     const router = useRouter()
     var options = []
 
-    // const [{user_details,environment},dispatch] = useUserValue();
+    const [{user_details,environment},dispatch] = useUserValue();
     const [values, setValues] = useState({
 		businessName:'',
         ein:'',
@@ -94,6 +94,9 @@ const SignUp = () => {
                     contactName:values.contactName,
                     email: values.email,
                     password: values.password,
+                    env:environment,
+                    apiUrl:environment.apiUrl,
+                    authUrl:environment.authUrl
                 }).then(() => {
                     toast("User registered successfully")
                     router.push('/merchant/login')

@@ -23,9 +23,15 @@ const Login = () => {
         // const sess_email = localStorage.getItem('email')
         if(user_details)
         {
-            Router.push('/merchant/home')
+            Router.push({
+                pathname: '/merchant/home',
+                query: { 
+                    envName: environment.name
+                }
+            })
         }
 
+        console.log(environment)
         if(environment===null)
         {
             Router.push('/')
@@ -46,31 +52,12 @@ const Login = () => {
 
         try {
 
-            // const cred = credentials.filter((user)=>user.name===environment.environment)
-            // let authUrl = ""
-            // let apiUrl = ""
-            //     console.log("Assigned Credentials")
-            //     console.log(cred)
-
-            // if(cred[0].environment === "sandbox")
-            // {
-            //     apiUrl= urls.apiUrlSandbox
-            //     authUrl= urls.authUrlSandbox
-            // }
-
-            // if(cred[0].environment === "staging")
-            // {
-            //     apiUrl= urls.apiUrlStaging
-            //     authUrl= urls.authUrlStaging
-            // }
-
             const res = await axios.post(`/api/merchant/login`,{
                 email: values.email,
                 password: values.password,
-                // environment: cred[0],
-                // apiUrl,
-                // authUrl
+                env: environment
             })
+
             const user = await res.data
             if(user.length)
             {
@@ -83,7 +70,13 @@ const Login = () => {
                 })
 
                 console.log(user[0])
-                Router.push('/merchant/home')
+                // Router.push('/merchant/home')
+                Router.push({
+                    pathname: '/merchant/home',
+                    query: { 
+                        envName: environment.name
+                    }
+                })
             }
           } catch (error) {
             toast.error("Invalid Email Id or Password")
@@ -104,16 +97,16 @@ const Login = () => {
 		setValues({ ...values, [name]: value });
 	};
 
-    const handleSelectChange = (e)=>{
-        if(e !== null)
-        {
-            setValues({ ...values, environment: e.value });
-        }
-        else
-        {
-            setValues({ ...values, environment: "" });
-        }
-    }
+    // const handleSelectChange = (e)=>{
+    //     if(e !== null)
+    //     {
+    //         setValues({ ...values, environment: e.value });
+    //     }
+    //     else
+    //     {
+    //         setValues({ ...values, environment: "" });
+    //     }
+    // }
  
     return (
         <>

@@ -5,7 +5,8 @@ connectDB()
 
 export default async function handler(req,res)
 {
-	const envName = global.localStorage.getItem('environmentName')
+	// const envName = req.body.getItem('environmentName')
+	const envName = req.body.envName
 	try {
 		const affiliate = await Affiliate.find({environment:envName}).sort({ name: 'asc' }).limit(100);
 		res.status(200).json(affiliate);

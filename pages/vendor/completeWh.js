@@ -10,7 +10,7 @@ import VendorNavbar from '../../components/Layout/VendorNavBar'
 export const getServerSideProps = async (context)=>{
 
     const { req } = context;
-    const { id } = context.query;
+    const { id,envName } = context.query;
     const { origin } = absoluteUrl(req)
   
     const affiliateRes = await axios.get(`${origin}/api/affiliate/${id}`)
@@ -29,7 +29,8 @@ export const getServerSideProps = async (context)=>{
         zipCd:affiliateData[0].zip, 
         tinMatch:false,
         businessId : merchantData.businessId,
-        payerRef : merchantData.payerRef
+        payerRef : merchantData.payerRef,
+        envName : envName
     })
 
     const whdata = await res.data

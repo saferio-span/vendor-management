@@ -3,6 +3,7 @@ import Transactions from "../../../models/transactionsModel"
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
 import axios from 'axios'
+import {credentials} from "../../../config/variables"
 // import { LocalStorage } from "node-localstorage";
 // import accessToken from "../../../config/generateAccessToken"
 
@@ -15,11 +16,19 @@ export default async function handler(req,res)
 	// console.log(`Api Url From Local : ${global.localStorage.getItem('apiUrl')}`)
 	// console.log(`Auth Url From Local : ${global.localStorage.getItem('authUrl')}`)
 
-	const apiUrl = global.localStorage.getItem('apiUrl')
-	const authUrl = global.localStorage.getItem('authUrl')
+	// const apiUrl = global.localStorage.getItem('apiUrl')
+	// const authUrl = global.localStorage.getItem('authUrl')
 
-    const { amount,payeeRef,description,businessId,payerRef,selectedDate } = req.body;
-    const jwsToken = generateJws()
+    const { amount,payeeRef,description,businessId,payerRef,selectedDate,envName } = req.body;
+
+    const cred = credentials.filter((user)=>user.name===envName)
+    const apiUrl = cred[0].apiUrl
+	const authUrl = cred[0].authUrl
+	const clientId = cred[0].clientId
+	const clientSecret = cred[0].clientSecret
+	const userToken = cred[0].userToken
+
+    const jwsToken = generateJws(clientId,clientSecret,userToken)
 
     const authOptions = {
 		headers: {
@@ -126,20 +135,16 @@ export default async function handler(req,res)
 	}
 }
 
-const generateJws = () => {
-	//setup the payload with Issuer, Subject, audience and Issued at.
-	// console.log(`Client Id From Local : ${global.localStorage.getItem('clientId')}`)
-	// console.log(`Client Secret From Local : ${global.localStorage.getItem('clientSecret')}`)
-	// console.log(`User Token From Local : ${global.localStorage.getItem('userToken')}`)
-	console.log(`IAT :${Math.floor(new Date().getTime() / 1000)}`)
+const generateJws = (clientId,clientSecret,userToken) => {
+	// setup the payload with Issuer, Subject, audience and Issued at.
 	const payload = {
-		iss: global.localStorage.getItem('clientId'),
-		sub: global.localStorage.getItem('clientId'),
-		aud: global.localStorage.getItem('userToken'),
+		iss: clientId,
+		sub: clientId,
+		aud: userToken,
 		iat: Math.floor(new Date().getTime() / 1000)
 	};
 
-	return jwt.sign(payload, global.localStorage.getItem('clientSecret'), {
+	return jwt.sign(payload, clientSecret, {
 		expiresIn: 216000,
 	});
 };

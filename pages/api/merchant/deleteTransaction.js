@@ -1,17 +1,27 @@
 import connectDB from "../../../config/connectDB";
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
+import {credentials} from "../../../config/variables"
 
 connectDB()
 
 export default async function handler(req,res)
 {
 
-	const apiUrl = global.localStorage.getItem('apiUrl')
-	const authUrl = global.localStorage.getItem('authUrl')
-    const { submissionId } = req.body;
+	// const apiUrl = global.localStorage.getItem('apiUrl')
+	// const authUrl = global.localStorage.getItem('authUrl')
+    const { submissionId,envName } = req.body;
 
-    const jwsToken = generateJws()
+	const cred = credentials.filter((user)=>user.name===envName)
+    const apiUrl = cred[0].apiUrl
+	const authUrl = cred[0].authUrl
+	const clientId = cred[0].clientId
+	const clientSecret = cred[0].clientSecret
+	const userToken = cred[0].userToken
+
+    const jwsToken = generateJws(clientId,clientSecret,userToken)
+
+    // const jwsToken = generateJws()
 
     const authOptions = {
 		headers: {
@@ -61,16 +71,16 @@ export default async function handler(req,res)
 	}
 }
 
-const generateJws = () => {
-	//setup the payload with Issuer, Subject, audience and Issued at.
+const generateJws = (clientId,clientSecret,userToken) => {
+	// setup the payload with Issuer, Subject, audience and Issued at.
 	const payload = {
-		iss: global.localStorage.getItem('clientId'),
-		sub: global.localStorage.getItem('clientId'),
-		aud: global.localStorage.getItem('userToken'),
+		iss: clientId,
+		sub: clientId,
+		aud: userToken,
 		iat: Math.floor(new Date().getTime() / 1000)
 	};
 
-	return jwt.sign(payload, global.localStorage.getItem('clientSecret'), {
+	return jwt.sign(payload, clientSecret, {
 		expiresIn: 216000,
 	});
 };

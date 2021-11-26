@@ -41,7 +41,7 @@ const MerchantNavBar = () => {
         //eslint-disable-next-line
     }, [])
 
-    const [{ user_details }, dispatch] = useUserValue();
+    const [{ user_details,environment }, dispatch] = useUserValue();
 
     return (
         <>
@@ -54,18 +54,25 @@ const MerchantNavBar = () => {
                 <div className="collapse navbar-collapse" id="navbarScroll">
                     <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                         <li key="home" className="nav-item">
-                            <Link href='/merchant/home'>
+                            {/* <Link href='/merchant/home'> */}
+                            <Link href={{ pathname: '/merchant/home', query: { 
+                                envName: environment.name
+                            }}}>
                                 <a className="nav-link">Affiliates</a>
                             </Link>
                         </li>
                         <li key="transactions" className="nav-item">
-                            <Link href={`/merchant/transactions/${payerRef}`}>
+                            {/* <Link href={`/merchant/transactions/${payerRef}`}> */}
+                            <Link href={
+                                { 
+                                    pathname: `/merchant/transactions/${payerRef}`, 
+                                    query: { 
+                                        envName: environment.name
+                                    }
+                                }
+                            }>
+
                                 <a className="nav-link">Transactions</a>
-                            </Link>
-                        </li>
-                        <li key="webhook" className="nav-item">
-                            <Link href='/merchant/webHook'>
-                                <a className="nav-link">Webhook</a>
                             </Link>
                         </li>
                     </ul>

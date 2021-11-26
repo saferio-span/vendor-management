@@ -9,7 +9,10 @@ export const getServerSideProps = async (context)=>{
     const { params,req } = context;
     const { origin } = absoluteUrl(req)
 
-    const formsRes = await axios.get(`${origin}/api/affiliate/getCompletedForms/${params.payeeRef}`)
+    // const formsRes = await axios.get(`${origin}/api/affiliate/getCompletedForms/${params.payeeRef}`)
+    const formsRes = await axios.post(`${origin}/api/affiliate/getCompletedForms/${params.payeeRef}`,{
+      envName: query.envName,
+    })
     const forms = await formsRes.data
   
     return{

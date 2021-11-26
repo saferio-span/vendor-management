@@ -12,7 +12,7 @@ import MerchantNavBar from "../../components/Layout/MerchantNavBar"
 const AddAffiliates = () => {
 
     var options = []
-    const [{ user_details }, dispatch] = useUserValue();
+    const [{ user_details,environment }, dispatch] = useUserValue();
     const [merchantID,setMerchantID] = useState();
     const [values, setValues] = useState({
 		name:'',
@@ -72,7 +72,8 @@ const AddAffiliates = () => {
                 state: values.state,
                 zip: values.zip,
                 email: values.email,
-                password: values.password
+                password: values.password,
+                envName: environment.name
             })
 
             const user = await res.data
@@ -89,7 +90,12 @@ const AddAffiliates = () => {
                     password: ''
                 })
                 toast("Affiliate created successfully")
-                Router.push('/merchant/home')
+                Router.push({
+                    pathname: '/merchant/home',
+                    query: { 
+                        envName: environment.name
+                    }
+                })
                 return true
             }
             else

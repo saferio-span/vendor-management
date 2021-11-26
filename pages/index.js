@@ -36,17 +36,17 @@ export default function Home() {
   const handleSelectChange=async(e)=>{
     if(e === null)
     {
-      const res = await axios.post(`/api/setEnvironment`,{
-        env: null
-      })
+      // const res = await axios.post(`/api/setEnvironment`,{
+      //   env: null
+      // })
       dispatch({
         type: actionTypes.SET_ENVIRONMENT_DETAILS,
         data: null,
       })
-      if(res.status===200)
-      {
+      // if(res.status===200)
+      // {
         setDetails(null)
-      }
+      // }
 
     }
     else
@@ -67,20 +67,20 @@ export default function Home() {
           authUrl= urls.authUrlStaging
       }
 
-      const res = await axios.post(`/api/setEnvironment`,{
-        env: cred[0],
-        apiUrl,
-        authUrl,
-      })
+      // const res = await axios.post(`/api/setEnvironment`,{
+      //   env: cred[0],
+      //   apiUrl,
+      //   authUrl,
+      // })
     
       dispatch({
         type: actionTypes.SET_ENVIRONMENT_DETAILS,
         data: cred[0],
       })
-      if(res.status===200)
-      {
+      // if(res.status===200)
+      // {
         setDetails(cred[0])
-      }
+      // }
       
     }
   }

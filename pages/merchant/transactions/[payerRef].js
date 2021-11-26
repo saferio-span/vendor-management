@@ -12,10 +12,12 @@ import ReactPaginate from "react-paginate"
 import { useRouter } from 'next/router'
 
 export const getServerSideProps = async (context)=>{
-    const { params,req } = context;
+    const { params,req,query } = context;
     const { origin } = absoluteUrl(req)
 
-    const res = await axios.get(`${origin}/api/affiliate/getAll`)
+    const res = await axios.post(`${origin}/api/affiliate/getAll`,{
+        envName: query.envName,
+    })
     const affiliates = await res.data
 
     const transRes = await axios.get(`${origin}/api/merchant/getTransaction/${params.payerRef}`)

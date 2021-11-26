@@ -1,6 +1,7 @@
 import connectDB from "../../../config/connectDB";
 import Affiliate from "../../../models/affiliateModel"
 import bcrypt from 'bcrypt';
+import {credentials} from "../../../config/variables"
 // import { LocalStorage } from "node-localstorage";
 
 connectDB()
@@ -19,15 +20,20 @@ export default async function handler(req,res)
     // console.log(req.body)
     // global.localStorage = new LocalStorage('./scratch');
     // global.localStorage.clear()
+
+    console.log(req.body.env)
+    console.log(`Email : ${req.body.email}`)
     await Affiliate.find({
-        email: req.body.email
+        email: req.body.email,
+        environment: req.body.env.name
     }, (err, user)=>{
       if (err){
+        console.log(err)
         return res.status(401).send('User not found. Please Sign in.');
       }
       else
       {
-        // console.log(user)
+        console.log(user)
         if(!user.length)
         {
             return res.status(401).send('User not found');  

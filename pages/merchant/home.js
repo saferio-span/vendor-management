@@ -12,10 +12,13 @@ import W9Pdf from "../../components/Layout/W9Pdf";
 import ReactPaginate from "react-paginate"
 
 export const getServerSideProps = async (context)=>{
-  const { req } = context;
+  const { req,query } = context;
   const { origin } = absoluteUrl(req)
 
-  const res = await axios.get(`${origin}/api/affiliate/getAll`)
+  const res = await axios.post(`${origin}/api/affiliate/getAll`,{
+    envName: query.envName,
+  })
+
   const affiliates = await res.data
 
   const transRes = await axios.get(`${origin}/api/merchant/getAllTransactions`)

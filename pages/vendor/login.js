@@ -22,18 +22,22 @@ const Login = () => {
     useEffect(()=>{
 
         // const sess_email = localStorage.getItem('email')
-        if(user_details)
-        {
-            Router.push(`/vendor/home/${user_details.payeeRef}`)
-            // Router.push({
-            //     pathname: '/vendor/home',
-            //     query: { user_details: user_details },
-            // })
-        }
+        console.log(environment)
         if(environment===null)
         {
             Router.push('/')
+            return false
         }
+        if(user_details)
+        {
+            // Router.push(`/vendor/home/${user_details.payeeRef}`)
+            Router.push({
+                pathname: `/vendor/home/${user_details.payeeRef}`,
+                query: { envName: environment.name },
+            })
+        }
+        
+        
 
         //eslint-disable-next-line
     })
@@ -49,30 +53,13 @@ const Login = () => {
         }
 
         try {
-            // const cred = credentials.filter((user)=>user.name===environment.environment)
-            // let authUrl = ""
-            // let apiUrl = ""
-            // console.log("Assigned Credentials")
-            // console.log(cred)
-
-            // if(cred[0].environment === "sandbox")
-            // {
-            //     apiUrl= urls.apiUrlSandbox
-            //     authUrl= urls.authUrlSandbox
-            // }
-
-            // if(cred[0].environment === "staging")
-            // {
-            //     apiUrl= urls.apiUrlStaging
-            //     authUrl= urls.authUrlStaging
-            // }
 
             const res = await axios.post(`/api/affiliate/login`,{
                 email: values.email,
                 password: values.password,
-                // environment: cred[0],
-                // apiUrl,
-                // authUrl
+                env: environment,
+                apiUrl:environment.apiUrl,
+                authUrl:environment.authUrl
             })
             const user = await res.data
             if(user.length)
@@ -89,6 +76,10 @@ const Login = () => {
                 //     query: { user_details: user_details },
                 // })
                 Router.push(`/vendor/home/${user[0].payeeRef}`)
+                // Router.push({
+                //     pathname: `/vendor/home/${user[0].payeeRef}`,
+                //     query: { envName: environment.name },
+                // })
             }
           } catch (error) {
             toast.error("Invalid Email Id or Password")
@@ -161,7 +152,14 @@ const Login = () => {
                         <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
                     </form>
                     <hr />
-                    <span>Don{`'`}t have an account ? -<Link href='/vendor/signUp'>
+                    <span>Don{`'`}t have an account ? -<Link href={
+                                        { 
+                                            pathname: `/vendor/signUp`, 
+                                            query: { 
+                                                envName: environment.name
+                                            }
+                                        }
+                                    }>
                         <a className="btn btn-link">Sign Up !</a>
                     </Link></span>
                 </div>

@@ -1,6 +1,5 @@
 import React from 'react'
-import PostList from '../../components/Layout/PostList';
-import MerchantNavBar from "../../components/Layout/MerchantNavBar"
+import PostList from '../components/Layout/PostList';
 import absoluteUrl from 'next-absolute-url'
 import axios from 'axios';
 
@@ -21,7 +20,6 @@ export const getServerSideProps = async (context)=>{
 const WebHook = (props) => {
     return (
         <>
-            <MerchantNavBar />
             <div className="container">
                 <div className="card px-3">
                     <div className="row">

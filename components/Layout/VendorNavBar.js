@@ -7,7 +7,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from 'axios';
 
 const VendorNavbar = () => {
-    const [{ user_details }, dispatch] = useUserValue();
+    const [{ user_details,environment }, dispatch] = useUserValue();
     const [payeeRef,setPayeeRef] = useState();
     const [pdfUrl,setPdfUrl] = useState(null);
     const handleLogOut = ()=>{
@@ -68,7 +68,15 @@ const VendorNavbar = () => {
                         {
                             pdfUrl && <>
                                 <li key="completedForm" className="nav-item">
-                                    <Link href={`/vendor/viewForms/${payeeRef}`}>
+                                    {/* <Link href={`/vendor/viewForms/${payeeRef}`}> */}
+                                    <Link href={
+                                        { 
+                                            pathname: `/vendor/viewForms/${payeeRef}`, 
+                                            query: { 
+                                                envName: environment.name
+                                            }
+                                        }
+                                    }>
                                         <a className="nav-link">View Completed Form</a>
                                     </Link>
                                 </li>
