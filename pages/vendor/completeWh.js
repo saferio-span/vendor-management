@@ -27,7 +27,7 @@ export const getServerSideProps = async (context)=>{
         city:affiliateData[0].city, 
         stateName:affiliateData[0].state, 
         zipCd:affiliateData[0].zip, 
-        tinMatch:false,
+        tinMatch:true,
         businessId : merchantData.businessId,
         payerRef : merchantData.payerRef,
         envName : envName

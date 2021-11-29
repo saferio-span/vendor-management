@@ -45,6 +45,15 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
         // }
     }
 
+    const closeModel = (e)=>{
+        setValues({
+            amount:'',
+            payeeRef : '',
+            description:'',
+            date: '',
+        })
+    }
+
     const handleSelectChange = (e)=>{
         if(e !== null)
         {
@@ -76,7 +85,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
             toast.error("Please fill in all fields")
             return false
         }
-        try {
+        // try {
             
             const res = await axios.post(`/api/merchant/postTransaction`,{
                 amount: values.amount,
@@ -99,7 +108,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                         amount:'',
                         payeeRef : '',
                         description:'',
-                        date: new Date(),
+                        date: '',
                     })
 
                     router.replace(router.asPath);
@@ -115,6 +124,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                     
                     $('.modal-backdrop').hide();
                 }
+                toast("Transaction added successfully")
             }
             // else
             // {
@@ -122,29 +132,23 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
             //     return false
             // }
 
-            // if(res.status != 200)
-            // {
-            //     console.log(`401 Res`)
-            //     console.log(res)
-            // }
-          } catch (error) {
-            console.log(error)
-            toast.error(error)
-            return false
-            // return null
-          }
+            if(res.status != 200)
+            {
+                // console.log(`401 Res`)
+                toast.error(res.data.Message)
+                // console.log(res)
+            }
 
     }
 
     return (
         <>
-            <ToastContainer />
             <div className="modal fade" id={defaultAffiliate !== "" ? `addPaymentModal${defaultAffiliate}` : `addPaymentModal`} data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id={defaultAffiliate !== "" ? `staticBackdropLabel${defaultAffiliate}` : `staticBackdropLabel`} >Add Payments</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" onClick={closeModel} aria-label="Close"></button>
                         </div>
                         <form onSubmit={handleSubmit}>
                             <div className="modal-body">
@@ -199,7 +203,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" className="btn btn-secondary" onClick={closeModel} data-bs-dismiss="modal">Close</button>
                                 <input type="submit" name="submit" className="btn btn-primary" />
                             </div>
                         </form>

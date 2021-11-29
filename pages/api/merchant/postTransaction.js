@@ -64,10 +64,13 @@ export default async function handler(req,res)
 		};
 	
 		const endPoint = `${apiUrl}/Form1099Transactions`;
+
+		let success = false
+		const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
 		// console.log(endPoint);
-		// try {
-			const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
-			const output = await axios.post(
+		try {
+
+			await axios.post(
 				endPoint,
 				{
 					SubmissionId: null,
@@ -101,34 +104,34 @@ export default async function handler(req,res)
 				options
 			);
 
-			if(output.status === 200)
-			{
-				const transaction = new Transactions()
-				transaction.sequenceId = sequenceID
-				transaction.txnAmt = amount
-				transaction.description = description
-				transaction.payeeRef = payeeRef
-				transaction.payerRef = payerRef
-				transaction.businessId = businessId
-				transaction.transactionDate = moment(selectedDate).format("MM/DD/YYYY"),
-				
-				transaction.save((err, trans)=>{
-					if (err) {
-						res.status(401).send(err);
-					} else {
-						res.status(200).send(trans);
-					}
-				});
-			}
-			else
-			{
-				res.status(output.response.status).send(output.response.config.data.Errors.Message);
-			}
-	
-		// } catch (err) {
-		// 	console.log(err)
-		// 	res.status(err.response.status).send(err);
-		// }
+			success = true
+
+		} catch (err) {
+			// console.log(err.response.data.Errors[0])
+			success = false
+			res.status(202).send(err.response.data.Errors[0]);
+		}
+
+		if(success)
+		{
+			const transaction = new Transactions()
+			transaction.sequenceId = sequenceID
+			transaction.txnAmt = amount
+			transaction.description = description
+			transaction.payeeRef = payeeRef
+			transaction.payerRef = payerRef
+			transaction.businessId = businessId
+			transaction.transactionDate = moment(selectedDate).format("MM/DD/YYYY"),
+			
+			transaction.save((err, trans)=>{
+				if (err) {
+					res.status(401).send(err);
+				} else {
+					res.status(200).send(trans);
+				}
+			});
+		}	
+
 	}
 	else{
 		res.status(401).send(`Access token is null`);
