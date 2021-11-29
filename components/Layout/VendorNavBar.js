@@ -48,6 +48,15 @@ const VendorNavbar = () => {
         //     Router.push('/vendor/login')
         // }
         fetchdata()
+        if(Object.keys(environment).length === 0)
+        {
+            localStorage.clear();
+            dispatch({
+                type: actionTypes.SET_USER_DETAILS,
+                data: null,
+            })
+            Router.push('/vendor/login')
+        }
         //eslint-disable-next-line
     }, [])
     return (

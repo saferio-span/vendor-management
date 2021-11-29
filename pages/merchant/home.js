@@ -100,8 +100,6 @@ export default function Home(props) {
         setLimitAffiliates(sortedResult)
     }
 
-    
-
     //eslint-disable-next-line
   },[affiliates,payeeRef,pageNum,pageCount,searchValue])
 

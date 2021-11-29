@@ -38,6 +38,15 @@ const MerchantNavBar = () => {
     useEffect(() => {
 
         fetchdata()
+        if(Object.keys(environment).length === 0)
+        {
+            localStorage.clear();
+            dispatch({
+                type: actionTypes.SET_USER_DETAILS,
+                data: null,
+            })
+            Router.push('/merchant/login')
+        }
         //eslint-disable-next-line
     }, [])
 
