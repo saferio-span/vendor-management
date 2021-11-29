@@ -431,9 +431,9 @@ const credentials = [
     },
     {
         name:"Naga Sandbox",
-        clientId:"a0f968c860d96f60",
-        clientSecret:"TnUW4joWp3JnyJegUHAQ",
-        userToken:"b736720e7db84229a72c4fbbdc72b807",
+        clientId:"89c226b9aac7ce1b",
+        clientSecret:"gdBav7Ko1OHs1qrfrZLwiA",
+        userToken:"7fbb4b839cab4439a8fa77b69dcbbfff",
         environment:"sandbox",
         authUrl: "https://testoauth.expressauth.net/v2/tbsauth",
 	    apiUrl: "https://testapi.taxbandits.com/v1.6.1",
