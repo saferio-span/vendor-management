@@ -9,6 +9,9 @@ const transactionSchema = new mongoose.Schema({
   txnAmt:{
     type: String,
   },
+  whAmt:{
+    type: String,
+  },
   description:{
     type: String,
   },

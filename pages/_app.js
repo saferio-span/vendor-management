@@ -18,7 +18,6 @@ function MyApp({ Component, pageProps }) {
     NProgress.done(true)
   })
 
-
   return (
     <Provider>
       <UserContextWrap reducer={reducer} intialState={initialState} >

@@ -8,10 +8,13 @@ import { credentials,urls } from '../config/variables';
 import { toast,ToastContainer } from "react-toastify"
 import Router from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
+import Link from "next/link"
 
 export const getServerSideProps = async (context)=>{
-  const session = await getSession(context)
 
+  // console.log(context.req.headers.referer)
+
+  const url = context.req.headers.referer
   // if(!session)
   // {
   //   return{
@@ -23,11 +26,13 @@ export const getServerSideProps = async (context)=>{
   // }
 
   return{
-    props:{ session }
+    props:{ 
+      url:url
+    }
   }
 }
 
-export default function Home() {
+export default function Home(props) {
   var options = []
   const [{environment},dispatch] = useUserValue();
   const [details,setDetails] = useState(null)
@@ -147,17 +152,9 @@ export default function Home() {
           </div>
         </div>
         <hr />
-        {/* {
-          details === null &&
-            <>
-              <h1 className="text-center text-success mt-5">Select the environment to move forward...</h1>
-            </>
-        }
-        {
-          details != null && */}
           <>
-            <div className="row mt-5">
-              <div className="col-3 offset-3">
+            <div className="row my-5">
+              <div className="col-3 offset-1">
                 {/* <Link href='/merchant/login'> */}
                     <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Merchant Login</a>
                 {/* </Link> */}
@@ -168,10 +165,25 @@ export default function Home() {
                     <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Vendor Login</a>
                 {/* </Link> */}
               </div>
+              <div className="col-3 offset-1">
+                <Link href='/webHook'>
+                    <a className="btn btn-warning mx-5" >Webhook</a>
+                </Link>
+              </div>
             </div>
           </>
-        {/* } */}
-        
+
+          <div className="container">
+            <div className="card">
+              <div className="card-header">
+                <h3>Webhook Configuration Note</h3>
+              </div>
+              <div className="card-body lead">
+                <p>To configure webhook in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}api/webhook/whCertificate</b></span></p>
+                <p>To add your environment details please send your <span className="text-primary"><b>Client Id, Client Secret, User Token</b></span> and Environment details to developer </p>
+              </div>
+            </div>
+          </div>
       </main>
 
       <footer>
@@ -180,3 +192,4 @@ export default function Home() {
     </div>
   )
 }
+// {window.location.href}

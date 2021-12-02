@@ -94,6 +94,7 @@ const VendorNavbar = () => {
                         
                     </ul>
 
+                    <span className="text-light">Environment : {environment.name}</span>
                     <Link href='/vendor/profile'>
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>

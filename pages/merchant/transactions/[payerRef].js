@@ -102,6 +102,7 @@ const Transactions = (props) => {
                 }               
             })
             const sortedResult = searchResult.slice((pageNum*10)-10, pageNum*10);
+            console.log(sortedResult)
             updateLimitedTransaction(sortedResult)
             updatepageCount(Math.ceil(sortedResult.length / 10))
         }
@@ -184,7 +185,7 @@ const Transactions = (props) => {
                         <th>Affiliate Name</th>
                         <th>Money</th>
                         <th>Description</th>
-                        <th>Unique Id</th>
+                        <th>Sequence Id</th>
                         <th>Transaction Date</th>
                     </tr>
                 </thead>

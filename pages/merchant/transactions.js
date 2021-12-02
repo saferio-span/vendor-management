@@ -12,11 +12,15 @@ import ReactPaginate from "react-paginate"
 import { useRouter } from 'next/router'
 
 export const getServerSideProps = async (context)=>{
-    const { req } = context;
+    const { params,req,query } = context;
     const { origin } = absoluteUrl(req)
 
-    const res = await axios.get(`${origin}/api/affiliate/getAll`)
+    const res = await axios.post(`${origin}/api/affiliate/getAll`,{
+        envName: query.envName,
+    })
     const affiliates = await res.data
+
+    console.log(affiliates)
 
     const transRes = await axios.get(`${origin}/api/merchant/getAllTransactions`)
     const transactions = await transRes.data
@@ -30,6 +34,9 @@ export const getServerSideProps = async (context)=>{
 }
 
 const Transactions = (props) => {
+    // console.log("Aff")
+    // console.log(props.affiliates)
+    // console.log("Aff")
 
     const router = useRouter()
     const paramPayeeRef = router.query.payeeRef ? router.query.payeeRef : ""
@@ -107,6 +114,7 @@ const Transactions = (props) => {
         {
             const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
             updateLimitedTransaction(sortedResult)
+            updatepageCount(Math.ceil(sortedResult.length / 10))
         }
         
         //eslint-disable-next-line

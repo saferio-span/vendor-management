@@ -19,9 +19,11 @@ export default async function handler(req,res)
 	// const apiUrl = global.localStorage.getItem('apiUrl')
 	// const authUrl = global.localStorage.getItem('authUrl')
 
-    const { amount,payeeRef,description,businessId,payerRef,selectedDate,envName } = req.body;
+    const { amount,payeeRef,description,businessId,payerRef,selectedDate,sequenceId,whAmount,envName } = req.body;
+	console.log(req.body)
 
     const cred = credentials.filter((user)=>user.name===envName)
+	console.log(cred[0])
     const apiUrl = cred[0].apiUrl
 	const authUrl = cred[0].authUrl
 	const clientId = cred[0].clientId
@@ -66,8 +68,25 @@ export default async function handler(req,res)
 		const endPoint = `${apiUrl}/Form1099Transactions`;
 
 		let success = false
-		const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
+		// const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
 		// console.log(endPoint);
+
+		console.log(
+			{
+				PayerRef: null,
+				BusinessId: businessId,
+				TINType: null,
+				TIN: null,
+				PayeeRef: payeeRef,	  
+				SequenceId: sequenceId,
+				TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
+				TxnAmt: amount,
+				WHAmt: whAmount == "" ? "0" : whAmount
+						  
+			}
+			)
+						
+
 		try {
 
 			await axios.post(
@@ -90,10 +109,10 @@ export default async function handler(req,res)
 							TIN: null,
 							Txns: [
 							  {
-								SequenceId: sequenceID,
+								SequenceId: sequenceId,
 								TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
 								TxnAmt: amount,
-								WHAmt: "0"
+								WHAmt: whAmount == "" ? "0" : whAmount
 							  }
 							]
 						  }
@@ -107,16 +126,19 @@ export default async function handler(req,res)
 			success = true
 
 		} catch (err) {
-			// console.log(err.response.data.Errors[0])
+			console.log(err.response.data.Errors)
 			success = false
+			console.log(success)
 			res.status(202).send(err.response.data.Errors[0]);
+			// res.status(202).send(err);
 		}
 
 		if(success)
 		{
 			const transaction = new Transactions()
-			transaction.sequenceId = sequenceID
+			transaction.sequenceId = sequenceId
 			transaction.txnAmt = amount
+			transaction.txnAmt = whAmount
 			transaction.description = description
 			transaction.payeeRef = payeeRef
 			transaction.payerRef = payerRef

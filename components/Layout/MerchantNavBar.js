@@ -86,6 +86,7 @@ const MerchantNavBar = () => {
                         </li>
                     </ul>
 
+                    <span className="text-light">Environment : {environment.name}</span>
                     <Link href='/merchant/profile'>
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>

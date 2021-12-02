@@ -13,6 +13,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
     const router = useRouter();
     const options = []
     const [{ user_details,environment }, dispatch] = useUserValue();
+    const sequenceId = Math.floor((Math.random() * 1000000000) + 1)
 
     let affiliateName = affiliates.map(affiliate =>{
         if(affiliate.payeeRef === defaultAffiliate)
@@ -23,8 +24,17 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
     // console.log(user_details)
     const [values, setValues] = useState({
 		amount:'',
+        whAmount:'',
         payeeRef : defaultAffiliate !== "" ? defaultAffiliate : '' ,
         description:'',
+        sequenceId: sequenceId,
+        date: '',
+	});
+
+    const [validateValues, setValidateValues] = useState({
+		amount:'',
+        payeeRef : defaultAffiliate !== "" ? defaultAffiliate : '' ,
+        sequenceId: sequenceId,
         date: '',
 	});
 
@@ -58,34 +68,42 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
         if(e !== null)
         {
             setValues({ ...values, payeeRef: e.value });
+            setValidateValues({ ...validateValues, payeeRef: e.value });
         }
         else
         {
             setValues({ ...values, payeeRef: "" });
+            setValidateValues({ ...validateValues, payeeRef: "" });
         }
     }
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
+
+        if(name !== "whAmount" && name !== "description")
+        {
+            console.log(name)
+            setValidateValues({ ...validateValues, [name]: value });
+        }
 	};
 
     const handleDateChange = (e) => {
         setValues({ ...values, date: e });
+        setValidateValues({ ...validateValues, date: e });
 	};
     
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
-        // console.log(values)
+        console.log(validateValues)
 
-        const hasEmptyField = Object.values(values).some((element)=>element==='')
+        const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
             return false
         }
-        // try {
             
             const res = await axios.post(`/api/merchant/postTransaction`,{
                 amount: values.amount,
@@ -94,6 +112,8 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 businessId : user_details.businessID,
                 payerRef : user_details.payerRef,
                 selectedDate : values.date,
+                sequenceId : values.sequenceId,
+                whAmount: values.whAmount,
                 envName: environment.name
             })
             const result = await res.data
@@ -128,6 +148,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
             }
             // else
             // {
+            //     console.log(res.data)
             //     toast.error(res.data)
             //     return false
             // }
@@ -155,6 +176,12 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="form-group my-2">
+                                            <label htmlFor="amount">Sequence Id<span className="text-danger font-weight-bold">*</span></label>
+                                            <input type="text" className="form-control" name="sequenceId" value={values.sequenceId} onChange={handleInputChange} />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="form-group my-2">
                                             {defaultAffiliate !== "" ?
                                             <>
                                                 <label htmlFor="amount">Affiliate</label>
@@ -164,7 +191,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                             </>
                                             :
                                             <>
-                                                <label htmlFor="state">Select Affiliate</label>
+                                                <label htmlFor="state">Select Affiliate<span className="text-danger font-weight-bold">*</span></label>
                                                 <Select
                                                     value = {
                                                         options.filter(option => option.value === values.payeeRef)
@@ -184,14 +211,20 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                     </div>
                                     <div className="col-6">
                                         <div className="form-group my-2">
-                                            <label htmlFor="amount">Date</label>
+                                            <label htmlFor="amount">Date<span className="text-danger font-weight-bold">*</span></label>
                                             <DatePicker selected={values.date } className="form-control" onChange={handleDateChange} />
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="form-group my-2">
-                                            <label htmlFor="amount">Amount</label>
+                                            <label htmlFor="amount">Amount<span className="text-danger font-weight-bold">*</span></label>
                                             <input type="text" className="form-control" name="amount" value={values.amount} onChange={handleInputChange} />
+                                        </div>    
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="form-group my-2">
+                                            <label htmlFor="amount">Withheld Amount</label>
+                                            <input type="text" className="form-control" name="whAmount" value={values.whAmount} onChange={handleInputChange} />
                                         </div>    
                                     </div>
                                     <div className="col-6">

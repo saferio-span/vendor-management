@@ -10,6 +10,7 @@ import absoluteUrl from 'next-absolute-url'
 import AddTransaction from "../../components/Layout/AddTransaction";
 import W9Pdf from "../../components/Layout/W9Pdf";
 import ReactPaginate from "react-paginate"
+import { useUserValue } from '../../contexts/UserContext'
 
 export const getServerSideProps = async (context)=>{
   const { req,query } = context;
@@ -42,7 +43,9 @@ export default function Home(props) {
   const [pageNum,setPageNum] = useState(1)
   const [pageCount,setPageCount] = useState()
   const [searchValue,setSearchValue] = useState("")
+  const [{user_details,environment},dispatch] = useUserValue();
   const transactions = props.transactions
+  
   // const pageCount = 5;
   for(const key in props.affiliates )
   {
@@ -85,7 +88,7 @@ export default function Home(props) {
           transactionCount = String(transactionCount)
 
 
-          if(searchAff.name.includes(searchValue) || amount.includes(searchValue) || transactionCount.includes(searchValue) || w9Status.includes(searchValue) || tinStatus.includes(searchValue) )
+          if(searchAff.name.includes(searchValue) || searchAff.payeeRef.includes(searchValue) || amount.includes(searchValue) || transactionCount.includes(searchValue) || w9Status.includes(searchValue) || tinStatus.includes(searchValue) )
           {
               searchResult.push(searchAff)
           }               
@@ -121,6 +124,15 @@ export default function Home(props) {
 
   const handleSearchChange = (e)=>{
       setSearchValue(e.target.value)
+  }
+
+  const getReqRevUrl =async ()=>{
+    const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
+      businessId : user_details.businessID,
+      envName: environment.name
+    })
+
+    window.open(`${res.data.ReviewUrl}`, '_blank');
   }
 
   return (
@@ -167,6 +179,7 @@ export default function Home(props) {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Payee Ref</th>
                   <th>Total Money</th>
                   <th>No of Transactions</th>
                   <th>W9 Status</th>
@@ -192,9 +205,10 @@ export default function Home(props) {
                     <>
                     <tr key={details._id}>
                         <td>{details.name}</td>
+                        <td>{details.payeeRef}</td>
                         <td><i className="bi bi-currency-dollar"></i> {amount}</td>
                         <td>
-                          <Link href={{ pathname: '/merchant/transactions', query: { payeeRef: details.payeeRef } }} >
+                          <Link href={{ pathname: '/merchant/transactions', query: { payeeRef: details.payeeRef,envName: environment.name } }} >
                             <a className="btn btn-link">{transactionCount}</a>
                           </Link></td>
                         <td>{details.w9Status ? details.w9Status : "-"}</td>
@@ -202,7 +216,15 @@ export default function Home(props) {
                         <td>
                           <button key={`${details._id}w9`} className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#w9Pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button>
                           <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
-                          <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1"><i className="bi bi-eye"></i> 1099-NEC</button>
+                          <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+    const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
+      businessId : user_details.businessID,
+      payeeRef: details.payeeRef,
+      envName: environment.name
+    })
+
+    window.open(`${res.data.ReviewUrl}`, '_blank');
+  }}><i className="bi bi-eye"></i> 1099-NEC</button>
                         </td>
                     </tr>
                     </>
