@@ -129,7 +129,7 @@ export default function Home(props) {
   const getReqRevUrl =async ()=>{
     const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
       businessId : user_details.businessID,
-      envName: environment.name
+      envName: environment ? environment.name : localStorage.getItem("env")
     })
 
     window.open(`${res.data.ReviewUrl}`, '_blank');
@@ -208,7 +208,7 @@ export default function Home(props) {
                         <td>{details.payeeRef}</td>
                         <td><i className="bi bi-currency-dollar"></i> {amount}</td>
                         <td>
-                          <Link href={{ pathname: '/merchant/transactions', query: { payeeRef: details.payeeRef,envName: environment.name } }} >
+                          <Link href={{ pathname: '/merchant/transactions', query: { payeeRef: details.payeeRef,envName: environment ? environment.name : localStorage.getItem("env") } }} >
                             <a className="btn btn-link">{transactionCount}</a>
                           </Link></td>
                         <td>{details.w9Status ? details.w9Status : "-"}</td>
@@ -220,7 +220,7 @@ export default function Home(props) {
     const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
       businessId : user_details.businessID,
       payeeRef: details.payeeRef,
-      envName: environment.name
+      envName: environment ? environment.name : localStorage.getItem("env")
     })
 
     window.open(`${res.data.ReviewUrl}`, '_blank');

@@ -2,6 +2,7 @@ import React,{useEffect, useState} from 'react'
 import Router from 'next/router'
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
+import { credentials } from '../../config/variables';
 import Link from "next/link";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from 'axios';
@@ -50,12 +51,14 @@ const VendorNavbar = () => {
         fetchdata()
         if(Object.keys(environment).length === 0)
         {
-            localStorage.clear();
+            const envName = localStorage.getItem('env')
+            const cred = credentials.filter((user)=>user.name===envName)
+
+            // localStorage.clear();
             dispatch({
-                type: actionTypes.SET_USER_DETAILS,
-                data: null,
+                type: actionTypes.SET_ENVIRONMENT_DETAILS,
+                data: cred[0],
             })
-            Router.push('/vendor/login')
         }
         //eslint-disable-next-line
     }, [])
@@ -82,7 +85,7 @@ const VendorNavbar = () => {
                                         { 
                                             pathname: `/vendor/viewForms/${payeeRef}`, 
                                             query: { 
-                                                envName: environment.name
+                                                envName: environment ? environment.name : localStorage.getItem("env")
                                             }
                                         }
                                     }>
@@ -94,7 +97,7 @@ const VendorNavbar = () => {
                         
                     </ul>
 
-                    <span className="text-light">Environment : {environment.name}</span>
+                    <span className="text-light">Environment : {environment ? environment.name : localStorage.getItem("env")}</span>
                     <Link href='/vendor/profile'>
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>

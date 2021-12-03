@@ -73,7 +73,7 @@ const AddAffiliates = () => {
                 zip: values.zip,
                 email: values.email,
                 password: values.password,
-                envName: environment.name
+                envName: environment ? environment.name : localStorage.getItem("env")
             })
 
             const user = await res.data
@@ -93,7 +93,7 @@ const AddAffiliates = () => {
                 Router.push({
                     pathname: '/merchant/home',
                     query: { 
-                        envName: environment.name
+                        envName: environment ? environment.name : localStorage.getItem("env")
                     }
                 })
                 return true

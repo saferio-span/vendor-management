@@ -68,7 +68,8 @@ export default async function handler(req,res)
 		res.status(200).send(output.data);
 	} catch (err) {
 		// console.log(err)
-		res.status(err.response.status).send(`Cannot get wh url`);
+		res.status(202).send(err.response.data.Errors[0]);
+		// res.status(err.response.status).send(`Cannot get wh url`);
 	}
 }
 

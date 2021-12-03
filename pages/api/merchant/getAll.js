@@ -6,9 +6,17 @@ connectDB()
 export default async function handler(req,res)
 {
 	const envName = req.body.envName
-	console.log(envName)
+	let affiliate = {}
 	try {
-		const affiliate = await Merchant.find({ environment: envName}).sort({ name: 'asc' });
+		if(envName)
+		{
+			affiliate = await Merchant.find({ environment: envName}).sort({ name: 'asc' });
+		}
+		else
+		{
+			affiliate = await Merchant.find().sort({ name: 'asc' });
+		}
+		
 		res.status(200).json(affiliate);
 	} catch (err) {
 		console.error(err);

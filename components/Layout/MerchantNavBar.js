@@ -4,6 +4,7 @@ import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
 import Link from "next/link";
 import axios from 'axios';
+import { credentials } from '../../config/variables';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const MerchantNavBar = () => {
@@ -15,11 +16,11 @@ const MerchantNavBar = () => {
             type: actionTypes.SET_USER_DETAILS,
             data: null,
         })
-        // dispatch({
-        //     type: actionTypes.SET_ENVIRONMENT_DETAILS,
-        //     data: null,
-        // })
-        Router.push('/merchant/login')
+        dispatch({
+            type: actionTypes.SET_ENVIRONMENT_DETAILS,
+            data: null,
+        })
+        Router.push('/')
     }
 
     const fetchdata = async ()=>{
@@ -40,12 +41,15 @@ const MerchantNavBar = () => {
         fetchdata()
         if(Object.keys(environment).length === 0)
         {
-            localStorage.clear();
+            const envName = localStorage.getItem('env')
+            const cred = credentials.filter((user)=>user.name===envName)
+
+            // localStorage.clear();
             dispatch({
-                type: actionTypes.SET_USER_DETAILS,
-                data: null,
+                type: actionTypes.SET_ENVIRONMENT_DETAILS,
+                data: cred[0],
             })
-            Router.push('/merchant/login')
+            // Router.push('/merchant/login')
         }
         //eslint-disable-next-line
     }, [])
@@ -65,7 +69,7 @@ const MerchantNavBar = () => {
                         <li key="home" className="nav-item">
                             {/* <Link href='/merchant/home'> */}
                             <Link href={{ pathname: '/merchant/home', query: { 
-                                envName: environment.name
+                                envName: environment ? environment.name : localStorage.getItem("env")
                             }}}>
                                 <a className="nav-link">Affiliates</a>
                             </Link>
@@ -76,7 +80,7 @@ const MerchantNavBar = () => {
                                 { 
                                     pathname: `/merchant/transactions/${payerRef}`, 
                                     query: { 
-                                        envName: environment.name
+                                        envName: environment ? environment.name : localStorage.getItem("env")
                                     }
                                 }
                             }>
@@ -86,7 +90,7 @@ const MerchantNavBar = () => {
                         </li>
                     </ul>
 
-                    <span className="text-light">Environment : {environment.name}</span>
+                    <span className="text-light">Environment : {environment ? environment.name : localStorage.getItem("env")}</span>
                     <Link href='/merchant/profile'>
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>

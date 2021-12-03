@@ -130,7 +130,7 @@ const SignUp = (props) => {
                         zip: values.zip,
                         email: values.email,
                         password: values.password,
-                        envName: environment.name
+                        envName: environment ? environment.name : localStorage.getItem("env")
                     }
                 )
                 // const res = await axios.post(`/api/affiliate/signUp`,{
@@ -156,7 +156,7 @@ const SignUp = (props) => {
                     zip: values.zip,
                     email: values.email,
                     password: values.password,
-                    envName: environment.name
+                    envName: environment ? environment.name : localStorage.getItem("env")
                 })
         
                 const user = await res.data

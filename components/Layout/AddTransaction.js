@@ -114,7 +114,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 selectedDate : values.date,
                 sequenceId : values.sequenceId,
                 whAmount: values.whAmount,
-                envName: environment.name
+                envName: environment ? environment.name : localStorage.getItem("env")
             })
             const result = await res.data
 

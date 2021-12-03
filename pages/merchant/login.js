@@ -21,22 +21,23 @@ const Login = () => {
     useEffect(()=>{
 
         // const sess_email = localStorage.getItem('email')
-        if(user_details)
-        {
-            Router.push({
-                pathname: '/merchant/home',
-                query: { 
-                    envName: environment.name
-                }
-            })
-        }
-
         console.log(environment)
         if(Object.keys(environment).length === 0)
         {
             Router.push('/')
         }
-        // if(session) Router.push('/merchant/home')
+        else{
+            if(user_details)
+            {
+                Router.push({
+                    pathname: '/merchant/home',
+                    query: { 
+                        envName: environment ? environment.name : localStorage.getItem("env")
+                    }
+                })
+            }
+        }
+
         //eslint-disable-next-line  
     },[])
     // if(session) return null
@@ -74,7 +75,7 @@ const Login = () => {
                 Router.push({
                     pathname: '/merchant/home',
                     query: { 
-                        envName: environment.name
+                        envName: environment ? environment.name : localStorage.getItem("env")
                     }
                 })
             }

@@ -275,7 +275,7 @@ const MerchantProfile = () => {
                         pathname: `/vendor/completeWh`, 
                         query: {
                             id: values.id,
-                            envName: environment.name
+                            envName: environment ? environment.name : localStorage.getItem("env")
                         }
                     }
                 }>

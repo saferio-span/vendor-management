@@ -33,7 +33,7 @@ const Login = () => {
             // Router.push(`/vendor/home/${user_details.payeeRef}`)
             Router.push({
                 pathname: `/vendor/home/${user_details.payeeRef}`,
-                query: { envName: environment.name },
+                query: { envName: environment ? environment.name : localStorage.getItem("env") },
             })
         }
         
@@ -156,7 +156,7 @@ const Login = () => {
                                         { 
                                             pathname: `/vendor/signUp`, 
                                             query: { 
-                                                envName: environment.name
+                                                envName: environment ? environment.name : localStorage.getItem("env")
                                             }
                                         }
                                     }>
