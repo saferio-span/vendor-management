@@ -1,11 +1,9 @@
 import React,{ useState } from 'react'
 import Link from "next/link";
 
-const WhCertificate = ({content}) => {
-    const keyVal = Math.floor(Math.random() * 10000000)
+const WhCertificate = () => {
+    // const keyVal = Math.floor(Math.random() * 10000000)
     const [display,setDisplayIframe] = useState()
-    console.log(keyVal)
-    console.log(content)
         
     return (
         <div className="container">
@@ -29,7 +27,7 @@ const WhCertificate = ({content}) => {
             </div>
             
 
-            {display && <iframe key={keyVal} className="my-1" title="W9" width="100%" height="625" src="https://testlinks.taxbandits.io?uId=16e2845b-3d9e-4621-bdcd-cba8751f0ab2" /> }
+            {display && <iframe className="my-1" title="W9" width="100%" height="625" src="https://testlinks.taxbandits.io?uId=16e2845b-3d9e-4621-bdcd-cba8751f0ab2" /> }
                        
         </div>
     )
