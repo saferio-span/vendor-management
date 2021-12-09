@@ -72,7 +72,9 @@ const SignUp = () => {
             return false
         }
 
-        const availablity = await axios.get(`/api/merchant/findByEmail/${values.email}`)
+        const availablity = await axios.post(`/api/merchant/findByEmail/${values.email}`,{
+            envName: environment ? environment.name : localStorage.getItem("env")
+        })
 
         if(availablity.data.length > 0)
         {
@@ -83,7 +85,7 @@ const SignUp = () => {
         {
             if(values.password === values.confirmPassword)
             {
-                await axios.post('/api/merchant/signUp',{
+                const res = await axios.post('/api/merchant/signUp',{
                     businessName:values.businessName,
                     ein:values.ein,
                     address1:values.address1,
@@ -97,13 +99,26 @@ const SignUp = () => {
                     env:environment,
                     apiUrl:environment.apiUrl,
                     authUrl:environment.authUrl
-                }).then(() => {
+                })
+                if(res.status == 200)
+                {
                     toast("User registered successfully")
                     router.push('/merchant/login')
-                }).catch((error) => {
-                    toast.error(error)
-                    return false
-                })
+                }
+
+                if(res.status != 200)
+                {
+                    // console.log(`401 Res`)
+                    toast.error(res.data.Message)
+                    // console.log(res)
+                }
+                
+                // .then(() => {
+                    
+                // }).catch((error) => {
+                //     toast.error(error)
+                //     return false
+                // })
             }
             else
             {

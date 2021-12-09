@@ -138,7 +138,7 @@ export default async function handler(req,res)
 			const transaction = new Transactions()
 			transaction.sequenceId = sequenceId
 			transaction.txnAmt = amount
-			transaction.txnAmt = whAmount
+			transaction.whAmt = whAmount
 			transaction.description = description
 			transaction.payeeRef = payeeRef
 			transaction.payerRef = payerRef

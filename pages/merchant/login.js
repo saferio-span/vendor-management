@@ -32,6 +32,7 @@ const Login = () => {
                 Router.push({
                     pathname: '/merchant/home',
                     query: { 
+                        payerRef : user_details.payerRef,
                         envName: environment ? environment.name : localStorage.getItem("env")
                     }
                 })
@@ -75,6 +76,7 @@ const Login = () => {
                 Router.push({
                     pathname: '/merchant/home',
                     query: { 
+                        payerRef : user[0].payerRef,
                         envName: environment ? environment.name : localStorage.getItem("env")
                     }
                 })

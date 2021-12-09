@@ -69,6 +69,7 @@ const MerchantNavBar = () => {
                         <li key="home" className="nav-item">
                             {/* <Link href='/merchant/home'> */}
                             <Link href={{ pathname: '/merchant/home', query: { 
+                                payerRef:payerRef,
                                 envName: environment ? environment.name : localStorage.getItem("env")
                             }}}>
                                 <a className="nav-link">Affiliates</a>

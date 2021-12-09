@@ -82,40 +82,46 @@ export default async function handler(req,res)
 			Accept: 'application/json',
 		},
 	};
-
+	let success = false
 	try {
 		const output = await axios.post(endPoint, businessObj, options);
 		businessID = output.data.BusinessId
+		success = true
+
 	} catch (err) {
-		console.log(err)
-        res.status(err.response.status).send(`Cannot Set business`);
+		success = false
+		console.log(success)
+		res.status(202).send(err.response.data.Errors[0]);
+		// res.status(202).send(err);
 	}
 
-    
-    // res.status(200).send(businessID);
-    const merchant = new Merchant()
-    merchant.businessName = req.body.businessName
-    merchant.businessID = businessID
-    merchant.ein = req.body.ein
-    merchant.address1 = req.body.address1
-    merchant.address2 = req.body.address2
-    merchant.city = req.body.city
-    merchant.state = req.body.state
-    merchant.zip = req.body.zip
-    merchant.name = req.body.contactName
-    merchant.email = req.body.email
-    merchant.password = bcrypt.hashSync(req.body.password, 10)
-    merchant.payerRef = `Pr${random}`
-	merchant.environment = envName
+	if(success)
+	{
+		// res.status(200).send(businessID);
+		const merchant = new Merchant()
+		merchant.businessName = req.body.businessName
+		merchant.businessID = businessID
+		merchant.ein = req.body.ein
+		merchant.address1 = req.body.address1
+		merchant.address2 = req.body.address2
+		merchant.city = req.body.city
+		merchant.state = req.body.state
+		merchant.zip = req.body.zip
+		merchant.name = req.body.contactName
+		merchant.email = req.body.email
+		merchant.password = bcrypt.hashSync(req.body.password, 10)
+		merchant.payerRef = `Pr${random}`
+		merchant.environment = envName
 
-    merchant.save((err, userCreated)=>{
-        if (err) {
-            res.status(401).send(JSON.stringify(err));
-        } else {
-            userCreated.password = undefined;
-            res.status(200).send(userCreated);
-        }
-    });
+		merchant.save((err, userCreated)=>{
+			if (err) {
+				res.status(401).send(JSON.stringify(err));
+			} else {
+				userCreated.password = undefined;
+				res.status(200).send(userCreated);
+			}
+		});
+	}
 
     // console.log(`Pr${random}`)
     // console.log(`Sign Up`)

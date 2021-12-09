@@ -6,7 +6,7 @@ connectDB()
 export default async function handler(req,res)
 {
 	try {
-		const trans = await Transactions.find().sort({ name: 'asc' });
+		const trans = await Transactions.find({payerRef:req.body.payerRef}).sort({ name: 'asc' });
 		res.status(200).json(trans);
 	} catch (err) {
 		console.error(err);

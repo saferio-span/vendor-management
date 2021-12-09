@@ -16,14 +16,29 @@ export const getServerSideProps = async (context)=>{
   const { req,query } = context;
   const { origin } = absoluteUrl(req)
 
-  const res = await axios.post(`${origin}/api/affiliate/getAll`,{
+  const merchantRes = await axios.post(`${origin}/api/merchant/getByPayerRef`,{
+    payerRef: query.payerRef,
+    envName: query.envName,
+  })
+
+  const merchant = await merchantRes.data
+  console.log(`Merchant`)
+  console.log(merchant[0]._id)
+
+  const res = await axios.post(`${origin}/api/affiliate/getAllByMerchnatId`,{
+    merchantId : merchant[0]._id,
     envName: query.envName,
   })
 
   const affiliates = await res.data
 
-  const transRes = await axios.get(`${origin}/api/merchant/getAllTransactions`)
+  console.log(affiliates)
+  const transRes = await axios.post(`${origin}/api/merchant/getAllTransactions`,{
+    payerRef: query.payerRef,
+  })
   const transactions = await transRes.data
+
+  // console.log(transactions)
 
   return{
     props:{ 
@@ -213,8 +228,8 @@ export default function Home(props) {
                           </Link></td>
                         <td>{details.w9Status ? details.w9Status : "-"}</td>
                         <td>{details.tinMatchingStatus ? details.tinMatchingStatus : "-"}</td>
-                        <td>
-                          <button key={`${details._id}w9`} className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#w9Pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button>
+                        <td>  
+                          {details.w9Status ? <><button key={`${details._id}w9`} className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#w9Pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button></> : <></> }
                           <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
                           <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
     const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{

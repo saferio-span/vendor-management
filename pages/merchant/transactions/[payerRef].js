@@ -15,7 +15,15 @@ export const getServerSideProps = async (context)=>{
     const { params,req,query } = context;
     const { origin } = absoluteUrl(req)
 
-    const res = await axios.post(`${origin}/api/affiliate/getAll`,{
+    const merchantRes = await axios.post(`${origin}/api/merchant/getByPayerRef`,{
+      payerRef: query.payerRef,
+      envName: query.envName,
+    })
+    
+    const merchant = await merchantRes.data
+    
+    const res = await axios.post(`${origin}/api/affiliate/getAllByMerchnatId`,{
+        merchantId : merchant[0]._id,
         envName: query.envName,
     })
     const affiliates = await res.data
@@ -110,11 +118,12 @@ const Transactions = (props) => {
         {
             const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
             updateLimitedTransaction(sortedResult)
+            updatepageCount(Math.ceil(transactions.length / 10))
         }
         
         //eslint-disable-next-line
     },[transactions,payeeRef,pageNum,pageCount,searchValue])
-
+    console.log(`Page Count : ${pageCount}`)
     const handleSelectChange = (e)=>{
         if(e !== null)
         {

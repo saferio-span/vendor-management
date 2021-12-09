@@ -105,9 +105,10 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
             return false
         }
             
+            console.log(values)
             const res = await axios.post(`/api/merchant/postTransaction`,{
                 amount: values.amount,
-                payeeRef : values.payeeRef,
+                payeeRef : defaultAffiliate ? defaultAffiliate : values.payeeRef,
                 description : values.description,
                 businessId : user_details.businessID,
                 payerRef : user_details.payerRef,
