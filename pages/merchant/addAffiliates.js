@@ -93,6 +93,7 @@ const AddAffiliates = () => {
                 Router.push({
                     pathname: '/merchant/home',
                     query: { 
+                        payerRef: user_details.payerRef,
                         envName: environment ? environment.name : localStorage.getItem("env")
                     }
                 })

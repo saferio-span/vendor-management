@@ -430,6 +430,15 @@ const credentials = [
 	    apiUrl: "https://api.tbsuat.com/v1.6.1/",
     },
     {
+        name:"Dhivya UAT",
+        clientId:"a4860750c36b47de",
+        clientSecret:"075K93cy51iGZbwG7cLxvA",
+        userToken:"9d7b4bf1ec0c4210a2d8fbb3231cdfbe",
+        environment:"uat",
+        authUrl: "http://oauth.tbsuat.com/v2/tbsauth",
+        apiUrl: "https://api.tbsuat.com/v1.6.1/",
+    },
+    {
         name:"Naga Sandbox",
         clientId:"89c226b9aac7ce1b",
         clientSecret:"gdBav7Ko1OHs1qrfrZLwiA",
@@ -485,9 +494,9 @@ const credentials = [
     },
     {
         name:"Saferio Staging",
-        clientId:"a770ea413cb45cbc",
-        clientSecret:"KBE0d9YevBwcFPqi6I7y6A",
-        userToken:"fc534b324bd0462ea8a27ca735619759",
+        clientId:"9b3270a9c754924d",
+        clientSecret:"PWlFPReufn3n9eaoG8jBZg",
+        userToken:"2e6465e6991e498899f9f4fa9cc1aa63",
         environment:"staging",
         authUrl: "https://oauth.expressauth.net/v2/tbsauth",
 	    apiUrl: "https://api.taxbandits.com/v1.6.1",
