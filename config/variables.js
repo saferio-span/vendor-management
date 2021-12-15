@@ -484,6 +484,15 @@ const credentials = [
 	    apiUrl: "https://testapi.taxbandits.com/v1.6.1",
     },
     {
+        name:"Sabitha Sandbox",
+        clientId:"9490b2c6f4b9253d",
+        clientSecret:"wj1XWSLsOXLubzoOFZ9Xg",
+        userToken:"2bde78e4b7274faf888187a07e21cf08",
+        environment:"sandbox",
+        authUrl: "https://testoauth.expressauth.net/v2/tbsauth",
+	    apiUrl: "https://testapi.taxbandits.com/v1.6.1",
+    },
+    {
         name:"Saferio Sandbox",
         clientId:"a0f968c860d96f60",
         clientSecret:"TnUW4joWp3JnyJegUHAQ",
