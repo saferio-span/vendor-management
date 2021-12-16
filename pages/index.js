@@ -124,6 +124,28 @@ export default function Home(props) {
     }
   }
 
+  const handleWebhook = ()=>{
+    console.log(details)
+    if(details === null)
+    {
+      Router.push({
+        pathname: '/webHook',
+        query: { 
+            envName: ""
+        }
+      })
+    }
+    else
+    {
+      Router.push({
+        pathname: '/webHook',
+        query: { 
+            envName: details.name
+        }
+      })
+    }
+  }
+
   return (
     <div>
       
@@ -170,9 +192,9 @@ export default function Home(props) {
                 {/* </Link> */}
               </div>
               <div className="col-3 offset-1">
-                <Link href='/webHook'>
-                    <a className="btn btn-warning mx-5" >Webhook</a>
-                </Link>
+                {/* <Link href='/webHook'> */}
+                    <a className="btn btn-warning mx-5" onClick={handleWebhook} >Webhook</a>
+                {/* </Link> */}
               </div>
             </div>
           </>

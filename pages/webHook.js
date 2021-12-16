@@ -6,23 +6,49 @@ import Link from "next/link"
 import Select from 'react-select'
 
 export const getServerSideProps = async (context)=>{
-    const { req } = context;
+    const { req,query } = context;
     const { origin } = absoluteUrl(req)
+
+
 
     const res = await axios.get(`${origin}/api/merchant/getWebHook`)
     const webHook = await res.data
-    const merchantRes = await axios.get(`${origin}/api/merchant/getAll`)
-    const merchants = await merchantRes.data
-    const affRes = await axios.get(`${origin}/api/affiliate/getAll`)
-    const affiliates = await affRes.data
-
-    return{
-      props:{
-        webHook,
-        merchants,
-        affiliates
-       }
+    if(query.envName != ""){
+        const merchantRes = await axios.post(`${origin}/api/merchant/getAll`,{
+            envName: query.envName
+        })
+        const merchants = await merchantRes.data
+        const affRes = await axios.post(`${origin}/api/affiliate/getAll`,{
+            envName: query.envName
+        })
+        const affiliates = await affRes.data
+    
+        return{
+          props:{
+            env:query.envName,
+            webHook,
+            merchants,
+            affiliates
+           }
+        }
     }
+    else
+    {
+        const merchantRes = await axios.get(`${origin}/api/merchant/getAll`)
+        const merchants = await merchantRes.data
+        const affRes = await axios.get(`${origin}/api/affiliate/getAll`)
+        const affiliates = await affRes.data
+    
+        return{
+          props:{
+            env:"",
+            webHook,
+            merchants,
+            affiliates
+           }
+        }
+    } 
+    
 }
 
 const WebHook = (props) => {
@@ -119,6 +145,30 @@ const WebHook = (props) => {
                         searchResult.push(result)
                     }
                 }
+            })
+            setWebHook(searchResult)
+        }
+        else if(props.env !== "")
+        {
+            const searchResult = []
+            props.webHook.forEach(result => {
+                affiliateOptions.forEach(aff=>{
+                    if(result.FormType === "FormW9")
+                    {
+                        if(result.FormW9.PayeeRef === aff.value)
+                        {
+                            searchResult.push(result)
+                        }
+                    }
+                    else if(result.FormType === "W8Ben")
+                    {
+                        if(result.FormW8Ben.PayeeRef === aff.value)
+                        {
+                            searchResult.push(result)
+                        }
+                    }
+                })
+                
             })
             setWebHook(searchResult)
         }
