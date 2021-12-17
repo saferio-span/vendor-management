@@ -77,6 +77,7 @@ export default async function handler(req,res)
                 },
                 options
 			);
+			
             res.status(200).send(output.data);
 
 		} catch (err) {

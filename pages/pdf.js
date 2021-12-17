@@ -23,7 +23,7 @@ export const getServerSideProps = async (context)=>{
 const WebHook = (props) => {
 
     // console.log(props.affiliates)
-    // console.log(props.data)
+    console.log(props.data)
 
     const handleUrl=async(url)=>{
         console.log(url)
@@ -54,7 +54,7 @@ const WebHook = (props) => {
                 <tr>
                   <th>Record ID</th>
                   <th>Files Unmasked</th>
-                  <th>Files Unmasked</th>
+                  <th>Files Masked</th>
                   
                 </tr>
               </thead>
