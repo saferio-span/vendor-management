@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { useUserValue } from "../contexts/UserContext";
 import { actionTypes } from "../contexts/userReducer"
 import absoluteUrl from 'next-absolute-url'
-import { credentials } from '../config/variables';
+// import { credentials } from '../config/variables';
 import { toast,ToastContainer } from "react-toastify"
 import Router from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +18,9 @@ export const getServerSideProps = async (context)=>{
   const { origin } = absoluteUrl(req)
 
   const url = context.req.headers.referer
+  const envRes = await axios.get(`${origin}/api/getAllEnv`)
+  const environCreds = await envRes.data
+  // console.log(environCreds)
   // if(!session)
   // {
   //   return{
@@ -30,7 +33,8 @@ export const getServerSideProps = async (context)=>{
 
   return{
     props:{ 
-      url:origin
+      url:origin,
+      credentials : environCreds
     }
   }
 }
@@ -39,6 +43,7 @@ export default function Home(props) {
   var options = []
   const [{environment},dispatch] = useUserValue();
   const [details,setDetails] = useState(null)
+  const credentials = props.credentials
   // const [env,setEnv]=useState(null)
 
   const handleSelectChange=async(e)=>{
@@ -175,6 +180,10 @@ export default function Home(props) {
                     onChange={handleSelectChange}
                 />
             </div>
+            
+          </div>
+          <div className="col-12 text-center mt-4">
+              <p>Didn't set your environment ? No worries you can do it form here ! <Link href='/addEnv'><a>Click me</a></Link></p>
           </div>
         </div>
         <hr />
@@ -211,10 +220,6 @@ export default function Home(props) {
             </div>
           </div>
       </main>
-
-      <footer>
-       
-      </footer>
     </div>
   )
 }

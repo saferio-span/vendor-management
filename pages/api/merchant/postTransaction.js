@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import moment from 'moment'
 import axios from 'axios'
 import {credentials} from "../../../config/variables"
+import Environment from "../../../models/envModel"
 // import { LocalStorage } from "node-localstorage";
 // import accessToken from "../../../config/generateAccessToken"
 
@@ -22,8 +23,8 @@ export default async function handler(req,res)
     const { amount,payeeRef,description,businessId,payerRef,selectedDate,sequenceId,whAmount,envName } = req.body;
 	console.log(req.body)
 
-    const cred = credentials.filter((user)=>user.name===envName)
-	console.log(cred[0])
+    // const cred = credentials.filter((user)=>user.name===envName)
+	const cred = await Environment.find({name:envName})
     const apiUrl = cred[0].apiUrl
 	const authUrl = cred[0].authUrl
 	const clientId = cred[0].clientId

@@ -58,13 +58,15 @@ export default async function handler(req,res)
 		zip,
 	} = req.body;
 
+	const payerRef = `Pr${random}`
 	const businessObj = {
-		BusinessNm:businessName,
+		BusinessNm: businessName,
+		PayerRef: payerRef,
 		isEIN: true,
 		EINorSSN: ein,
-		Email:email,
-		ContactNm:contactName,
-		Phone:"1234567890",
+		Email: email,
+		ContactNm: contactName,
+		Phone: "1234567890",
 		isBusinessTerminated: false,
 		USAddress: {
 			Address1:address1,
@@ -110,7 +112,7 @@ export default async function handler(req,res)
 		merchant.name = req.body.contactName
 		merchant.email = req.body.email
 		merchant.password = bcrypt.hashSync(req.body.password, 10)
-		merchant.payerRef = `Pr${random}`
+		merchant.payerRef = payerRef
 		merchant.environment = envName
 
 		merchant.save((err, userCreated)=>{

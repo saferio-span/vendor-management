@@ -2,6 +2,7 @@ import connectDB from "../../../config/connectDB";
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
 import {credentials} from "../../../config/variables"
+import Environment from "../../../../models/envModel"
 
 connectDB()
 
@@ -12,7 +13,8 @@ export default async function handler(req,res)
 	// const authUrl = global.localStorage.getItem('authUrl')
     const { submissionId,envName } = req.body;
 
-	const cred = credentials.filter((user)=>user.name===envName)
+	const cred = await Environment.find({name:req.body.envName})
+	// const cred = credentials.filter((user)=>user.name===envName)
     const apiUrl = cred[0].apiUrl
 	const authUrl = cred[0].authUrl
 	const clientId = cred[0].clientId
