@@ -412,6 +412,15 @@ const countries = {
 
 const credentials = [
     {
+        name:"Andros Sandbox",
+        clientId:"86a0d5672a229fb6",
+        clientSecret:"2b9BUmQKieG1gOALdpFdFw",
+        userToken:"5dcc93cf52314a16a9014e66d2061ae8",
+        environment:"sandbox",
+        authUrl: "https://testoauth.expressauth.net/v2/tbsauth",
+	    apiUrl: "https://testapi.taxbandits.com/v1.6.1",
+    },
+    {
         name:"Balaji Sandbox",
         clientId:"81f0ca36db244112",
         clientSecret:"oXuOd267lYq1Yxnxi0x87Q",
