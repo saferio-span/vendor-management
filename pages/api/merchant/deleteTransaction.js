@@ -2,7 +2,7 @@ import connectDB from "../../../config/connectDB";
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
 import {credentials} from "../../../config/variables"
-import Environment from "../../../../models/envModel"
+import Environment from "../../../models/envModel"
 
 connectDB()
 
