@@ -183,7 +183,7 @@ export default function Home(props) {
             
           </div>
           <div className="col-12 text-center mt-4">
-              <p>Didn't set your environment ? No worries you can do it form here ! <Link href='/addEnv'><a>Click me</a></Link></p>
+              <p>Didn{`'`}t set your environment ? No worries you can do it form here ! <Link href='/addEnv'><a>Click me</a></Link></p>
           </div>
         </div>
         <hr />
