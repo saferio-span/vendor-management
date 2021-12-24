@@ -47,7 +47,7 @@ export default async function handler(req,res)
         //     }
         // }).clone().catch(function(err){ console.log(err)});
 
-		res.status(200).json(whPost);
+		res.status(200).send();
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('server Error');
