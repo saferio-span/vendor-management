@@ -5,6 +5,7 @@ import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
+import { useUserValue } from '../../../contexts/UserContext'
 import AddTransaction from "../../../components/Layout/AddTransaction";
 import moment from 'moment'
 import Select from 'react-select'
@@ -46,6 +47,17 @@ export const getServerSideProps = async (context)=>{
 const Records1099Nec = (props) => {
     const records = props.records
     const affiliates = props.affiliates
+    const [{ user_details,environment }, dispatch] = useUserValue();
+
+    const handleBtnClick =async(submissionId,recordId)=>{
+        const res =await axios.post(`/api/affiliate/signUp`,{
+            submissionId,
+            recordId,
+            envName: environment ? environment.name : localStorage.getItem("env")
+        })
+        const data = res.data
+        window.open(data.FilePath, "_blank")
+    }
     // console.log(affiliates)
     // console.log(records)
     return (
@@ -83,11 +95,14 @@ const Records1099Nec = (props) => {
                                     name = option.name
                                 }
                             })
-                            return (<tr key={details._id}>
+                            return (
+                            <tr key={details._id}>
                                 <td>{name}</td>
                                 <td>{details.FederalReturnStatus}</td>
                                 <td>{details.TaxYear}</td>
-                                <td></td>
+                                <td>
+                                    <button className="btn btn-primary" onClick={() => handleBtnClick(submissionId,recordId)}>Get 1099 Pdf</button>
+                                </td>
                             </tr>)
                         })}
                     </tbody>
