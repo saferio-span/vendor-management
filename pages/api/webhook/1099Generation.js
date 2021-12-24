@@ -47,7 +47,7 @@ export default async function handler(req,res)
                             FederalReturnStatusTs: record.FederalReturn.StatusTs,
                             FederalReturnInfo: record.FederalReturn.Info
                         });
-                        await newWHResponse.save();
+                        await new1099Response.save();
                     }
                     else
                     {
