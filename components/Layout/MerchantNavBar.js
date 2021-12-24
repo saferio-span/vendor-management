@@ -10,6 +10,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 const MerchantNavBar = () => {
     
     const [payerRef,setPayerRef]=useState()
+    const [businessId,setBusinessId]=useState()
     const handleLogOut = ()=>{
         localStorage.clear();
         dispatch({
@@ -29,6 +30,7 @@ const MerchantNavBar = () => {
         const details = res.data
 
         setPayerRef(details[0].payerRef)
+        setBusinessId(details[0].businessID)
 
         dispatch({
             type: actionTypes.SET_USER_DETAILS,
@@ -87,6 +89,21 @@ const MerchantNavBar = () => {
                             }>
 
                                 <a className="nav-link">Transactions</a>
+                            </Link>
+                        </li>
+                        <li key="1099NECTMG" className="nav-item">
+                            {/* <Link href={`/merchant/transactions/${payerRef}`}> */}
+                            <Link href={
+                                { 
+                                    pathname: `/merchant/1099Nec/${businessId}`, 
+                                    query: { 
+                                        payerRef:payerRef,
+                                        envName: environment ? environment.name : localStorage.getItem("env")
+                                    }
+                                }
+                            }>
+
+                                <a className="nav-link">1099 NEC</a>
                             </Link>
                         </li>
                     </ul>
