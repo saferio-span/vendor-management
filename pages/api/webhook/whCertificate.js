@@ -38,15 +38,17 @@ export default async function handler(req,res)
         console.log(`Update Details`)
         console.log(affiliate)
 
-        await Affiliate.findOneAndUpdate({payeeRef: payeeRef },affiliate,function (err, user) {
-            if (err){
-                console.log(err)
-            }
-            else{
-                console.log(user)
-            }
-        }).clone().catch(function(err){ console.log(err)});
-
+        if(affiliate)
+        {
+            await Affiliate.findOneAndUpdate({payeeRef: payeeRef },affiliate,function (err, user) {
+                if (err){
+                    console.log(err)
+                }
+                else{
+                    console.log(user)
+                }
+            }).clone().catch(function(err){ console.log(err)});
+        }
 		res.status(200).json(whPost);
 	} catch (err) {
 		console.error(err.message);
