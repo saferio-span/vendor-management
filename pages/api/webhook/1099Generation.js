@@ -19,11 +19,11 @@ export default async function handler(req,res)
     const taxYear = req.body.TaxYear
     const form1099NECRecords = req.body.Form1099NECRecords
 	try {
-        form1099NECRecords.forEach(async(record)=>{
-            await Records1099.find({
+        form1099NECRecords.forEach((record)=>{
+            Records1099.find({
                 SubmissionId:submissionId,
                 RecordId: record.RecordId
-            },async (err,data)=>{
+            },(err,data)=>{
                 if (err){
                     console.log(err)
                     return res.status(401).send('Error occured in checking that the record already exist or not.');
@@ -47,19 +47,19 @@ export default async function handler(req,res)
                             FederalReturnStatusTs: record.FederalReturn.StatusTs,
                             FederalReturnInfo: record.FederalReturn.Info
                         });
-                        await new1099Response.save();
+                        new1099Response.save();
                         console.log(`generated Successfully for ${record.RecordId}`)
                     }
                     else
                     {
-                        await Records1099.findOneAndUpdate({RecordId:record.RecordId},{
+                        Records1099.findOneAndUpdate({RecordId:record.RecordId},{
                             FederalReturnStatus: record.FederalReturn.Status,
                             FederalReturnStatusTs: record.FederalReturn.StatusTs,
                             FederalReturnInfo: record.FederalReturn.Info
-                        }).clone().catch(function(err){ console.log(err)});
+                        })
                     }
                   } 
-            }).clone().catch(function(err){ console.log(err)});
+            })
         })
 
 		res.status(200).send();
