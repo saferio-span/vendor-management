@@ -19,8 +19,8 @@ export default async function handler(req,res)
     const taxYear = req.body.TaxYear
     const form1099NECRecords = req.body.Form1099NECRecords
 	try {
-        form1099NECRecords.forEach(async(record)=>{
-            await Records1099.find({
+        form1099NECRecords.forEach((record)=>{
+            Records1099.find({
                 SubmissionId:submissionId,
                 RecordId: record.RecordId
             },async (err,data)=>{
@@ -55,7 +55,7 @@ export default async function handler(req,res)
                             FederalReturnStatus: record.FederalReturn.Status,
                             FederalReturnStatusTs: record.FederalReturn.StatusTs,
                             FederalReturnInfo: record.FederalReturn.Info
-                        })
+                        }).clone().catch(function(err){ console.log(err)});
                     }
                   } 
             })
