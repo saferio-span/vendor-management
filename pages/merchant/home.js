@@ -223,7 +223,7 @@ export default function Home(props) {
                         <td>{details.payeeRef}</td>
                         <td><i className="bi bi-currency-dollar"></i> {amount}</td>
                         <td>
-                          <Link href={{ pathname: '/merchant/transactions', query: { payeeRef: details.payeeRef,envName: environment ? environment.name : localStorage.getItem("env") } }} >
+                          <Link href={{ pathname: '/merchant/transactions', query: { payerRef:user_details.payerRef,payeeRef: details.payeeRef,envName: environment ? environment.name : localStorage.getItem("env") } }} >
                             <a className="btn btn-link">{transactionCount}</a>
                           </Link></td>
                         <td>{details.w9Status ? details.w9Status : "-"}</td>

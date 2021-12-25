@@ -1,23 +1,17 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
+import Environment from "../../models/envModel"
 
 export default async function handler(req,res)
 {
-
-    const cred = {
-        name:"Saferio Sandbox",
-        clientId:"a0f968c860d96f60",
-        clientSecret:"TnUW4joWp3JnyJegUHAQ",
-        userToken:"b736720e7db84229a72c4fbbdc72b807",
-        environment:"sandbox",
-        authUrl: "https://testoauth.expressauth.net/v2/tbsauth",
-	    apiUrl: "https://testapi.taxbandits.com/v1.6.1",
-    }
-    const apiUrl = cred.apiUrl
-	const authUrl = cred.authUrl
-	const clientId = cred.clientId
-	const clientSecret = cred.clientSecret
-	const userToken = cred.userToken
+	const { submissionId,recordId,envName } = req.body;
+    // const cred = credentials.filter((user)=>user.name===envName)
+	const cred = await Environment.find({name:envName})
+    const apiUrl = cred[0].apiUrl
+	const authUrl = cred[0].authUrl
+	const clientId = cred[0].clientId
+	const clientSecret = cred[0].clientSecret
+	const userToken = cred[0].userToken
 
     const jwsToken = generateJws(clientId,clientSecret,userToken)
 
@@ -62,14 +56,11 @@ export default async function handler(req,res)
 			const output = await axios.post(
 				endPoint,
 				{
-                    SubmissionId: null,
+                    SubmissionId: submissionId,
                     RecordIds:[
                      {
-                      RecordId: "9056b604-3cc5-4ab9-8095-9c106b6a7d8e"
-                     },
-                     {
-                      RecordId :"e5df5a0c-df71-44a1-a129-ff8e067fcf4a"
-                     },
+                      RecordId: recordId
+                     }
                     ],
                     Customization: {
                         TINMaskType: "Both",

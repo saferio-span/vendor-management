@@ -28,10 +28,15 @@ export const getServerSideProps = async (context)=>{
     })
     const affiliates = await res.data
 
-    console.log(affiliates)
+    // console.log(affiliates)
 
-    const transRes = await axios.get(`${origin}/api/merchant/getAllTransactions`)
+    const transRes = await axios.post(`${origin}/api/merchant/getAllTransactions`,{
+        payerRef: query.payerRef,
+        envName: query.envName,
+    })
     const transactions = await transRes.data
+
+    console.log(transactions)
 
     return{
       props:{
@@ -116,13 +121,13 @@ const Transactions = (props) => {
             })
             const sortedResult = searchResult.slice((pageNum*10)-10, pageNum*10);
             updateLimitedTransaction(sortedResult)
-            updatepageCount(Math.ceil(sortedResult.length / 10))
+            updatepageCount(Math.ceil(transactions.length / 10))
         }
         else
         {
             const sortedResult = transactions.slice((pageNum*10)-10, pageNum*10);
             updateLimitedTransaction(sortedResult)
-            updatepageCount(Math.ceil(sortedResult.length / 10))
+            updatepageCount(Math.ceil(transactions.length / 10))
         }
         
         //eslint-disable-next-line

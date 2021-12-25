@@ -96,11 +96,12 @@ export default function Home(props) {
         <>
             <VendorNavbar />
             <div className="row my-5 mx-2">
-                <div className="col-10">
+                <div className="col-8">
                     <h4>Transactions List</h4>
                 </div>
-                <div className="col-2">
-                    {props.record && <button className="btn btn-warning" onClick={handle1099Click}><i className="bi bi-download"></i> 1099 Pdf</button> }
+                <div className="col-3 offset-1">
+                    {props.record && <button className="btn btn-warning mx-1" onClick={handle1099Click}><i className="bi bi-download"></i> Get 1099 Pdf</button> }
+                    {props.record && <button className="btn btn-info" onClick={handle1099Click}><i className="bi bi-download"></i> AWS 1099 Pdf</button> }
                 </div>
             </div>
             <div className="row mx-2 mb-3">
