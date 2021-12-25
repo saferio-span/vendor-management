@@ -6,7 +6,7 @@ export default async function handler(req,res)
 {
 	PdfUrls.find({
 		RecordId: req.body.Records[0].RecordId
-	},(err,data)=>{
+	},async (err,data)=>{
 		if (err){
 			console.log(err)
 			return res.status(401).send('Error occured in checking that the record already exist or not.');
