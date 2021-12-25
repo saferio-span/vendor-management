@@ -50,7 +50,7 @@ const Records1099Nec = (props) => {
     const [{ user_details,environment }, dispatch] = useUserValue();
 
     const handleBtnClick =async(submissionId,recordId)=>{
-        const res =await axios.post(`/api/affiliate/signUp`,{
+        const res =await axios.post(`/api/get1099Pdf`,{
             submissionId,
             recordId,
             envName: environment ? environment.name : localStorage.getItem("env")
@@ -67,13 +67,7 @@ const Records1099Nec = (props) => {
             <div className="row my-5 mx-2">
                 <div className="col-10">
                     <h4>1099 List</h4>
-                </div>
-                <div className="col-2 text-right">
-                    <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
-                        <i className="bi bi-person-plus-fill"></i> Add Payments
-                    </button>                    
-                </div>
-                
+                </div>                
             </div>
             <div className="row my-2 mx-2">
                 <table className="table table-hover table-striped table-responsive">
@@ -101,7 +95,7 @@ const Records1099Nec = (props) => {
                                 <td>{details.FederalReturnStatus}</td>
                                 <td>{details.TaxYear}</td>
                                 <td>
-                                    <button className="btn btn-primary" onClick={() => handleBtnClick(submissionId,recordId)}>Get 1099 Pdf</button>
+                                    <button className="btn btn-primary" onClick={async() => handleBtnClick(details.SubmissionId,details.RecordId)}>Get 1099 Pdf</button>
                                 </td>
                             </tr>)
                         })}

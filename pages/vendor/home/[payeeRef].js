@@ -4,6 +4,8 @@ import absoluteUrl from 'next-absolute-url'
 import axios from 'axios'
 import moment from 'moment'
 import ReactPaginate from "react-paginate"
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { useUserValue } from '../../../contexts/UserContext'
 
 export const getServerSideProps = async (context)=>{
     const { params,req } = context;
@@ -11,28 +13,50 @@ export const getServerSideProps = async (context)=>{
 
     const transRes = await axios.get(`${origin}/api/affiliate/getTransaction/${params.payeeRef}`)
     const transactions = await transRes.data
+
+    const recordRes = await axios.post(`${origin}/api/affiliate/get1099ByPayeeRef`,{
+        payeeRef : params.payeeRef
+    })
+    const record = await recordRes.data
+
+    console.log(record)
   
     return{
       props:{
-        transactions
+        transactions,
+        record
       }
     }
 }
   
 export default function Home(props) {
     const transactions = props.transactions
+    const [{ user_details,environment }, dispatch] = useUserValue();
     const [limitTransactions,setLimitTrans] =  useState([])
     const [pageNum,setPageNum] = useState(1)
     const [pageCount,setPageCount] = useState()
     const [searchValue,setSearchValue] = useState("")
+    const [submissionId,setSubmissionId] = useState("")
+    const [recordId,setRecordId] = useState("")
+
+    
 
     const handlePageClick = (data)=>{
         setPageNum(data.selected + 1)
     }
 
+    const handle1099Click = async()=>{
+        const res =await axios.post(`/api/get1099Pdf`,{
+            submissionId,
+            recordId,
+            envName: environment ? environment.name : localStorage.getItem("env")
+        })
+        const data = res.data
+        window.open(data.FilePath, "_blank")
+    }
+
     useEffect(()=>{
         setLimitTrans([])
-
         if(transactions && searchValue != "")
         {
             const searchResult = []
@@ -56,7 +80,11 @@ export default function Home(props) {
             setPageCount(Math.ceil(transactions.length / 10))
             setLimitTrans(sortedResult)
         }
-
+        if(props.record)
+        {
+            setSubmissionId(props.record.SubmissionId)
+            setRecordId(props.record.RecordId)
+        }
         //eslint-disable-next-line
       },[pageNum,pageCount,searchValue])
 
@@ -70,6 +98,9 @@ export default function Home(props) {
             <div className="row my-5 mx-2">
                 <div className="col-10">
                     <h4>Transactions List</h4>
+                </div>
+                <div className="col-2">
+                    {props.record && <button className="btn btn-warning" onClick={handle1099Click}><i className="bi bi-download"></i> 1099 Pdf</button> }
                 </div>
             </div>
             <div className="row mx-2 mb-3">

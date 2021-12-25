@@ -4,7 +4,6 @@ import axios from 'axios'
 import Environment from "../../models/envModel"
 import PdfUrls from "../../models/1099PdfUrlModel"
 
-
 connectDB()
 
 export default async function handler(req,res)
@@ -62,8 +61,8 @@ export default async function handler(req,res)
 
         if(output.data.StatusCode == 200)
         {
-           const res = await PdfUrls.findOne({RecordId:output.data.Form1099NecRecords[0].RecordId})
-           const pdfData = await res.data
+           const pdfData = await PdfUrls.findOne({RecordId:output.data.Form1099NecRecords[0].RecordId})
+        //    const pdfData = await res.data
            console.log(pdfData)
            res.status(200).send(pdfData);
         }
