@@ -36,5 +36,5 @@ export default async function handler(req,res)
 			}
 		}
 	})
-	res.status(200).json(pdfData);
+	res.status(200).json();
 }
