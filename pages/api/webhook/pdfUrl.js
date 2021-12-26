@@ -29,7 +29,6 @@ export default async function handler(req,res)
 				console.log("Pdf Store Body End")
 				try {
 					const pdfData = await newPdfResponse.save();
-					res.status(200).json(pdfData);
 				} catch (err) {
 					console.error(err.message);
 					res.status(500).send('server Error');
@@ -37,4 +36,5 @@ export default async function handler(req,res)
 			}
 		}
 	})
+	res.status(200).json(pdfData);
 }
