@@ -107,7 +107,9 @@ const SignUp = (props) => {
             return false
         }
 
-        const availablity = await axios.get(`/api/affiliate/findByEmail/${values.email}`)
+        const availablity = await axios.post(`/api/affiliate/findByEmail/${values.email}`,{
+            envName: environment ? environment.name : localStorage.getItem("env")
+        })
 
         if(availablity.data.length > 0)
         {

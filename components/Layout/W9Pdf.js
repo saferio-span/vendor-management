@@ -1,15 +1,15 @@
 import React from 'react'
 import Link from "next/link";
 
-const W9Pdf = ({url,userId}) => {
+const W9Pdf = ({url,userId,header}) => {
 
     return (
         <>
-            <div className="modal fade" id={`w9Pdf${userId}`} data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal fade" id={`pdf${userId}`} data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id={userId !== "" ? `staticBackdropLabel${userId}` : `staticBackdropLabel`} >W9 PDF</h5>
+                            <h5 className="modal-title" id={userId !== "" ? `staticBackdropLabel${userId}` : `staticBackdropLabel`} >{header?header:"W9 PDF"}</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">

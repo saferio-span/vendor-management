@@ -229,7 +229,7 @@ export default function Home(props) {
                         <td>{details.w9Status ? details.w9Status : "-"}</td>
                         <td>{details.tinMatchingStatus ? details.tinMatchingStatus : "-"}</td>
                         <td>  
-                          {details.w9Status ? <><button key={`${details._id}w9`} className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#w9Pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button></> : <></> }
+                          {details.w9Status ? <><button key={`${details._id}w9`} className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button></> : <></> }
                           <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
                           <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
     const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{

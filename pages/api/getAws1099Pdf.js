@@ -55,7 +55,7 @@ export default async function handler(req,res)
 			const output = await axios.post(
 				endPoint,
 				{
-                    SubmissionId: submissionId,
+                    SubmissionId: null,
                     RecordIds:[
                      {
                       RecordId: recordId
@@ -71,10 +71,9 @@ export default async function handler(req,res)
             res.status(200).send(output.data);
 
 		} catch (err) {
-			res.status(202).send(err);
-			// res.status(202).send(err);
+            err.response.data.Form1099NecRecords.ErrorRecords[0].status=202
+			res.status(202).send(err.response.data.Form1099NecRecords.ErrorRecords[0]);
 		}	
-
 	}
 	else{
 		res.status(401).send(`Access token is null`);

@@ -4,7 +4,7 @@ import Environment from "../../models/envModel"
 
 export default async function handler(req,res)
 {
-	const { submissionId,recordId,envName } = req.body;
+	const { businessId,recordId,payeeRef,payerRef,envName } = req.body;
     // const cred = credentials.filter((user)=>user.name===envName)
 	const cred = await Environment.find({name:envName})
     const apiUrl = cred[0].apiUrl
@@ -48,22 +48,28 @@ export default async function handler(req,res)
 			},
 		};
 	
-		const endPoint = `${apiUrl}/Form1099NEC/RequestPdfUrls`;
+		const endPoint = `${apiUrl}/Form1099NEC/RequestDistURL`;
 
 		try {
 
 			const output = await axios.post(
 				endPoint,
 				{
-                    SubmissionId: submissionId,
-                    RecordIds:[
-                     {
-                      RecordId: recordId
-                     }
-                    ],
-                    Customization: {
-                        TINMaskType: "Masked",
-                    },
+                    TaxYear: "2021",
+                    RecordId:recordId,
+                    Business: {
+                        BusinessId :businessId,
+                        PayerRef: payerRef
+                     },
+                    Recipient: {
+                        PayeeRef: payeeRef,
+                     },
+                     Customization: {
+                        BusinessLogoUrl: "//logo.clearbit.com/refersion.com",
+                        ReturnUrl: "https://example.com",
+                        CancelUrl: "https://example.com",
+                        ExpiryTime: "5"
+                    }
                 },
                 options
 			);
@@ -71,10 +77,10 @@ export default async function handler(req,res)
             res.status(200).send(output.data);
 
 		} catch (err) {
-			res.status(202).send(err);
-			// res.status(202).send(err);
+            console.log(err.response.data.Errors[0])
+            err.response.data.Errors[0].status=202
+			res.status(202).send(err.response.data.Errors[0]);
 		}	
-
 	}
 	else{
 		res.status(401).send(`Access token is null`);

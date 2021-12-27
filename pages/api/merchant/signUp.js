@@ -92,7 +92,7 @@ export default async function handler(req,res)
 
 	} catch (err) {
 		success = false
-		console.log(success)
+		console.log(err.response.data)
 		res.status(202).send(err.response.data.Errors[0]);
 		// res.status(202).send(err);
 	}

@@ -7,9 +7,11 @@ connectDB()
 export default async function handler(req, res){
 
   const email = req.query.email
+  const envName = req.body.envName
+
 
   try {
-    const userData = await Affiliate.find({ email: email })
+    const userData = await Affiliate.find({ email: email,environment: envName })
     res.json(userData)
   } catch (err) {
     console.log(err)
