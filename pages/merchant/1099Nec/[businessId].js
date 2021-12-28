@@ -13,6 +13,9 @@ import Select from 'react-select'
 import ReactPaginate from "react-paginate"
 import { useRouter } from 'next/router'
 import W9Pdf from "../../../components/Layout/W9Pdf";
+// import { Document,pdfjs } from 'react-pdf/dist/esm/entry.webpack';
+import { Document,pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 
 export const getServerSideProps = async (context)=>{
@@ -25,6 +28,8 @@ export const getServerSideProps = async (context)=>{
     })
     
     const merchant = await merchantRes.data
+    console.log(`Merchant`)
+    console.log(merchant)
     
     const res = await axios.post(`${origin}/api/affiliate/getAllByMerchnatId`,{
         merchantId : merchant[0]._id,
@@ -52,6 +57,8 @@ const Records1099Nec = (props) => {
     const [{ user_details,environment }, dispatch] = useUserValue();
     const [distUrl,setDistUrl] = useState()
     const [recordId,setRecordId] = useState()
+    const [bufferString,setbufferString] = useState()
+    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
     const handleBtnClick =async(submissionId,recordId)=>{
         const res =await axios.post(`/api/get1099Pdf`,{
@@ -70,7 +77,6 @@ const Records1099Nec = (props) => {
             envName: environment ? environment.name : localStorage.getItem("env")
         })
         const data = await res.data
-        // console.log(data)
 
         if(data.status == 202)
         {
@@ -80,38 +86,25 @@ const Records1099Nec = (props) => {
             console.log(data)
            const url = data.Form1099NecRecords.SuccessRecords[0].Files.Copy1.Masked
            console.log(url)
-           const res =await axios.post(`/api/decryptPdf`,{
-                urlLink:url,
-                recordId
+           const res =await axios(`/api/decryptPdf`,{
+                method: 'post',
+                responseType: 'blob',
+                data:{
+                    urlLink:url,
+                    recordId
+                }
             })
 
             const pdfData = await res.data
 
-            console.log(pdfData)
-
-            // if(pdfData.status == 200)
-            // {
-            //     window.open(pdfData.url, "_blank")
-            // }
-            // else{
-            //     toast.error("Pdf cannot be downloaded")
-            // }
-
-            // }
-
-            // if(pdfData)
-            // {
-            //    const pdfUrl= URL.createObjectURL(pdfData.Body);
-            //    console.log(pdfUrl)
-            // //    window.open(data.FilePath, "_blank")
-            // }
-
-        //     const data= await res.data
+            const file = new Blob(
+                [pdfData], 
+                {type: 'application/pdf'});
+            const fileURL = URL.createObjectURL(file);
+            console.log(fileURL)
+            window.open(fileURL,"_blank");
             
-        //     console.log(data)
-            window.open(pdfData.Body, "_blank")
         }
-        // window.open(data.FilePath, "_blank")
     }
 
     const handleDistBtnClick = async(props)=>{
@@ -131,16 +124,12 @@ const Records1099Nec = (props) => {
         if(data.status == 202)
         {
             toast.error(data.Message)
-        }
-        else
+        }else
         {
-            setDistUrl(data.DistributionUrl)
-            setRecordId(distData.recordId)
+            window.open(data.DistributionUrl,"_blank");
         }
 
     }
-    console.log(distUrl)
-    console.log(recordId)
     return (
         <>
             <MerchantNavBar />
@@ -189,8 +178,7 @@ const Records1099Nec = (props) => {
                                 <td>
                                     <button className="btn btn-primary mx-1" onClick={async() => handleBtnClick(details.SubmissionId,details.RecordId)}>Get 1099 Pdf</button>
                                     <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,details.RecordId)}>AWS 1099 Pdf</button>
-                                    <button className="btn btn-success mx-1" onClick={async() => handleAwsBtnClick("323394f6-9b8c-4676-99c1-fea7b4cf676a","9056b604-3cc5-4ab9-8095-9c106b6a7d8e")}>AWS 1099 Static</button>
-                                    {distUrl ? <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Show 1099 Pdf</button> : <button className="btn btn-info mx-1" onClick={async() => handleDistBtnClick(distProps)}>Get Dist 1099 Pdf</button> }
+                                    <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)}>Get Dist 1099 Pdf</button>
                                     {/* <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} onClick={async() => handleDistBtnClick(distProps)} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Distribution 1099 Pdf</button> */}
                                 </td>
                             </tr>)
@@ -200,9 +188,9 @@ const Records1099Nec = (props) => {
                 
             </div>
 
-            {distUrl && recordId && <> <W9Pdf url={distUrl} userId={recordId} header="1099 Pdf" />
-            </>
-        }
+            {/* {distUrl && recordId && <> <W9Pdf url={distUrl} userId={`pdf${recordId}`} header="1099 Pdf" /></>} */}
+            {/* {bufferString && recordId && <>{bufferString}</>} */}
+            {/* <Document file="sample.pdf" /> */}
         </>
     )
 }

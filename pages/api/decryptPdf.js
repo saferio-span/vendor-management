@@ -29,19 +29,17 @@ export default async function handler(req,res)
 
     // const pdfData = s3.getObject(params).createReadStream().pipe()
     // console.log(pdfData)
-
+    console.log("Getting Pdf Buffer")
     s3.getObject(params, function(err, data) {
         // Handle any error and exit
         if (err)
-            return err;
-    
-      // No error happened
-      // Convert Body from a Buffer to a String
-        let objectData = data.Body.toString('utf-8'); // Use the encoding necessary
-    //   console.log(objectData)
-    //   fs.writeFileSync('some.pdf', objectData)
-        res.status(200).send(data.Body)
+        {
+            console.log(err)
+            return err;          
+        }
+        res.status(200).send(data.Body)        
     });
+    
     // // console.log(pdfData)
     // var file = fs.createWriteStream(`${recordId}.pdf`);
     // // var file = fs.createWriteStream(`/1099Pdf/${recordId}.pdf`);// save the pdf in local

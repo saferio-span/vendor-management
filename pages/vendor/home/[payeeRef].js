@@ -6,10 +6,25 @@ import moment from 'moment'
 import ReactPaginate from "react-paginate"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useUserValue } from '../../../contexts/UserContext'
+import { toast, ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 
 export const getServerSideProps = async (context)=>{
     const { params,req } = context;
     const { origin } = absoluteUrl(req)
+
+    const userRes = await axios.post(`${origin}/api/affiliate/getAffByPayeeRef`,{
+        payeeRef : params.payeeRef
+    })
+    const user = await userRes.data[0]
+
+    // console.log(`User Start --------`)
+    // console.log(user)
+    // console.log(`User End --------`)
+
+
+    const merchantRes = await axios.get(`${origin}/api/affiliate/${user._id}`)
+    const merchant =  await merchantRes.data.merchant
 
     const transRes = await axios.get(`${origin}/api/affiliate/getTransaction/${params.payeeRef}`)
     const transactions = await transRes.data
@@ -19,18 +34,24 @@ export const getServerSideProps = async (context)=>{
     })
     const record = await recordRes.data
 
-    console.log(record)
+    // console.log(record)
   
     return{
       props:{
         transactions,
-        record
+        record,
+        merchant
       }
     }
 }
   
 export default function Home(props) {
     const transactions = props.transactions
+    const businessId = props.merchant.businessId
+    const payerRef = props.merchant.payerRef
+
+    // const businessId = ""
+    // const payerRef = ""
     const [{ user_details,environment }, dispatch] = useUserValue();
     const [limitTransactions,setLimitTrans] =  useState([])
     const [pageNum,setPageNum] = useState(1)
@@ -38,6 +59,7 @@ export default function Home(props) {
     const [searchValue,setSearchValue] = useState("")
     const [submissionId,setSubmissionId] = useState("")
     const [recordId,setRecordId] = useState("")
+    // console.log(user_details)
 
     
 
@@ -53,6 +75,68 @@ export default function Home(props) {
         })
         const data = res.data
         window.open(data.FilePath, "_blank")
+    }
+
+    const handleAwsBtnClick =async()=>{
+        const res =await axios.post(`/api/getAws1099Pdf`,{
+            submissionId,
+            recordId,
+            envName: environment ? environment.name : localStorage.getItem("env")
+        })
+        const data = await res.data
+        console.log(data)
+
+        if(data.status == 202)
+        {
+            toast.error(data.Message)
+        }
+        else{
+            // console.log(data)
+           const url = data.Form1099NecRecords.SuccessRecords[0].Files.Copy1.Masked
+           console.log(url)
+           const res = await axios(`/api/decryptPdf`,{
+                method: 'post',
+                responseType: 'blob',
+                data:{
+                    urlLink:url,
+                    recordId
+                }
+            })
+
+            const pdfData = await res.data
+
+            const file = new Blob(
+                [pdfData], 
+                {type: 'application/pdf'});
+            const fileURL = URL.createObjectURL(file);
+            console.log(fileURL)
+            window.open(fileURL,"_blank");
+        
+        }
+    }
+
+    const handleDistBtnClick = async()=>{
+        // console.log(user_details)
+        const distData = {
+            businessId : businessId,
+            recordId : recordId,
+            payeeRef : user_details.payeeRef,
+            payerRef : payerRef,
+            envName: environment ? environment.name : localStorage.getItem("env")
+        }
+
+        const res =await axios.post(`/api/getDistributionUrl`,distData)
+        const data = await res.data
+
+        // console.log(data)
+        if(data.status == 202)
+        {
+            toast.error(data.Message)
+        }else
+        {
+            window.open(data.DistributionUrl,"_blank");
+        }
+
     }
 
     useEffect(()=>{
@@ -95,13 +179,15 @@ export default function Home(props) {
     return (
         <>
             <VendorNavbar />
+            <ToastContainer />
             <div className="row my-5 mx-2">
                 <div className="col-8">
                     <h4>Transactions List</h4>
                 </div>
-                <div className="col-3 offset-1">
-                    {props.record && <button className="btn btn-warning mx-1" onClick={handle1099Click}><i className="bi bi-download"></i> Get 1099 Pdf</button> }
-                    {props.record && <button className="btn btn-info" onClick={handle1099Click}><i className="bi bi-download"></i> AWS 1099 Pdf</button> }
+                <div className="col-4">
+                    {props.record && <> <button className="btn btn-primary mx-1" onClick={handle1099Click}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
+                    <button className="btn btn-warning mx-1" onClick={handleAwsBtnClick}><i className="bi bi-download" /> AWS 1099 Pdf</button>
+                    <button className="btn btn-success mx-1" onClick={handleDistBtnClick}><i className="bi bi-download"/> Get Dist 1099 Pdf</button></>}
                 </div>
             </div>
             <div className="row mx-2 mb-3">
