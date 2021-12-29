@@ -1,6 +1,6 @@
-import connectDB from "../../../config/connectDB";
-import Affiliate from "../../../models/affiliateModel"
-import WHResponse from "../../../models/wHResponseModel"
+import connectDB from "../../../../config/connectDB";
+import Affiliate from "../../../../models/affiliateModel"
+import WHResponse from "../../../../models/wHResponseModel"
 connectDB()
 
 export default async function handler(req,res)

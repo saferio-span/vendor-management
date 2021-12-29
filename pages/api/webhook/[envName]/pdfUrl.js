@@ -1,5 +1,5 @@
-import connectDB from "../../../config/connectDB";
-import PdfUrls from "../../../models/1099PdfUrlModel"
+import connectDB from "../../../../config/connectDB";
+import PdfUrls from "../../../../models/1099PdfUrlModel"
 connectDB()
 
 export default async function handler(req,res)
