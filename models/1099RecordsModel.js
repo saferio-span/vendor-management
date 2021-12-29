@@ -13,6 +13,7 @@ const FederalReturn = new mongoose.Schema({
 	}
 });
 
+
 const Form1099NECRecord = new mongoose.Schema({
 	RecordId: {
 		type: String,
@@ -30,6 +31,9 @@ const Form1099NECRecord = new mongoose.Schema({
 		type: String,
 	},
   FederalReturn:{
+    type: FederalReturn
+  },
+  TINMatching:{
     type: FederalReturn
   }
 });
