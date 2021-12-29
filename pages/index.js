@@ -47,6 +47,7 @@ export default function Home(props) {
   const [inputVal,setInputVal]=useState()
   const [filterCred,setFilterCred]=useState()
   const [showNote,setShowNote]=useState(false)
+  const [showEnv,setShowEnv]=useState(false)
   // console.log(credentials)
   var options = []
 
@@ -70,6 +71,7 @@ export default function Home(props) {
       localStorage.setItem('env',cred[0].name)
       setDetails(cred[0]) 
       setShowNote(true)
+      setShowEnv(false)
     }
   }
 
@@ -121,6 +123,7 @@ export default function Home(props) {
     const value = e.target.value
     setEnv(value)
     setInputVal(value)
+    setShowEnv(true)
 
     if(value !== "")
     {
@@ -186,7 +189,7 @@ export default function Home(props) {
                 <input type="text" name="env" onChange={handleEnvChange} autoComplete="off" value={inputVal} className="form-control" placeholder="Environment Name"/>
             </div>
             <div className="list-group">
-              {filterCred && filterCred.map((details) => {
+              {filterCred && showEnv && filterCred.map((details) => {
                 return (
                   <button key={details.name} type="button" onClick={()=>handleSelectChange(details.name)} className="list-group-item list-group-item-action">{details.name}</button>
                 )}
@@ -202,22 +205,22 @@ export default function Home(props) {
         <hr />
           <>
             <div className="row my-5">
-              <div className="col-3 offset-1">
+              <div className="col-4 offset-3">
                 {/* <Link href='/merchant/login'> */}
                     <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Merchant Login</a>
                 {/* </Link> */}
                 
               </div>
-              <div className="col-3 offset-1">
+              <div className="col-3">
                 {/* <Link href='/vendor/login'> */}
                     <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Vendor Login</a>
                 {/* </Link> */}
               </div>
-              <div className="col-3 offset-1">
-                {/* <Link href='/webHook'> */}
+              {/* <div className="col-3 offset-1">
+                <Link href='/webHook'>
                     <a className="btn btn-warning mx-5" onClick={handleWebhook} >Webhook</a>
-                {/* </Link> */}
-              </div>
+                </Link>
+              </div> */}
             </div>
           </>
 

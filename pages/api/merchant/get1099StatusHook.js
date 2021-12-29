@@ -1,5 +1,5 @@
 import connectDB from "../../../config/connectDB";
-import WhResponse from "../../../models/wHResponseModel"
+import Records1099 from "../../../models/1099RecordsModel"
 
 connectDB()
 
@@ -7,7 +7,7 @@ export default async function handler(req,res)
 {
 	const envName = req.body.envName
 	try {
-		const trans = await WhResponse.find({environment:envName}).sort({ date: 'desc' });
+		const trans = await Records1099.find({environment:envName}).sort({ FederalReturnStatusTs: 'desc' });
 		res.status(200).json(trans);
 	} catch (err) {
 		console.error(err);

@@ -13,14 +13,17 @@ export default async function handler(req,res)
 
 	console.log("1099 Store Body End")
     const envName = req.query.envName
+    console.log(`Env name : ${envName}`)
 
     const submissionId = req.body.SubmissionId
     const businessId = req.body.BusinessId
     const payerRef = req.body.PayerRef
     const taxYear = req.body.TaxYear
     const form1099NECRecords = req.body.Form1099NECRecords
-	try {
+	// try {
         form1099NECRecords.forEach((record)=>{
+            console.log(`Submission Id : ${submissionId}`)
+            console.log(`Record Id : ${record.RecordId}`)
             Records1099.find({
                 SubmissionId:submissionId,
                 RecordId: record.RecordId
@@ -65,8 +68,8 @@ export default async function handler(req,res)
         })
 
 		res.status(200).send();
-	} catch (err) {
-		console.error(err.message);
-		res.status(500).send('server Error');
-	}
+	// } catch (err) {
+	// 	console.error(err.message);
+	// 	res.status(500).send('server Error');
+	// }
 }

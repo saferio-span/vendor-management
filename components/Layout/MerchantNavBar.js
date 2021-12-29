@@ -106,6 +106,19 @@ const MerchantNavBar = () => {
                                 <a className="nav-link">1099 NEC</a>
                             </Link>
                         </li>
+                        <li key="webhook" className="nav-item">
+                            {/* <Link href={`/merchant/transactions/${payerRef}`}> */}
+                            <Link href={
+                                { 
+                                    pathname: `/merchant/webhook`, 
+                                    query: { 
+                                        envName: environment ? environment.name : localStorage.getItem("env")
+                                    }
+                                }
+                            }>
+                                <a className="nav-link">Webhook</a>
+                            </Link>
+                        </li>
                     </ul>
 
                     <span className="text-light">Environment : {environment ? environment.name : localStorage.getItem("env")}</span>
