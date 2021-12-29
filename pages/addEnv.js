@@ -141,18 +141,13 @@ const AddEnv = (props) => {
                 setShowEnvName(tempEnvname)
             }
         }
+    //eslint-disable-next-line
     },[values])
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
         setShowNote(false)
-        // if(name == "name" || name == "envType" )
-        // {
-        //     console.log(value)
-            
-            
-        // }
 	};
 
     const handleSelectChange = (e)=>{

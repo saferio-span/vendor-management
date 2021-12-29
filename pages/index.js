@@ -148,6 +148,7 @@ export default function Home(props) {
     {
       setFilterCred([])
     }
+  //eslint-disable-next-line
   }, [env])
 
   // console.log(filterCred)
@@ -185,7 +186,7 @@ export default function Home(props) {
             <div className="list-group">
               {filterCred && filterCred.map((details) => {
                 return (
-                  <button type="button" onClick={()=>handleSelectChange(details.name)} className="list-group-item list-group-item-action">{details.name}</button>
+                  <button key={details.name} type="button" onClick={()=>handleSelectChange(details.name)} className="list-group-item list-group-item-action">{details.name}</button>
                 )}
               )}
             </div>
