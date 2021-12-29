@@ -92,7 +92,8 @@ const Records1099Nec = (props) => {
                 data:{
                     urlLink:url,
                     recordId
-                }
+                },
+                envName: environment ? environment.name : localStorage.getItem("env")
             })
 
             const pdfData = await res.data

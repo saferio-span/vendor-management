@@ -100,7 +100,8 @@ export default function Home(props) {
                 data:{
                     urlLink:url,
                     recordId
-                }
+                },
+                envName: environment ? environment.name : localStorage.getItem("env")
             })
 
             const pdfData = await res.data

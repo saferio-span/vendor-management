@@ -1,20 +1,27 @@
 import AWS from "aws-sdk"
 import fs from "fs"
+import Environment from "../../models/envModel"
 
 export default async function handler(req,res)
 {
     const url = req.body.urlLink
     const recordId = req.body.recordId
+    const envName = req.body.envName
+
+    const cred = await Environment.find({name:envName})
+    const awsAccessKey = cred[0].awsAccessKey
+	const awsSecretKey = cred[0].awsSecretKey
+	const pdfKey = cred[0].pdfKey
     const urlParts = url.split('.com/');
     console.log(urlParts[1])
     AWS.config.update({ region: "us-east-1" });// don't change this US-East-01
 
     const s3 = new AWS.S3({
-        accessKeyId: process.env.AWS_DECRYPT_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_DECRYPT_SECRET_KEY
+        accessKeyId: awsAccessKey,
+        secretAccessKey: awsSecretKey
     });
     
-    const ssecKey = Buffer.alloc(32, process.env.BASE_64_PDF_KEY,'base64')// you can get the key from Taxbandits API Console
+    const ssecKey = Buffer.alloc(32, pdfKey,'base64')// you can get the key from Taxbandits API Console
  
     var params = {
         Key: urlParts[1],// File path without main domain URL.
@@ -22,13 +29,7 @@ export default async function handler(req,res)
         SSECustomerAlgorithm: "AES256",
         SSECustomerKey: ssecKey,
     }
-    // console.log(params)
 
-    // let data = await s3.getObject(params).promise()
-    // console.log(data)
-
-    // const pdfData = s3.getObject(params).createReadStream().pipe()
-    // console.log(pdfData)
     console.log("Getting Pdf Buffer")
     s3.getObject(params, function(err, data) {
         // Handle any error and exit
@@ -39,17 +40,4 @@ export default async function handler(req,res)
         }
         res.status(200).send(data.Body)        
     });
-    
-    // // console.log(pdfData)
-    // var file = fs.createWriteStream(`${recordId}.pdf`);
-    // // var file = fs.createWriteStream(`/1099Pdf/${recordId}.pdf`);// save the pdf in local
-    // s3.getObject(params).createReadStream().pipe(file);
-
-    // const urlPdf = s3.getSignedUrl('getObject',params)
-    // res.status(200).send({
-    //     status:200,
-    //     url:urlPdf
-    // });
-
-    // res.status(200).send()
 }

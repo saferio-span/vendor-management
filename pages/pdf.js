@@ -29,7 +29,7 @@ const WebHook = (props) => {
         console.log(url)
         const res = await axios.post(`/api/decryptPdf`,{
             urlLink:url,
-            envName:"Saferio Sandbox"
+            envName:"Saferio-sandbox"
         })
         const result = await res.data
         console.log(result)
