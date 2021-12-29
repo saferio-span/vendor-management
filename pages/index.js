@@ -40,71 +40,37 @@ export const getServerSideProps = async (context)=>{
 }
 
 export default function Home(props) {
-  var options = []
   const [{environment},dispatch] = useUserValue();
   const [details,setDetails] = useState(null)
   const credentials = props.credentials
-  // const [env,setEnv]=useState(null)
+  const [env,setEnv]=useState()
+  const [inputVal,setInputVal]=useState()
+  const [filterCred,setFilterCred]=useState()
+  const [showNote,setShowNote]=useState(false)
+  // console.log(credentials)
+  var options = []
 
-  const handleSelectChange=async(e)=>{
-    if(e === null)
+  const handleSelectChange=async(name)=>{
+    if(name === "")
     {
-      // const res = await axios.post(`/api/setEnvironment`,{
-      //   env: null
-      // })
       dispatch({
         type: actionTypes.SET_ENVIRONMENT_DETAILS,
         data: null,
       })
-      // if(res.status===200)
-      // {
-        setDetails(null)
-      // }
-
+      setDetails(null)
     }
     else
     {
-      const cred = credentials.filter((user)=>user.name===e.value)
-      // let apiUrl = ""
-      // let authUrl = ""
-
-      // if(cred[0].environment === "sandbox")
-      // {
-      //     apiUrl= urls.apiUrlSandbox
-      //     authUrl= urls.authUrlSandbox
-      // }
-
-      // if(cred[0].environment === "staging")
-      // {
-      //     apiUrl= urls.apiUrlStaging
-      //     authUrl= urls.authUrlStaging
-      // }
-
-      // const res = await axios.post(`/api/setEnvironment`,{
-      //   env: cred[0],
-      //   apiUrl,
-      //   authUrl,
-      // })
-    
+      setInputVal(name)
+      const cred = credentials.filter((user)=>user.name===name)   
       dispatch({
         type: actionTypes.SET_ENVIRONMENT_DETAILS,
         data: cred[0],
       })
       localStorage.setItem('env',cred[0].name)
-      // if(res.status===200)
-      // {
-        setDetails(cred[0])
-      // }
-      
+      setDetails(cred[0]) 
+      setShowNote(true)
     }
-  }
-
-  if(credentials)
-  {   
-      for(const key in credentials )
-      {
-          options.push({ value: credentials[key].name, label: credentials[key].name })
-      }
   }
 
   const handleMerchantLogin = ()=>{
@@ -151,6 +117,41 @@ export default function Home(props) {
     }
   }
 
+  const handleEnvChange =(e)=>{
+    const value = e.target.value
+    setEnv(value)
+    setInputVal(value)
+
+    if(value !== "")
+    {
+        const cred = credentials.filter((user)=>user.name===value)   
+        if(cred.length > 0)
+        {
+          dispatch({
+            type: actionTypes.SET_ENVIRONMENT_DETAILS,
+            data: cred[0],
+          })
+          localStorage.setItem('env',cred[0].name)
+          setDetails(cred[0]) 
+          setShowNote(true)
+        }
+    }
+  }
+
+  useEffect(() => {
+    if(env!="")
+    {
+      const filterCredData = credentials.filter((user)=>user.name.includes(env))  
+      setFilterCred(filterCredData)
+    }
+    else
+    {
+      setFilterCred([])
+    }
+  }, [env])
+
+  // console.log(filterCred)
+
   return (
     <div>
       
@@ -167,7 +168,7 @@ export default function Home(props) {
           <div className="col-4 offset-4">
             <div className="form-group my-2">
                 <label htmlFor="env">Environment </label>
-                <Select
+                {/* <Select
                     className="basic-single my-2"
                     classNamePrefix="select"
                     defaultValue="0"
@@ -178,10 +179,19 @@ export default function Home(props) {
                     name="env"
                     options={options}
                     onChange={handleSelectChange}
-                />
+                /> */}
+                <input type="text" name="env" onChange={handleEnvChange} autoComplete="off" value={inputVal} className="form-control" placeholder="Environment Name"/>
             </div>
-            
+            <div className="list-group">
+              {filterCred && filterCred.map((details) => {
+                return (
+                  <button type="button" onClick={()=>handleSelectChange(details.name)} className="list-group-item list-group-item-action">{details.name}</button>
+                )}
+              )}
+            </div>
           </div>
+        </div>
+        <div className="row">
           <div className="col-12 text-center mt-4">
               <p>Didn{`'`}t set your environment? No worries you can do it form here! <Link href='/addEnv'><a>Click me</a></Link></p>
           </div>
@@ -208,17 +218,20 @@ export default function Home(props) {
             </div>
           </>
 
-          <div className="container">
-            <div className="card">
-              <div className="card-header">
-                <h3>Webhook Configuration Note</h3>
-              </div>
-              <div className="card-body lead">
-                <p>To configure webhook in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/whCertificate</b></span></p>
-                <p>To add your environment details please send your <span className="text-primary"><b>Client Id, Client Secret, User Token</b></span> and Environment details to developer </p>
-              </div>
-            </div>
-          </div>
+          {showNote && 
+                <div className="container">
+                    <div className="card">
+                      <div className="card-header">
+                          <h3>Webhook Configuration Note</h3>
+                      </div>
+                      <div className="card-body lead">
+                          <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
+                          <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></p>
+                          <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></p>
+                      </div>
+                    </div>
+                </div>
+            }
       </main>
     </div>
   )

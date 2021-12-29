@@ -22,6 +22,15 @@ const envSchema = new mongoose.Schema({
   },
   apiUrl:{
     type: String,
+  },
+  pdfKey:{
+    type: String,
+  },
+  awsSecretKey:{
+    type: String,
+  },
+  awsAccessKey:{
+    type: String,
   }
 })
 

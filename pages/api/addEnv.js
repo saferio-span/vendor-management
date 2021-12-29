@@ -6,6 +6,7 @@ connectDB()
 export default async function handler(req,res)
 {
     const environ = new Environment()
+    console.log(req.body)
 	environ.name = req.body.name
     environ.clientId = req.body.clientId
     environ.clientSecret = req.body.clientSecret
@@ -13,6 +14,9 @@ export default async function handler(req,res)
     environ.environment = req.body.environment
     environ.authUrl = req.body.authUrl
     environ.apiUrl = req.body.apiUrl
+    environ.pdfKey = req.body.pdfKey
+    environ.awsSecretKey = req.body.awsSecretKey
+    environ.awsAccessKey = req.body.awsAccessKey
 
     environ.save((err, envCreated)=>{
         if (err) {

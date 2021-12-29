@@ -535,7 +535,7 @@ const credentials = [
         userToken:"3e6400a228b041dbaec66318f91cc637",
         environment:"uat",
         authUrl: "http://oauth.tbsuat.com/v2/tbsauth",
-	    apiUrl: "https://api.tbsuat.com/v1.6.1/",
+	    apiUrl: "https://api.tbsuat.com/v1.6.1",
     },
     {
         name:"Yogesh Sandbox",
@@ -553,7 +553,7 @@ const credentials = [
         userToken:"4b5162fa75464ab2a58a2d03719289fd",
         environment:"uat",
         authUrl: "http://oauth.tbsuat.com/v2/tbsauth",
-	    apiUrl: "https://api.tbsuat.com/v1.6.1/",
+	    apiUrl: "https://api.tbsuat.com/v1.6.1",
     },
 ]
 
