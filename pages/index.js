@@ -207,13 +207,13 @@ export default function Home(props) {
             <div className="row my-5">
               <div className="col-4 offset-3">
                 {/* <Link href='/merchant/login'> */}
-                    <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Merchant Login</a>
+                    <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Payer Login</a>
                 {/* </Link> */}
                 
               </div>
               <div className="col-3">
                 {/* <Link href='/vendor/login'> */}
-                    <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Vendor Login</a>
+                    <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
                 {/* </Link> */}
               </div>
               {/* <div className="col-3 offset-1">

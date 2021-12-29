@@ -119,7 +119,7 @@ const Login = () => {
                 <div className="row">
                         <div className="col-10">
                             <h3 className={`${style.heading} fw-bolder text-center text-uppercase`}>
-                                     Vendor Login
+                                     Payee Login
                             </h3>
                         </div>
                         <div className="col-2">
