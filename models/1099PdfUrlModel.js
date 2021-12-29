@@ -16,6 +16,10 @@ const PdfUrlSchema = new mongoose.Schema({
   Status: { 
     type: String
   },
+  date: {
+		type: Date,
+		default: Date.now,
+	},
   environment: {
 		type: String,
 	}

@@ -62,6 +62,8 @@ export default function Home(props) {
     const [pageNum,setPageNum] = useState(1)
     const [pageCount,setPageCount] = useState()
     const [searchValue,setSearchValue] = useState("")
+    const payeeRef = user_details ? user_details.payeeRef : ""
+    
     // const [submissionId,setSubmissionId] = useState("")
     // const [recordId,setRecordId] = useState("")
     // console.log(user_details)
@@ -102,7 +104,7 @@ export default function Home(props) {
                 responseType: 'blob',
                 data:{
                     urlLink:url,
-                    recordId,
+                    recordId:props.recordId,
                     envName: environment ? environment.name : localStorage.getItem("env")
                 },
                 
@@ -200,7 +202,7 @@ export default function Home(props) {
                 <div className="col-4">
                     { record && record.map(data=>{
                      return data.Form1099NECRecords.map((formRecord)=>{
-                        if(formRecord.PayeeRef == user_details.payeeRef)
+                        if(formRecord.PayeeRef == payeeRef)
                         {
                             const distProps = {
                                 submissionId:data.SubmissionId,

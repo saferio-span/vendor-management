@@ -57,6 +57,10 @@ const Records1099Schema = new mongoose.Schema({
   Form1099NECRecords: { 
     type: [Form1099NECRecord]
   },
+  date: {
+		type: Date,
+		default: Date.now,
+	},
   environment: {
 		type: String,
 	}

@@ -38,7 +38,7 @@ export const getServerSideProps = async (context)=>{
 }
 
 const WebHook = (props) => {
-    const [webHook,setWebHook]=useState()
+    const [webHook,setWebHook]=useState([])
     const [webHookType,setWebhookType] = useState("whCertificate")
 
     const handleHookChange = (name)=>{
@@ -64,6 +64,7 @@ const WebHook = (props) => {
 
          //eslint-disable-next-line
     }, [webHookType])
+    console.log(webHook)
 
     return (
         <>
