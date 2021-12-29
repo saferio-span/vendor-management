@@ -147,7 +147,9 @@ export default function Home(props) {
     else
     {
       setFilterCred([])
+      setShowNote(false)
     }
+
   //eslint-disable-next-line
   }, [env])
 
