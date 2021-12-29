@@ -13,7 +13,6 @@ export default async function handler(req,res)
     const envName = req.query.envName
     console.log(`Env name : ${envName}`)
 
-    const envName = req.query.envName
     const new1099Response = new Records1099({
 		...req.body,
         environment:envName
