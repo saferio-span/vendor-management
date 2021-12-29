@@ -10,7 +10,7 @@ import { toast, ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 
 export const getServerSideProps = async (context)=>{
-    const { params,req } = context;
+    const { params,req,query } = context;
     const { origin } = absoluteUrl(req)
 
     const userRes = await axios.post(`${origin}/api/affiliate/getAffByPayeeRef`,{
@@ -29,9 +29,13 @@ export const getServerSideProps = async (context)=>{
     const transRes = await axios.get(`${origin}/api/affiliate/getTransaction/${params.payeeRef}`)
     const transactions = await transRes.data
 
-    const recordRes = await axios.post(`${origin}/api/affiliate/get1099ByPayeeRef`,{
-        payeeRef : params.payeeRef
+    const recordRes = await axios.post(`${origin}/api/merchant/get1099RecordsByBusinessId`,{
+        businessId:merchant.businessId,
+        envName: query.envName
     })
+    // const recordRes = await axios.post(`${origin}/api/affiliate/get1099ByPayeeRef`,{
+    //     payeeRef : params.payeeRef
+    // })
     const record = await recordRes.data
 
     // console.log(record)
@@ -49,6 +53,7 @@ export default function Home(props) {
     const transactions = props.transactions
     const businessId = props.merchant.businessId
     const payerRef = props.merchant.payerRef
+    const record = props.record
 
     // const businessId = ""
     // const payerRef = ""
@@ -57,30 +62,28 @@ export default function Home(props) {
     const [pageNum,setPageNum] = useState(1)
     const [pageCount,setPageCount] = useState()
     const [searchValue,setSearchValue] = useState("")
-    const [submissionId,setSubmissionId] = useState("")
-    const [recordId,setRecordId] = useState("")
+    // const [submissionId,setSubmissionId] = useState("")
+    // const [recordId,setRecordId] = useState("")
     // console.log(user_details)
-
-    
 
     const handlePageClick = (data)=>{
         setPageNum(data.selected + 1)
     }
 
-    const handle1099Click = async()=>{
+    const handle1099Click = async(props)=>{
         const res =await axios.post(`/api/get1099Pdf`,{
-            submissionId,
-            recordId,
+            submissionId:props.submissionId,
+            recordId:props.recordId,
             envName: environment ? environment.name : localStorage.getItem("env")
         })
         const data = res.data
         window.open(data.FilePath, "_blank")
     }
 
-    const handleAwsBtnClick =async()=>{
+    const handleAwsBtnClick =async(props)=>{
         const res =await axios.post(`/api/getAws1099Pdf`,{
-            submissionId,
-            recordId,
+            submissionId:props.submissionId,
+            recordId:props.recordId,
             envName: environment ? environment.name : localStorage.getItem("env")
         })
         const data = await res.data
@@ -116,11 +119,11 @@ export default function Home(props) {
         }
     }
 
-    const handleDistBtnClick = async()=>{
+    const handleDistBtnClick = async(props)=>{
         // console.log(user_details)
         const distData = {
             businessId : businessId,
-            recordId : recordId,
+            recordId : props.recordId,
             payeeRef : user_details.payeeRef,
             payerRef : payerRef,
             envName: environment ? environment.name : localStorage.getItem("env")
@@ -165,11 +168,19 @@ export default function Home(props) {
             setPageCount(Math.ceil(transactions.length / 10))
             setLimitTrans(sortedResult)
         }
-        if(props.record)
-        {
-            setSubmissionId(props.record.SubmissionId)
-            setRecordId(props.record.RecordId)
-        }
+        // if(record)
+        // {
+        //     record.forEach(data=>{
+        //         data.Form1099NECRecords.forEach((formRecord)=>{
+        //             if(formRecord.PayeeRef == user_details.payeeRef)
+        //             {
+        //                 setSubmissionId(data.SubmissionId)
+        //                 setRecordId(formRecord.RecordId)
+        //             }
+        //         })
+        //     })
+            
+        // }
         //eslint-disable-next-line
       },[pageNum,pageCount,searchValue])
 
@@ -186,9 +197,22 @@ export default function Home(props) {
                     <h4>Transactions List</h4>
                 </div>
                 <div className="col-4">
-                    {props.record && <> <button className="btn btn-primary mx-1" onClick={handle1099Click}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
-                    <button className="btn btn-warning mx-1" onClick={handleAwsBtnClick}><i className="bi bi-download" /> AWS 1099 Pdf</button>
-                    <button className="btn btn-success mx-1" onClick={handleDistBtnClick}><i className="bi bi-download"/> Get Dist 1099 Pdf</button></>}
+                    { record && record.forEach(data=>{
+                data.Form1099NECRecords.forEach((formRecord)=>{
+                    if(formRecord.PayeeRef == user_details.payeeRef)
+                    {
+                        const distProps = {
+                            submissionId:data.SubmissionId,
+                            payeeRef:formRecord.PayeeRef,
+                            recordId:formRecord.RecordId
+                        }
+                        return (<> 
+                        <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
+                        <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
+                        <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button></>)
+                    }
+                    })
+                })}
                 </div>
             </div>
             <div className="row mx-2 mb-3">

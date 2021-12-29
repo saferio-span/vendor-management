@@ -13,10 +13,6 @@ import Select from 'react-select'
 import ReactPaginate from "react-paginate"
 import { useRouter } from 'next/router'
 import W9Pdf from "../../../components/Layout/W9Pdf";
-// import { Document,pdfjs } from 'react-pdf/dist/esm/entry.webpack';
-import { Document,pdfjs } from 'react-pdf';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-
 
 export const getServerSideProps = async (context)=>{
     const { params,req,query } = context;
@@ -38,7 +34,8 @@ export const getServerSideProps = async (context)=>{
     const affiliates = await res.data
 
     const recordsRes = await axios.post(`${origin}/api/merchant/get1099RecordsByBusinessId`,{
-        businessId:params.businessId
+        businessId:params.businessId,
+        envName: query.envName
     })
     const records = await recordsRes.data
 
@@ -58,7 +55,6 @@ const Records1099Nec = (props) => {
     const [distUrl,setDistUrl] = useState()
     const [recordId,setRecordId] = useState()
     const [bufferString,setbufferString] = useState()
-    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
     const handleBtnClick =async(submissionId,recordId)=>{
         const res =await axios.post(`/api/get1099Pdf`,{
@@ -157,36 +153,36 @@ const Records1099Nec = (props) => {
                     </thead>
                     <tbody>
                         {records && records.map((details) => {
+                            details.Form1099NECRecords.map((record)=>{
+                                let name = ''
+                                affiliates.forEach(option => {
+                                    if(option.payeeRef === record.PayeeRef)
+                                    {
+                                        name = option.name
+                                    }
+                                })
 
-                            let name = ''
-                            affiliates.forEach(option => {
-                                if(option.payeeRef === details.PayeeRef)
-                                {
-                                    name = option.name
+                                const distProps = {
+                                    submissionId:details.SubmissionId,
+                                    payeeRef:record.PayeeRef,
+                                    recordId:record.RecordId
                                 }
+                                return (
+                                <tr key={details._id}>
+                                    <td>{name}</td>
+                                    <td>{record.FederalReturn.Status}</td>
+                                    <td>{details.TaxYear}</td>
+                                    <td>
+                                        <button className="btn btn-primary mx-1" onClick={async() => handleBtnClick(details.SubmissionId,record.RecordId)}>Get 1099 Pdf</button>
+                                        <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId)}>AWS 1099 Pdf</button>
+                                        <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)}>Get Dist 1099 Pdf</button>
+                                        {/* <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} onClick={async() => handleDistBtnClick(distProps)} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Distribution 1099 Pdf</button> */}
+                                    </td>
+                                </tr>)
                             })
-
-                            const distProps = {
-                                submissionId:details.SubmissionId,
-                                payeeRef:details.payeeRef,
-                                recordId:details.RecordId
-                            }
-                            return (
-                            <tr key={details._id}>
-                                <td>{name}</td>
-                                <td>{details.FederalReturnStatus}</td>
-                                <td>{details.TaxYear}</td>
-                                <td>
-                                    <button className="btn btn-primary mx-1" onClick={async() => handleBtnClick(details.SubmissionId,details.RecordId)}>Get 1099 Pdf</button>
-                                    <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,details.RecordId)}>AWS 1099 Pdf</button>
-                                    <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)}>Get Dist 1099 Pdf</button>
-                                    {/* <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} onClick={async() => handleDistBtnClick(distProps)} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Distribution 1099 Pdf</button> */}
-                                </td>
-                            </tr>)
                         })}
                     </tbody>
-                </table>
-                
+                </table>   
             </div>
 
             {/* {distUrl && recordId && <> <W9Pdf url={distUrl} userId={`pdf${recordId}`} header="1099 Pdf" /></>} */}

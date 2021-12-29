@@ -75,11 +75,11 @@ const Login = () => {
                 //     pathname: '/vendor/home',
                 //     query: { user_details: user_details },
                 // })
-                Router.push(`/vendor/home/${user[0].payeeRef}`)
-                // Router.push({
-                //     pathname: `/vendor/home/${user[0].payeeRef}`,
-                //     query: { envName: environment.name },
-                // })
+                // Router.push(`/vendor/home/${user[0].payeeRef}`)
+                Router.push({
+                    pathname: `/vendor/home/${user[0].payeeRef}`,
+                    query: { envName: environment.name },
+                })
             }
           } catch (error) {
             toast.error("Invalid Email Id or Password")

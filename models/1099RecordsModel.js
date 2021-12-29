@@ -1,6 +1,39 @@
 
 import mongoose from 'mongoose'
 
+const FederalReturn = new mongoose.Schema({
+	Status: {
+		type: String,
+	},
+	StatusTs: {
+		type: String,
+	},
+	Info: {
+		type: String,
+	}
+});
+
+const Form1099NECRecord = new mongoose.Schema({
+	RecordId: {
+		type: String,
+	},
+	RecipientId: {
+		type: String,
+	},
+	PayeeRef: {
+		type: String,
+	},
+	NECBox1: {
+		type: String,
+	},
+	NECBox4: {
+		type: String,
+	},
+  FederalReturn:{
+    type: FederalReturn
+  }
+});
+
 const Records1099Schema = new mongoose.Schema({
   SubmissionId: { 
     type: String,
@@ -14,29 +47,11 @@ const Records1099Schema = new mongoose.Schema({
   TaxYear:{
     type: String,
   },
-  RecordId: { 
-    type: String
-  },
-  RecipientId: { 
-    type: String
-  },
-  PayeeRef:{
+  NoOf1099s:{
     type: String,
   },
-  NECBox1:{
-    type: String,
-  },
-  NECBox4:{
-    type: String,
-  },
-  FederalReturnStatus:{
-    type: String,
-  },
-  FederalReturnStatusTs:{
-    type: String,
-  },
-  FederalReturnInfo:{
-    type: String,
+  Form1099NECRecords: { 
+    type: [Form1099NECRecord]
   },
   environment: {
 		type: String,
