@@ -37,7 +37,10 @@ const Records1099Schema = new mongoose.Schema({
   },
   FederalReturnInfo:{
     type: String,
-  }
+  },
+  environment: {
+		type: String,
+	}
 })
 
 let Dataset = mongoose.models.Records1099 || mongoose.model('Records1099', Records1099Schema)

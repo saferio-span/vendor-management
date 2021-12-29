@@ -1,5 +1,5 @@
-import connectDB from "../../../config/connectDB";
-import Records1099 from "../../../models/1099RecordsModel"
+import connectDB from "../../../../config/connectDB";
+import Records1099 from "../../../../models/1099RecordsModel"
 connectDB()
 
 export default async function handler(req,res)
@@ -12,6 +12,7 @@ export default async function handler(req,res)
 	console.log(req.body);
 
 	console.log("1099 Store Body End")
+    const envName = req.query.envName
 
     const submissionId = req.body.SubmissionId
     const businessId = req.body.BusinessId
@@ -45,7 +46,8 @@ export default async function handler(req,res)
                             NECBox4:record.NecBox4,
                             FederalReturnStatus: record.FederalReturn.Status,
                             FederalReturnStatusTs: record.FederalReturn.StatusTs,
-                            FederalReturnInfo: record.FederalReturn.Info
+                            FederalReturnInfo: record.FederalReturn.Info,
+                            environment:envName
                         });
                         new1099Response.save();
                         console.log(`generated Successfully for ${record.RecordId}`)

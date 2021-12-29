@@ -5,8 +5,10 @@ connectDB()
 
 export default async function handler(req,res)
 {
+    const envName = req.query.envName
     const newWHResponse = new WHResponse({
 		...req.body,
+        environment:envName
 	});
 	console.log("Wh Store Body")
 
@@ -34,9 +36,6 @@ export default async function handler(req,res)
             affiliate.pdfUrl = req.body.FormW8Ben.PdfUrl
             payeeRef = req.body.FormW8Ben.PayeeRef
         }
-
-        console.log(`Update Details`)
-        console.log(affiliate)
 
         if(affiliate)
         {

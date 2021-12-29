@@ -16,6 +16,9 @@ const PdfUrlSchema = new mongoose.Schema({
   Status: { 
     type: String
   },
+  environment: {
+		type: String,
+	}
 })
 
 let Dataset = mongoose.models.PdfUrls || mongoose.model('PdfUrls', PdfUrlSchema)

@@ -4,6 +4,7 @@ connectDB()
 
 export default async function handler(req,res)
 {
+	const envName = req.query.envName
 	PdfUrls.find({
 		RecordId: req.body.Records[0].RecordId
 	},async (err,data)=>{
@@ -21,6 +22,7 @@ export default async function handler(req,res)
 					FileName: req.body.Records[0].FileName,
 					FilePath: req.body.Records[0].FilePath,
 					Status: req.body.Records[0].Status,
+					environment:envName
 				});
 				console.log("Pdf Store Body")
 			

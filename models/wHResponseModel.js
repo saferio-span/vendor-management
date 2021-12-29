@@ -213,6 +213,9 @@ const WHResponseSchema = new  mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+	environment: {
+		type: String,
+	}
 });
 
 let Dataset = mongoose.models.whResponse || mongoose.model('whResponse', WHResponseSchema)
