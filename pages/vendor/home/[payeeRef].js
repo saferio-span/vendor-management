@@ -102,9 +102,10 @@ export default function Home(props) {
                 responseType: 'blob',
                 data:{
                     urlLink:url,
-                    recordId
+                    recordId,
+                    envName: environment ? environment.name : localStorage.getItem("env")
                 },
-                envName: environment ? environment.name : localStorage.getItem("env")
+                
             })
 
             const pdfData = await res.data
@@ -197,20 +198,23 @@ export default function Home(props) {
                     <h4>Transactions List</h4>
                 </div>
                 <div className="col-4">
-                    { record && record.forEach(data=>{
-                data.Form1099NECRecords.forEach((formRecord)=>{
-                    if(formRecord.PayeeRef == user_details.payeeRef)
-                    {
-                        const distProps = {
-                            submissionId:data.SubmissionId,
-                            payeeRef:formRecord.PayeeRef,
-                            recordId:formRecord.RecordId
+                    { record && record.map(data=>{
+                     return data.Form1099NECRecords.map((formRecord)=>{
+                        if(formRecord.PayeeRef == user_details.payeeRef)
+                        {
+                            const distProps = {
+                                submissionId:data.SubmissionId,
+                                payeeRef:formRecord.PayeeRef,
+                                recordId:formRecord.RecordId
+                            }
+                            return (<> 
+                            <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
+                            <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
+                            <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button></>)
                         }
-                        return (<> 
-                        <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
-                        <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
-                        <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button></>)
-                    }
+                        else{
+                            return(<></>)
+                        }
                     })
                 })}
                 </div>

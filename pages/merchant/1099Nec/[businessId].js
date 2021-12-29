@@ -38,6 +38,7 @@ export const getServerSideProps = async (context)=>{
         envName: query.envName
     })
     const records = await recordsRes.data
+    console.log(records)
 
     return{
       props:{
@@ -52,9 +53,6 @@ const Records1099Nec = (props) => {
     const records = props.records
     const affiliates = props.affiliates
     const [{ user_details,environment }, dispatch] = useUserValue();
-    const [distUrl,setDistUrl] = useState()
-    const [recordId,setRecordId] = useState()
-    const [bufferString,setbufferString] = useState()
 
     const handleBtnClick =async(submissionId,recordId)=>{
         const res =await axios.post(`/api/get1099Pdf`,{
@@ -87,9 +85,9 @@ const Records1099Nec = (props) => {
                 responseType: 'blob',
                 data:{
                     urlLink:url,
-                    recordId
+                    recordId,
+                    envName: environment ? environment.name : localStorage.getItem("env")
                 },
-                envName: environment ? environment.name : localStorage.getItem("env")
             })
 
             const pdfData = await res.data
@@ -153,7 +151,7 @@ const Records1099Nec = (props) => {
                     </thead>
                     <tbody>
                         {records && records.map((details) => {
-                            details.Form1099NECRecords.map((record)=>{
+                            return details.Form1099NECRecords.map((record)=>{
                                 let name = ''
                                 affiliates.forEach(option => {
                                     if(option.payeeRef === record.PayeeRef)

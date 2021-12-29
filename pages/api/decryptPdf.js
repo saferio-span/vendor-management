@@ -7,8 +7,10 @@ export default async function handler(req,res)
     const url = req.body.urlLink
     const recordId = req.body.recordId
     const envName = req.body.envName
+    console.log(envName)
 
     const cred = await Environment.find({name:envName})
+    console.log(cred)
     const awsAccessKey = cred[0].awsAccessKey
 	const awsSecretKey = cred[0].awsSecretKey
 	const pdfKey = cred[0].pdfKey
