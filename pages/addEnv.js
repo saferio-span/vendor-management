@@ -13,9 +13,34 @@ export const getServerSideProps = async (context)=>{
     const { req,query } = context;
     const { origin } = absoluteUrl(req)
   
-    const url = context.req.headers.referer
-    const envRes = await axios.get(`${origin}/api/getAllEnv`)
-    const environCreds = await envRes.data
+    // const url = context.req.headers.referer
+    // const envRes = await axios.get(`${origin}/api/getAllEnv`)
+    // const environCreds = await envRes.data
+
+    const session = await getSession(context)
+    if(session !== null)
+    {
+        const envRes = await axios.post(`${origin}/api/getAllEnv`,{
+        email:session.user.email
+        })
+        const environCreds = await envRes.data
+        return{
+        props:{ 
+            url:origin,
+            credentials : environCreds,
+            session: await getSession(context)
+        }
+        }
+    }
+    else{
+        return{
+        props:{ 
+            url:origin,
+            credentials : [],
+            session: await getSession(context)
+        }
+        }
+    }
     // console.log(environCreds)
     // if(!session)
     // {
@@ -27,13 +52,13 @@ export const getServerSideProps = async (context)=>{
     //   }
     // }
   
-    return{
-      props:{ 
-        url:origin,
-        credentials : environCreds,
-        session: await getSession(context)
-      }
-    }
+    // return{
+    //   props:{ 
+    //     url:origin,
+    //     credentials : environCreds,
+    //     session: await getSession(context)
+    //   }
+    // }
   }
 
 const AddEnv = (props) => {
@@ -56,6 +81,18 @@ const AddEnv = (props) => {
         envName:showEnvName
 	});
 
+    const [validateValues, setValidateValues] = useState({
+        name:'',
+        envType:'',
+        clientId:'',
+        clientSecret:'',
+        userToken:'',
+        authUrl:'',
+        apiUrl:'',
+        pdfKey:'',
+        envName:showEnvName
+	});
+
     var options = [
         { value: "sandbox", label: "Sandbox" },
         { value: "staging", label: "Staging" },
@@ -65,7 +102,7 @@ const AddEnv = (props) => {
     const handleSubmit =async (e)=>{
         e.preventDefault()
         console.log(values)
-        const hasEmptyField = Object.values(values).some((element)=>element==='')
+        const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
@@ -100,8 +137,8 @@ const AddEnv = (props) => {
         })
 
         const envrn = await res.data
-        console.log(`Created Env`)
-        console.log(envrn)
+        // console.log(`Created Env`)
+        // console.log(envrn)
         if(envrn)
         {
             setValues({
@@ -115,6 +152,17 @@ const AddEnv = (props) => {
                 pdfKey:'',
                 awsSecretKey:'',
                 awsAccessKey:'',
+                envName:''
+            });
+            setValidateValues({
+                name:'',
+                envType:'',
+                clientId:'',
+                clientSecret:'',
+                userToken:'',
+                authUrl:'',
+                apiUrl:'',
+                pdfKey:'',
                 envName:''
             });
             toast("Environment added successfully")
@@ -157,6 +205,10 @@ const AddEnv = (props) => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
         setShowNote(false)
+        if(name != "awsSecretKey" && name != "awsAccessKey")
+        {
+            setValidateValues({ ...validateValues, [name]: value })
+        }
 	};
 
     const handleSelectChange = (e)=>{
@@ -165,10 +217,12 @@ const AddEnv = (props) => {
         if(e !== null)
         {
             setValues({ ...values, envType: e.value });
+            setValidateValues({ ...validateValues, envType: e.value })
         }
         else
         {
             setValues({ ...values, envType: "" });
+            setValidateValues({ ...validateValues, envType: "" });
         }
     }
 
@@ -209,7 +263,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="businessName">Environment Type</label>
+                                        <label htmlFor="businessName">Environment Type<span className="text-danger font-weight-bold">*</span></label>
                                         <Select
                                             className="basic-single"
                                             classNamePrefix="select"
@@ -228,7 +282,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="ein">Client ID</label>
+                                        <label htmlFor="ein">Client ID<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="clientId" placeholder="Client Id" value={values.clientId} name="clientId" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -236,7 +290,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="userToken">User Token</label>
+                                        <label htmlFor="userToken">User Token<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="userToken" name="userToken" value={values.userToken} placeholder="User Token" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -244,7 +298,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="state">Api Url </label>
+                                        <label htmlFor="state">Api Url<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="apiUrl" name="apiUrl" value={values.apiUrl} placeholder="Api Url" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -262,7 +316,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="name">Name</label>
+                                        <label htmlFor="name">Name<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="name" name="name" placeholder="Name" value={values.name} onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -270,7 +324,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="city">Client Secret </label>
+                                        <label htmlFor="city">Client Secret<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="clientSecret" name="clientSecret" value={values.clientSecret} placeholder="Client Secret" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -278,7 +332,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="authUrl">Auth Url </label>
+                                        <label htmlFor="authUrl">Auth Url<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="authUrl" name="authUrl" placeholder="Auth Url" value={values.authUrl} onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -286,7 +340,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="pdfKey">Pdf Key </label>
+                                        <label htmlFor="pdfKey">Pdf Key<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="pdfKey" name="pdfKey" placeholder="Pdf Key" value={values.pdfKey} onChange={handleInputChange} />
                                     </div>
                                 </div>

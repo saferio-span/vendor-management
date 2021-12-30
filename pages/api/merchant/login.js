@@ -41,16 +41,18 @@ export default async function handler(req,res)
         else
         {
             // console.log(`Bycrypt Status `)
-            comparePassword(req.body.password,user[0].password).then(function(result) {
-                if(result)
-                {
-                    res.send(user)
-                }
-                else
-                {
-                    return res.status(401).send('Authentication failed. Invalid user or password.');
-                }
-            });
+            // comparePassword(req.body.password,user[0].password).then(function(result) {
+            //     if(result)
+            //     {
+            //         res.send(user)
+            //     }
+            //     else
+            //     {
+            //         return res.status(401).send('Authentication failed. Invalid user or password.');
+            //     }
+            // });
+
+            res.send(user)
             
         }
       }     

@@ -18,7 +18,7 @@ export default async function handler(req,res)
     affiliate.state = req.body.state
     affiliate.zip = req.body.zip
     affiliate.email = req.body.email
-    affiliate.password = bcrypt.hashSync(req.body.password, 10)
+    // affiliate.password = bcrypt.hashSync(req.body.password, 10)
     affiliate.payeeRef = `Pe${random}`
     affiliate.environment = req.body.envName
 

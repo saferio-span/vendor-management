@@ -24,8 +24,8 @@ const SignUp = () => {
         zip:'',
         contactName:'',
         email: '',
-		password: '',
-        confirmPassword:''
+		// password: '',
+        // confirmPassword:''
 	});
 
     const [validateValues, setValidateValues] = useState({
@@ -37,8 +37,6 @@ const SignUp = () => {
         zip:'',
         contactName:'',
         email: '',
-		password: '',
-        confirmPassword:''
 	});
     const handleSelectChange = (e)=>{
         if(e !== null)
@@ -83,8 +81,8 @@ const SignUp = () => {
         }
         else
         {
-            if(values.password === values.confirmPassword)
-            {
+            // if(values.password === values.confirmPassword)
+            // {
                 const res = await axios.post('/api/merchant/signUp',{
                     businessName:values.businessName,
                     ein:values.ein,
@@ -95,7 +93,7 @@ const SignUp = () => {
                     zip:values.zip,
                     contactName:values.contactName,
                     email: values.email,
-                    password: values.password,
+                    // password: values.password,
                     env:environment,
                     apiUrl:environment.apiUrl,
                     authUrl:environment.authUrl
@@ -120,12 +118,12 @@ const SignUp = () => {
                 //     toast.error(error)
                 //     return false
                 // })
-            }
-            else
-            {
-                toast.error("Password does not match !")
-                return false
-            }
+            // }
+            // else
+            // {
+            //     toast.error("Password does not match !")
+            //     return false
+            // }
         }
     }
     if(states)
@@ -229,14 +227,14 @@ const SignUp = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="password">Password<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="password" className="form-control" id="password" placeholder="Password" name="password" onChange={handleInputChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="col-6">
                             <div className="row">
@@ -247,14 +245,14 @@ const SignUp = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="confirmPassword">Confirm Password<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="password" className="form-control" id="confirmPassword" placeholder="Confirm Password" name="confirmPassword" onChange={handleInputChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <br />

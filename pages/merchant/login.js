@@ -14,8 +14,9 @@ const Login = () => {
     // console.log(credentials)
     const [values, setValues] = useState({
         email: '',
-		password: '',
+		// password: '',
 	});
+    
     const [{user_details,environment},dispatch] = useUserValue();
     
     useEffect(()=>{
@@ -56,7 +57,7 @@ const Login = () => {
 
             const res = await axios.post(`/api/merchant/login`,{
                 email: values.email,
-                password: values.password,
+                // password: values.password,
                 env: environment
             })
 
@@ -82,7 +83,8 @@ const Login = () => {
                 })
             }
           } catch (error) {
-            toast.error("Invalid Email Id or Password")
+            // toast.error("Invalid Email Id or Password")
+            toast.error("Invalid Email Id")
             console.log(error)
             return null
           }
@@ -135,10 +137,10 @@ const Login = () => {
                             <label htmlFor="email">Email</label>
                             <input type="email" className="form-control my-2" id="email" name="email" placeholder="Email" onChange={handleInputChange} />
                         </div>
-                        <div className="form-group my-2">
+                        {/* <div className="form-group my-2">
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control my-2" id="password" name="password" placeholder="Password" onChange={handleInputChange} />
-                        </div>
+                        </div> */}
                         <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
                     </form>
                     <hr />

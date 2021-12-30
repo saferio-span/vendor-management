@@ -41,21 +41,23 @@ export default async function handler(req,res)
         else
         {
             // console.log(`Bycrypt Status `)
-            comparePassword(req.body.password,user[0].password).then(function(result) {
-                if(result)
-                {
-                    // global.localStorage.setItem('clientId', req.body.environment.clientId)
-                    // global.localStorage.setItem('clientSecret', req.body.environment.clientSecret)
-                    // global.localStorage.setItem('userToken', req.body.environment.userToken)
-                    // global.localStorage.setItem('apiUrl', req.body.apiUrl)
-                    // global.localStorage.setItem('authUrl', req.body.authUrl)
-                    res.send(user) 
-                }
-                else
-                {
-                    return res.status(401).send('Authentication failed. Invalid user or password.');
-                }
-            });
+            // comparePassword(req.body.password,user[0].password).then(function(result) {
+            //     if(result)
+            //     {
+            //         // global.localStorage.setItem('clientId', req.body.environment.clientId)
+            //         // global.localStorage.setItem('clientSecret', req.body.environment.clientSecret)
+            //         // global.localStorage.setItem('userToken', req.body.environment.userToken)
+            //         // global.localStorage.setItem('apiUrl', req.body.apiUrl)
+            //         // global.localStorage.setItem('authUrl', req.body.authUrl)
+            //         res.send(user) 
+            //     }
+            //     else
+            //     {
+            //         return res.status(401).send('Authentication failed. Invalid user or password.');
+            //     }
+            // });
+
+            res.send(user) 
             
         }
       }     

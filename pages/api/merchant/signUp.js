@@ -111,7 +111,7 @@ export default async function handler(req,res)
 		merchant.zip = req.body.zip
 		merchant.name = req.body.contactName
 		merchant.email = req.body.email
-		merchant.password = bcrypt.hashSync(req.body.password, 10)
+		// merchant.password = bcrypt.hashSync(req.body.password, 10)
 		merchant.payerRef = payerRef
 		merchant.environment = envName
 

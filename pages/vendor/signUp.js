@@ -45,8 +45,8 @@ const SignUp = (props) => {
         state:'',
         zip:'',
         email: '',
-		password: '',
-        confirmPassword:''
+		// password: '',
+        // confirmPassword:''
 	});
 
     const [validateValues, setValidateValues] = useState({
@@ -57,8 +57,8 @@ const SignUp = (props) => {
         state:'',
         zip:'',
         email: '',
-		password: '',
-        confirmPassword:''
+		// password: '',
+        // confirmPassword:''
 	});
 
     const handleBusinessChange = (e)=>{
@@ -119,8 +119,8 @@ const SignUp = (props) => {
         else
         {
 
-            if(values.password === values.confirmPassword)
-            {
+            // if(values.password === values.confirmPassword)
+            // {
                 console.log(
                     {
                         merchantID: values.merchantId,
@@ -173,8 +173,8 @@ const SignUp = (props) => {
                         state:'',
                         zip:'',
                         email: '',
-                        password: '',
-                        confirmPassword:''
+                        // password: '',
+                        // confirmPassword:''
                     })
                     toast("Account created successfully")
                     Router.push('/vendor/login')
@@ -185,12 +185,12 @@ const SignUp = (props) => {
                     toast("Account cannot be created")
                     return false
                 }
-            }
-            else
-            {
-                toast.error("Password does not match !")
-                return false
-            }
+            // }
+            // else
+            // {
+            //     toast.error("Password does not match !")
+            //     return false
+            // }
         }
     }
     if(states)
@@ -302,7 +302,7 @@ const SignUp = (props) => {
                         </div>
                     </div>
                     
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-6">
                             <div className="row">
                                 <div className="col">
@@ -323,7 +323,7 @@ const SignUp = (props) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <br />
                     <div className="row">
                         <div className="offset-11 col-1">

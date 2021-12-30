@@ -22,7 +22,7 @@ const AddAffiliates = () => {
         state:'',
         zip:'',
         email: '',
-        password: ''
+        // password: ''
 	});
 
     const [validateValues, setValidateValues] = useState({
@@ -32,7 +32,7 @@ const AddAffiliates = () => {
         state:'',
         zip:'',
         email: '',
-		password: '',
+		// password: '',
 	});
 
     useEffect(()=>{
@@ -75,7 +75,7 @@ const AddAffiliates = () => {
                 state: values.state,
                 zip: values.zip,
                 email: values.email,
-                password: values.password,
+                // password: values.password,
                 envName: environment ? environment.name : localStorage.getItem("env")
             })
 
@@ -90,7 +90,7 @@ const AddAffiliates = () => {
                     state:'',
                     zip:'',
                     email: '',
-                    password: ''
+                    // password: ''
                 })
                 toast("Affiliate created successfully")
                 Router.push({
@@ -226,14 +226,14 @@ const AddAffiliates = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="password">Password<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="password" className="form-control" id="password" placeholder="Password" name="password" onChange={handleInputChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <br />

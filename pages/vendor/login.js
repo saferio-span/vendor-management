@@ -15,7 +15,7 @@ const Login = () => {
     var options = []
     const [values, setValues] = useState({
         email: '',
-		password: '',
+		// password: '',
 	});
     const [{user_details,environment},dispatch] = useUserValue();
     
@@ -56,7 +56,7 @@ const Login = () => {
 
             const res = await axios.post(`/api/affiliate/login`,{
                 email: values.email,
-                password: values.password,
+                // password: values.password,
                 env: environment,
                 apiUrl:environment.apiUrl,
                 authUrl:environment.authUrl
@@ -145,10 +145,10 @@ const Login = () => {
                             <label htmlFor="email">Email</label>
                             <input type="email" className="form-control my-2" id="email" name="email" placeholder="Email" onChange={handleInputChange} />
                         </div>
-                        <div className="form-group my-2">
+                        {/* <div className="form-group my-2">
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control my-2" id="password" name="password" placeholder="Password" onChange={handleInputChange} />
-                        </div>
+                        </div> */}
                         <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
                     </form>
                     <hr />
