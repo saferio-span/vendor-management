@@ -22,7 +22,7 @@ const Login = () => {
     useEffect(()=>{
 
         // const sess_email = localStorage.getItem('email')
-        console.log(environment)
+        // console.log(environment)
         if(Object.keys(environment).length === 0)
         {
             Router.push('/')
@@ -82,8 +82,9 @@ const Login = () => {
                 })
             }
           } catch (error) {
-            toast.error("Invalid Email Id or Password")
-            console.log(error)
+            // toast.error("Invalid Email Id or Password")
+            toast.error("Invalid Email Id")
+            // console.log(error)
             return null
           }
 

@@ -75,12 +75,12 @@ const Home=(props)=>{
   const [showNote,setShowNote]=useState(false)
   const [showEnv,setShowEnv]=useState(false)
   const [showEnvPage,setShowEnvPage]=useState(false)
-  console.log(credentials)
+  // console.log(credentials)
   var options = []
 
-  console.log(`Session`)
-  console.log(props.session)
-  console.log(`Session`)
+  // console.log(`Session`)
+  // console.log(props.session)
+  // console.log(`Session`)
 
   const handleSelectChange=async(name)=>{
     if(name === "")
@@ -129,7 +129,7 @@ const Home=(props)=>{
   }
 
   const handleWebhook = ()=>{
-    console.log(details)
+    // console.log(details)
     if(details === null)
     {
       Router.push({
@@ -209,7 +209,7 @@ const Home=(props)=>{
                           <h3 className={`${style.heading} fw-bolder text-center text-uppercase`}>
                               Welcome to Vendor Management
                           </h3>
-                          <p className="text-center">Inorder to secure your details and choose your environment please signin with google to continue</p>
+                          <p className="text-center">Inorder to secure your details and choose your environment please sign in with google to continue</p>
                       </div>
                   </div>
                   <div className="d-flex justify-content-center align-items-cente">
@@ -259,7 +259,7 @@ const Home=(props)=>{
             </div>
             <div className="row">
               <div className="col-12 text-center mt-4">
-                  <p>Didn{`'`}t set your environment? No worries you can do it form here! <Link href='/addEnv'><a>Click me</a></Link></p>
+                  <p>Didn{`'`}t set your environment? No worries you can do it form here! <Link href='/addEnv'><a>Click me</a></Link> {showNote && <>| <Link href={{ pathname: '/updateEnv', query: { envName: inputVal } }} ><a>Update Environment</a></Link></>}</p>
               </div>
             </div>
             <hr />
