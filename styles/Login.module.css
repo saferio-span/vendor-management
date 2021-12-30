@@ -8,6 +8,12 @@
     width:100%;
 }
 
+.googleContainer {
+    margin-top: 100px;
+    max-width: 600px;
+    width:100%;
+}
+
 .heading{
     color: '#555';
     letter-spacing: '1px';

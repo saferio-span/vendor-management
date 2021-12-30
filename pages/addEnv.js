@@ -5,6 +5,7 @@ import { toast,ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link"
 import absoluteUrl from 'next-absolute-url'
+import { signOut,getSession } from "next-auth/client"
 
 export const getServerSideProps = async (context)=>{
 
@@ -29,12 +30,14 @@ export const getServerSideProps = async (context)=>{
     return{
       props:{ 
         url:origin,
-        credentials : environCreds
+        credentials : environCreds,
+        session: await getSession(context)
       }
     }
   }
 
 const AddEnv = (props) => {
+    const session = props.session
     const credentials = props.credentials
     // console.log(credentials)
     const [showEnvName,setShowEnvName] = useState()
@@ -93,6 +96,7 @@ const AddEnv = (props) => {
            pdfKey:values.pdfKey,
            awsSecretKey:values.awsSecretKey,
            awsAccessKey:values.awsAccessKey,
+           email:session.user.email
         })
 
         const envrn = await res.data
@@ -141,6 +145,11 @@ const AddEnv = (props) => {
                 setShowEnvName(tempEnvname)
             }
         }
+
+        if(session == null )
+        {
+            signOut()
+        }
     //eslint-disable-next-line
     },[values])
 
@@ -187,11 +196,14 @@ const AddEnv = (props) => {
             
             <div className="container bg-light my-3 py-3">
                 <form onSubmit={handleSubmit}>
-                    {/* <div className="row">
+                    <div className="row">
                         <div className="col-4 offset-4">
-                            
+                            <div className="form-group my-2">
+                                <label htmlFor="ein">Email</label>
+                                <input type="text" className="form-control" id="email" placeholder="Email" value={session != null ? session.user.email : ""} disabled />
+                            </div>
                         </div>
-                    </div> */}
+                    </div>
                     <div className="row">
                         <div className="col-6">
                             <div className="row">

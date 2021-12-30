@@ -31,6 +31,9 @@ const envSchema = new mongoose.Schema({
   },
   awsAccessKey:{
     type: String,
+  },
+  email:{
+    type: String,
   }
 })
 

@@ -17,6 +17,7 @@ export default async function handler(req,res)
     environ.pdfKey = req.body.pdfKey
     environ.awsSecretKey = req.body.awsSecretKey
     environ.awsAccessKey = req.body.awsAccessKey
+    environ.email = req.body.email
 
     environ.save((err, envCreated)=>{
         if (err) {

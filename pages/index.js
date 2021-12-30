@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { signOut,getSession } from "next-auth/client"
+import { providers,signIn,signOut,getSession } from "next-auth/client"
 import axios from "axios"
 import Select from 'react-select'
 import { useUserValue } from "../contexts/UserContext";
@@ -10,6 +10,8 @@ import { toast,ToastContainer } from "react-toastify"
 import Router from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link"
+import style from "../styles/Login.module.css"
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export const getServerSideProps = async (context)=>{
 
@@ -17,9 +19,37 @@ export const getServerSideProps = async (context)=>{
   const { req,query } = context;
   const { origin } = absoluteUrl(req)
 
-  const url = context.req.headers.referer
-  const envRes = await axios.get(`${origin}/api/getAllEnv`)
-  const environCreds = await envRes.data
+  // const url = context.req.headers.referer
+  // const envRes = await axios.get(`${origin}/api/getAllEnv`)
+  // const environCreds = await envRes.data
+
+  const session = await getSession(context)
+  if(session !== null)
+  {
+    const envRes = await axios.post(`${origin}/api/getAllEnv`,{
+      email:session.user.email
+    })
+    const environCreds = await envRes.data
+    return{
+      props:{ 
+        url:origin,
+        credentials : environCreds,
+        providers: await providers(context),
+        session: await getSession(context)
+      }
+    }
+  }
+  else{
+    return{
+      props:{ 
+        url:origin,
+        credentials : [],
+        providers: await providers(context),
+        session: await getSession(context)
+      }
+    }
+  }
+
   // console.log(environCreds)
   // if(!session)
   // {
@@ -31,15 +61,11 @@ export const getServerSideProps = async (context)=>{
   //   }
   // }
 
-  return{
-    props:{ 
-      url:origin,
-      credentials : environCreds
-    }
-  }
 }
 
-export default function Home(props) {
+const Home=(props)=>{
+  const providers = props.providers
+  const session = props.session
   const [{environment},dispatch] = useUserValue();
   const [details,setDetails] = useState(null)
   const credentials = props.credentials
@@ -48,8 +74,13 @@ export default function Home(props) {
   const [filterCred,setFilterCred]=useState()
   const [showNote,setShowNote]=useState(false)
   const [showEnv,setShowEnv]=useState(false)
-  // console.log(credentials)
+  const [showEnvPage,setShowEnvPage]=useState(false)
+  console.log(credentials)
   var options = []
+
+  console.log(`Session`)
+  console.log(props.session)
+  console.log(`Session`)
 
   const handleSelectChange=async(name)=>{
     if(name === "")
@@ -153,6 +184,12 @@ export default function Home(props) {
       setShowNote(false)
     }
 
+    if(session !== null)
+    {
+      localStorage.setItem('googleEmail',session.user.email)
+      setShowEnvPage(true)
+    }
+
   //eslint-disable-next-line
   }, [env])
 
@@ -163,83 +200,114 @@ export default function Home(props) {
       
       <main>
         <ToastContainer />
-        <div className="row mt-5">
-          <div className="col-4 offset-4">
-            <h1 className="d-flex justify-content-center align-items-center my-4 ">
-              Vendor Management
-            </h1>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-4 offset-4">
-            <div className="form-group my-2">
-                <label htmlFor="env">Environment </label>
-                {/* <Select
-                    className="basic-single my-2"
-                    classNamePrefix="select"
-                    defaultValue="0"
-                    isSearchable="true"
-                    isClearable="true"
-                    id="env"
-                    instanceId="env"
-                    name="env"
-                    options={options}
-                    onChange={handleSelectChange}
-                /> */}
-                <input type="text" name="env" onChange={handleEnvChange} autoComplete="off" value={inputVal} className="form-control" placeholder="Environment Name"/>
-            </div>
-            <div className="list-group">
-              {filterCred && showEnv && filterCred.map((details) => {
-                return (
-                  <button key={details.name} type="button" onClick={()=>handleSelectChange(details.name)} className="list-group-item list-group-item-action">{details.name}</button>
-                )}
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 text-center mt-4">
-              <p>Didn{`'`}t set your environment? No worries you can do it form here! <Link href='/addEnv'><a>Click me</a></Link></p>
-          </div>
-        </div>
-        <hr />
-          <>
-            <div className="row my-5">
-              <div className="col-4 offset-3">
-                {/* <Link href='/merchant/login'> */}
-                    <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Payer Login</a>
-                {/* </Link> */}
-                
+        {
+          !showEnvPage && <>
+            <div className={`${style.loginContainer} d-flex justify-content-center align-items-center my-5`}>
+              <div className={`${style.googleContainer} border border-1 max-auto p-4 shadow`}>
+                  <div className="row">
+                      <div className="col-12">
+                          <h3 className={`${style.heading} fw-bolder text-center text-uppercase`}>
+                              Welcome to Vendor Management
+                          </h3>
+                          <p className="text-center">Inorder to secure your details and choose your environment please signin with google to continue</p>
+                      </div>
+                  </div>
+                  <div className="d-flex justify-content-center align-items-cente">
+                  <button className="btn btn-danger px-5 my-2" onClick={()=>signIn(providers.google.id)}><i className="bi bi-google"></i> Sign in with Google </button>
+                  </div>
+                  
               </div>
-              <div className="col-3">
-                {/* <Link href='/vendor/login'> */}
-                    <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
-                {/* </Link> */}
-              </div>
-              {/* <div className="col-3 offset-1">
-                <Link href='/webHook'>
-                    <a className="btn btn-warning mx-5" onClick={handleWebhook} >Webhook</a>
-                </Link>
-              </div> */}
-            </div>
+          </div>
           </>
-
-          {showNote && 
-                <div className="container">
-                    <div className="card">
-                      <div className="card-header">
-                          <h3>Webhook Configuration Note</h3>
-                      </div>
-                      <div className="card-body lead">
-                          <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
-                          <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></p>
-                          <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></p>
-                      </div>
-                    </div>
+        }
+        
+        {
+          showEnvPage && <>
+            <div className="row mt-5">
+              <div className="col-4 offset-4">
+                <h1 className="d-flex justify-content-center align-items-center my-4 ">
+                  Vendor Management
+                </h1>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-4 offset-4">
+                <div className="form-group my-2">
+                    <label htmlFor="env">Environment </label>
+                    {/* <Select
+                        className="basic-single my-2"
+                        classNamePrefix="select"
+                        defaultValue="0"
+                        isSearchable="true"
+                        isClearable="true"
+                        id="env"
+                        instanceId="env"
+                        name="env"
+                        options={options}
+                        onChange={handleSelectChange}
+                    /> */}
+                    <input type="text" name="env" onChange={handleEnvChange} autoComplete="off" value={inputVal} className="form-control" placeholder="Environment Name"/>
                 </div>
-            }
+                <div className="list-group">
+                  {filterCred && showEnv && filterCred.map((details) => {
+                    return (
+                      <button key={details.name} type="button" onClick={()=>handleSelectChange(details.name)} className="list-group-item list-group-item-action">{details.name}</button>
+                    )}
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 text-center mt-4">
+                  <p>Didn{`'`}t set your environment? No worries you can do it form here! <Link href='/addEnv'><a>Click me</a></Link></p>
+              </div>
+            </div>
+            <hr />
+              <>
+                <div className="row my-5">
+                  <div className="col-2 offset-3">
+                    {/* <Link href='/merchant/login'> */}
+                        <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Payer Login</a>
+                    {/* </Link> */}
+                    
+                  </div>
+                  <div className="col-2">
+                    {/* <Link href='/vendor/login'> */}
+                        <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
+                    {/* </Link> */}
+                  </div>
+                  <div className="col-2">
+                    <button className="btn btn-danger mx-5" onClick={()=>signOut()}>Logout Google</button>
+                  </div>
+                  {/* <div className="col-3 offset-1">
+                    <Link href='/webHook'>
+                        <a className="btn btn-warning mx-5" onClick={handleWebhook} >Webhook</a>
+                    </Link>
+                  </div> */}
+                </div>
+              </>
+
+              {showNote && 
+                    <div className="container">
+                        <div className="card">
+                          <div className="card-header">
+                              <h3>Webhook Configuration Note</h3>
+                          </div>
+                          <div className="card-body lead">
+                              <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
+                              <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></p>
+                              <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></p>
+                          </div>
+                        </div>
+                    </div>
+              }
+          </>
+        }
+        
       </main>
     </div>
   )
 }
 // {window.location.href}
+
+export default Home

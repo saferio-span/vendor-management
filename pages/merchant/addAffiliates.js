@@ -38,6 +38,7 @@ const AddAffiliates = () => {
     useEffect(()=>{
         if(user_details)
         {
+            console.log(user_details)
             setMerchantID(user_details)
         }
         //eslint-disable-next-line
