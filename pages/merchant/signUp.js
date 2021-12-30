@@ -109,7 +109,8 @@ const SignUp = () => {
                 if(res.status != 200)
                 {
                     // console.log(`401 Res`)
-                    toast.error(res.data.Message)
+                    // toast.error(res.data.Message)
+                    console.log(res.data)
                     // console.log(res)
                 }
                 
