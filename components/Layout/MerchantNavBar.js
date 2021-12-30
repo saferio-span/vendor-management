@@ -4,13 +4,14 @@ import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
 import Link from "next/link";
 import axios from 'axios';
-import { credentials } from '../../config/variables';
+// import { credentials } from '../../config/variables';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const MerchantNavBar = () => {
     
     const [payerRef,setPayerRef]=useState()
     const [businessId,setBusinessId]=useState()
+    const [{ user_details,environment }, dispatch] = useUserValue();
     const handleLogOut = ()=>{
         localStorage.clear();
         dispatch({
@@ -38,25 +39,34 @@ const MerchantNavBar = () => {
         })
     }
 
+    const setEnvironment = async()=>{
+        const envName = localStorage.getItem('env')
+        const googleEmail = localStorage.getItem('googleEmail')
+        const envRes = await axios.post(`${origin}/api/getEnvByName`,{
+            email: googleEmail,
+            envName : envName
+        })
+        const environCreds = await envRes.data
+
+        // localStorage.clear();
+        dispatch({
+            type: actionTypes.SET_ENVIRONMENT_DETAILS,
+            data: environCreds[0],
+        })
+    }
+
     useEffect(() => {
 
         fetchdata()
         if(Object.keys(environment).length === 0)
         {
-            const envName = localStorage.getItem('env')
-            const cred = credentials.filter((user)=>user.name===envName)
-
-            // localStorage.clear();
-            dispatch({
-                type: actionTypes.SET_ENVIRONMENT_DETAILS,
-                data: cred[0],
-            })
+            setEnvironment()
             // Router.push('/merchant/login')
         }
         //eslint-disable-next-line
     }, [])
 
-    const [{ user_details,environment }, dispatch] = useUserValue();
+    
 
     return (
         <>

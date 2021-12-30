@@ -8,9 +8,9 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
 import AddTransaction from "../../components/Layout/AddTransaction";
-import W9Pdf from "../../components/Layout/W9Pdf";
 import ReactPaginate from "react-paginate"
 import { useUserValue } from '../../contexts/UserContext'
+import { useRouter } from 'next/router'
 
 export const getServerSideProps = async (context)=>{
   const { req,query } = context;
@@ -22,8 +22,8 @@ export const getServerSideProps = async (context)=>{
   })
 
   const merchant = await merchantRes.data
-  console.log(`Merchant`)
-  console.log(merchant[0]._id)
+  // console.log(`Merchant`)
+  // console.log(merchant[0]._id)
 
   const res = await axios.post(`${origin}/api/affiliate/getAllByMerchnatId`,{
     merchantId : merchant[0]._id,
@@ -32,7 +32,7 @@ export const getServerSideProps = async (context)=>{
 
   const affiliates = await res.data
 
-  console.log(affiliates)
+  // console.log(affiliates)
   const transRes = await axios.post(`${origin}/api/merchant/getAllTransactions`,{
     payerRef: query.payerRef,
   })
@@ -50,6 +50,7 @@ export const getServerSideProps = async (context)=>{
 
 export default function Home(props) {
 
+  const router = useRouter()
   const options = []
   const optionAff = props.affiliates
   const [affiliates,setAffilites] =  useState([])
@@ -60,6 +61,7 @@ export default function Home(props) {
   const [searchValue,setSearchValue] = useState("")
   const [{user_details,environment},dispatch] = useUserValue();
   const transactions = props.transactions
+  const envName = router.query.envName
   
   // const pageCount = 5;
   for(const key in props.affiliates )
@@ -144,7 +146,7 @@ export default function Home(props) {
   const getReqRevUrl =async ()=>{
     const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
       businessId : user_details.businessID,
-      envName: environment ? environment.name : localStorage.getItem("env")
+      envName: envName
     })
 
     window.open(`${res.data.ReviewUrl}`, '_blank');
@@ -223,23 +225,25 @@ export default function Home(props) {
                         <td>{details.payeeRef}</td>
                         <td><i className="bi bi-currency-dollar"></i> {amount}</td>
                         <td>
-                          <Link href={{ pathname: '/merchant/transactions', query: { payerRef:user_details ? user_details.payerRef:"",payeeRef: details.payeeRef,envName: environment ? environment.name : localStorage.getItem("env") } }} >
+                          <Link href={{ pathname: '/merchant/transactions', query: { payerRef:user_details ? user_details.payerRef:"",payeeRef: details.payeeRef,envName: envName } }} >
                             <a className="btn btn-link">{transactionCount}</a>
                           </Link></td>
                         <td>{details.w9Status ? details.w9Status : "-"}</td>
                         <td>{details.tinMatchingStatus ? details.tinMatchingStatus : "-"}</td>
                         <td>  
-                          {details.w9Status ? <><button key={`${details._id}w9`} className="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target={`#pdf${details.payeeRef}`} ><i className="bi bi-download"></i> W9</button></> : <></> }
-                          <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
-                          <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
-    const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
-      businessId : user_details.businessID,
-      payeeRef: details.payeeRef,
-      envName: environment ? environment.name : localStorage.getItem("env")
-    })
+                          <div className="row">
+                            <div className="col-3 p-0">{details.w9Status !== "-" ? <><Link href={{ pathname: `/merchant/w9Form/${details.payeeRef}`, query: { envName: envName } }} ><a className="btn btn-sm btn-warning"><i className="bi bi-file-earmark-pdf"></i> W9</a></Link></> : <></> }</div>
+                            <div className="col-3 p-0"><button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button></div>
+                            <div className="col-4 p-0"><button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+                                const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
+                                  businessId : user_details.businessID,
+                                  payeeRef: details.payeeRef,
+                                  envName: envName
+                                })
 
-    window.open(`${res.data.ReviewUrl}`, '_blank');
-  }}><i className="bi bi-eye"></i> 1099-NEC</button>
+                                window.open(`${res.data.ReviewUrl}`, '_blank');
+                              }}><i className="bi bi-eye"></i> 1099-NEC</button></div>
+                          </div>
                         </td>
                     </tr>
                     </>
@@ -274,10 +278,10 @@ export default function Home(props) {
             </div>
         </div>
         {limitAffiliates && limitAffiliates.map((details) => {
+          // console.log(details)
           return (
             <>
               <AddTransaction affiliates = {optionAff} defaultAffiliate = {details.payeeRef} />
-              <W9Pdf url={details.pdfUrl} userId={details.payeeRef} />
             </> 
           )
         }

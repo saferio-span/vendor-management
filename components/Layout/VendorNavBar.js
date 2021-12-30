@@ -2,7 +2,6 @@ import React,{useEffect, useState} from 'react'
 import Router from 'next/router'
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
-import { credentials } from '../../config/variables';
 import Link from "next/link";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from 'axios';
@@ -43,6 +42,22 @@ const VendorNavbar = () => {
         setPayeeRef(details.user[0].payeeRef)
     }
 
+    const setEnvironment = async()=>{
+        const envName = localStorage.getItem('env')
+        const googleEmail = localStorage.getItem('googleEmail')
+        const envRes = await axios.post(`${origin}/api/getEnvByName`,{
+            email: googleEmail,
+            envName : envName
+        })
+        const environCreds = await envRes.data
+
+        // localStorage.clear();
+        dispatch({
+            type: actionTypes.SET_ENVIRONMENT_DETAILS,
+            data: environCreds[0],
+        })
+    }
+
     useEffect(() => {
         // if(!user_details)
         // {
@@ -51,14 +66,7 @@ const VendorNavbar = () => {
         fetchdata()
         if(Object.keys(environment).length === 0)
         {
-            const envName = localStorage.getItem('env')
-            const cred = credentials.filter((user)=>user.name===envName)
-
-            // localStorage.clear();
-            dispatch({
-                type: actionTypes.SET_ENVIRONMENT_DETAILS,
-                data: cred[0],
-            })
+            setEnvironment()
         }
         //eslint-disable-next-line
     }, [])
