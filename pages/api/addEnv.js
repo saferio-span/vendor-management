@@ -7,17 +7,17 @@ export default async function handler(req,res)
 {
     const environ = new Environment()
     console.log(req.body)
-	environ.name = req.body.name
-    environ.clientId = req.body.clientId
-    environ.clientSecret = req.body.clientSecret
-    environ.userToken = req.body.userToken
-    environ.environment = req.body.environment
-    environ.authUrl = req.body.authUrl
-    environ.apiUrl = req.body.apiUrl
-    environ.pdfKey = req.body.pdfKey
-    environ.awsSecretKey = req.body.awsSecretKey
-    environ.awsAccessKey = req.body.awsAccessKey
-    environ.email = req.body.email
+	environ.name = req.body.name.trim()
+    environ.clientId = req.body.clientId.trim()
+    environ.clientSecret = req.body.clientSecret.trim()
+    environ.userToken = req.body.userToken.trim()
+    environ.environment = req.body.environment.trim()
+    environ.authUrl = req.body.authUrl.trim()
+    environ.apiUrl = req.body.apiUrl.trim()
+    environ.pdfKey = req.body.pdfKey.trim()
+    environ.awsSecretKey = req.body.awsSecretKey.trim()
+    environ.awsAccessKey = req.body.awsAccessKey.trim()
+    environ.email = req.body.email.trim()
 
     environ.save((err, envCreated)=>{
         if (err) {

@@ -1,5 +1,6 @@
 import connectDB from "../../../config/connectDB";
 import Merchant from "../../../models/merchantModel"
+import Environment from "../../../models/envModel"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
@@ -13,13 +14,13 @@ export default async function handler(req,res)
 
     var businessID = "";
 
-
-	const apiUrl = req.body.apiUrl
-	const authUrl = req.body.authUrl
-	const envName = req.body.env.name
-	const clientId = req.body.env.clientId
-	const clientSecret = req.body.env.clientSecret
-	const userToken = req.body.env.userToken
+	const envName = req.body.envName
+	const cred = await Environment.find({name:envName})
+    const apiUrl = cred[0].apiUrl
+	const authUrl = cred[0].authUrl
+	const clientId = cred[0].clientId
+	const clientSecret = cred[0].clientSecret
+	const userToken = cred[0].userToken
 
     const jwsToken = generateJws(clientId,clientSecret,userToken)
 
@@ -56,9 +57,10 @@ export default async function handler(req,res)
 		city,
 		state,
 		zip,
+		payerRef
 	} = req.body;
 
-	const payerRef = `Pr${random}`
+	// const payerRef = `Pr${random}`
 	const businessObj = {
 		BusinessNm: businessName,
 		PayerRef: payerRef,

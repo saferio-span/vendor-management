@@ -18,3 +18,13 @@
     color: '#555';
     letter-spacing: '1px';
 }
+
+.updateButton
+{
+   margin-top: 40px; 
+}
+
+.logoutButton
+{
+    margin-top: 34px; 
+}

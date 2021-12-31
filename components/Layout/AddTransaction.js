@@ -192,7 +192,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                             </>
                                             :
                                             <>
-                                                <label htmlFor="state">Select Affiliate<span className="text-danger font-weight-bold">*</span></label>
+                                                <label htmlFor="state">Select Payee<span className="text-danger font-weight-bold">*</span></label>
                                                 <Select
                                                     value = {
                                                         options.filter(option => option.value === values.payeeRef)
@@ -205,6 +205,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                                     name="affiliates"
                                                     options={options}
                                                     onChange={handleSelectChange}
+                                                    id="transAff"
                                                 />
                                             </>}
                                             

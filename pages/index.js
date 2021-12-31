@@ -69,32 +69,37 @@ const Home=(props)=>{
   const [{environment},dispatch] = useUserValue();
   const [details,setDetails] = useState(null)
   const credentials = props.credentials
-  const [env,setEnv]=useState()
+  // const [env,setEnv]=useState()
   const [inputVal,setInputVal]=useState()
-  const [filterCred,setFilterCred]=useState()
+  // const [filterCred,setFilterCred]=useState()
   const [showNote,setShowNote]=useState(false)
   const [showEnv,setShowEnv]=useState(false)
   const [showEnvPage,setShowEnvPage]=useState(false)
   // console.log(credentials)
   var options = []
-
+  for(const key in credentials )
+  {
+      options.push({ value: credentials[key].name, label: credentials[key].name })
+  }
   // console.log(`Session`)
   // console.log(props.session)
   // console.log(`Session`)
 
-  const handleSelectChange=async(name)=>{
-    if(name === "")
+  const handleSelectChange=async(e)=>{
+    console.log(e)
+    if(e == null)
     {
       dispatch({
         type: actionTypes.SET_ENVIRONMENT_DETAILS,
         data: null,
       })
       setDetails(null)
+      setShowNote(false)
     }
     else
     {
-      setInputVal(name)
-      const cred = credentials.filter((user)=>user.name===name)   
+      setInputVal(e.value)
+      const cred = credentials.filter((user)=>user.name===e.value)   
       dispatch({
         type: actionTypes.SET_ENVIRONMENT_DETAILS,
         data: cred[0],
@@ -102,7 +107,7 @@ const Home=(props)=>{
       localStorage.setItem('env',cred[0].name)
       setDetails(cred[0]) 
       setShowNote(true)
-      setShowEnv(false)
+      // setShowEnv(false)
     }
   }
 
@@ -113,7 +118,13 @@ const Home=(props)=>{
     }
     else
     {
-      Router.push('/merchant/login')
+      // Router.push('/merchant/login')
+      Router.push({
+        pathname: '/merchant/login',
+        query: { 
+            envName: inputVal
+        }
+      })
     }
   }
 
@@ -124,7 +135,12 @@ const Home=(props)=>{
     }
     else
     {
-      Router.push('/vendor/login')
+      Router.push({
+        pathname: '/vendor/login',
+        query: { 
+            envName: inputVal
+        }
+      })
     }
   }
 
@@ -173,16 +189,6 @@ const Home=(props)=>{
   }
 
   useEffect(() => {
-    if(env!="")
-    {
-      const filterCredData = credentials.filter((user)=>user.name.includes(env))  
-      setFilterCred(filterCredData)
-    }
-    else
-    {
-      setFilterCred([])
-      setShowNote(false)
-    }
 
     if(session !== null)
     {
@@ -191,7 +197,7 @@ const Home=(props)=>{
     }
 
   //eslint-disable-next-line
-  }, [env])
+  }, [])
 
   // console.log(filterCred)
 
@@ -229,12 +235,15 @@ const Home=(props)=>{
                   Vendor Management
                 </h1>
               </div>
+              <div className="col-2 offset-2  ">
+                <button className={`${style.logoutButton} btn btn-danger mx-5`} onClick={()=>signOut()}>Logout Google</button>
+              </div>
             </div>
             <div className="row">
               <div className="col-4 offset-4">
                 <div className="form-group my-2">
                     <label htmlFor="env">Environment </label>
-                    {/* <Select
+                    <Select
                         className="basic-single my-2"
                         classNamePrefix="select"
                         defaultValue="0"
@@ -245,27 +254,34 @@ const Home=(props)=>{
                         name="env"
                         options={options}
                         onChange={handleSelectChange}
-                    /> */}
-                    <input type="text" name="env" onChange={handleEnvChange} autoComplete="off" value={inputVal} className="form-control" placeholder="Environment Name"/>
+                    />
+                    {/* <input type="text" name="env" onChange={handleEnvChange} autoComplete="off" value={inputVal} className="form-control" placeholder="Environment Name"/> */}
                 </div>
-                <div className="list-group">
+
+                {/* <div className="list-group">
                   {filterCred && showEnv && filterCred.map((details) => {
                     return (
                       <button key={details.name} type="button" onClick={()=>handleSelectChange(details.name)} className="list-group-item list-group-item-action">{details.name}</button>
                     )}
                   )}
+                </div> */}
+              </div>
+              <div className="col-1 p-0">
+                <div className="form-group">
+                  {showNote && <> <Link href={{ pathname: '/updateEnv', query: { envName: inputVal } }} ><a className={`${style.updateButton} btn btn-secondary`} title="Update Environment"><i className="bi bi-pencil-square"></i></a></Link></>}
                 </div>
+              
               </div>
             </div>
             <div className="row">
               <div className="col-12 text-center mt-4">
-                  <p>Didn{`'`}t set your environment? No worries you can do it form here! <Link href='/addEnv'><a>Click me</a></Link> {showNote && <>| <Link href={{ pathname: '/updateEnv', query: { envName: inputVal } }} ><a>Update Environment</a></Link></>}</p>
+                  <p>Didn{`'`}t set your environment? No worries you can do it from here! <Link href='/addEnv'><a>Click me</a></Link></p>
               </div>
             </div>
             <hr />
               <>
                 <div className="row my-5">
-                  <div className="col-2 offset-3">
+                  <div className="col-2 offset-4">
                     {/* <Link href='/merchant/login'> */}
                         <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Payer Login</a>
                     {/* </Link> */}
@@ -276,9 +292,9 @@ const Home=(props)=>{
                         <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
                     {/* </Link> */}
                   </div>
-                  <div className="col-2">
-                    <button className="btn btn-danger mx-5" onClick={()=>signOut()}>Logout Google</button>
-                  </div>
+                  {/* <div className="col-2">
+                    
+                  </div> */}
                   {/* <div className="col-3 offset-1">
                     <Link href='/webHook'>
                         <a className="btn btn-warning mx-5" onClick={handleWebhook} >Webhook</a>
@@ -293,10 +309,32 @@ const Home=(props)=>{
                           <div className="card-header">
                               <h3>Webhook Configuration Note</h3>
                           </div>
-                          <div className="card-body lead">
-                              <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
-                              <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></p>
-                              <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></p>
+                          <div className="card-body">
+                            <table className="table table-striped table-hover">
+                              <thead>
+                                <tr>
+                                  <th>Event Type</th>
+                                  <th>Callback URL</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>WhCertificate Status Change</td>
+                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></td>
+                                </tr>
+                                <tr>
+                                  <td>Form 1099 Auto Generation</td>
+                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></td>
+                                </tr>
+                                <tr>
+                                  <td>PDF Complete</td>
+                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                                {/* <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
+                                <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></p>
+                                <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></p> */}
                           </div>
                         </div>
                     </div>

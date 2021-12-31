@@ -1,10 +1,17 @@
 import connectDB from "../../../../config/connectDB";
 import PdfUrls from "../../../../models/1099PdfUrlModel"
+import PdfHook from "../../../../models/PdfWebHookModel"
 connectDB()
 
 export default async function handler(req,res)
 {
 	const envName = req.query.envName
+	const pdfHook = new PdfHook({
+		...req.body,
+        environment:envName
+	});
+
+	await pdfHook.save()
 	PdfUrls.find({
 		RecordId: req.body.Records[0].RecordId
 	},async (err,data)=>{

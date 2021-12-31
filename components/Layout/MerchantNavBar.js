@@ -12,6 +12,7 @@ const MerchantNavBar = () => {
     const [payerRef,setPayerRef]=useState()
     const [businessId,setBusinessId]=useState()
     const [{ user_details,environment }, dispatch] = useUserValue();
+    const [envName,setEnvName]=useState()
     const handleLogOut = ()=>{
         localStorage.clear();
         dispatch({
@@ -41,6 +42,8 @@ const MerchantNavBar = () => {
 
     const setEnvironment = async()=>{
         const envName = localStorage.getItem('env')
+        // console.log(envName)
+        setEnvName(envName)
         const googleEmail = localStorage.getItem('googleEmail')
         const envRes = await axios.post(`${origin}/api/getEnvByName`,{
             email: googleEmail,
@@ -58,14 +61,16 @@ const MerchantNavBar = () => {
     useEffect(() => {
 
         fetchdata()
-        if(Object.keys(environment).length === 0)
+        if(environment === undefined)
         {
             setEnvironment()
             // Router.push('/merchant/login')
         }
+        setEnvName(localStorage.getItem('env'))
+        // console.log(localStorage.getItem('env'))
         //eslint-disable-next-line
     }, [])
-
+    // console.log(envName)
     
 
     return (
@@ -82,9 +87,9 @@ const MerchantNavBar = () => {
                             {/* <Link href='/merchant/home'> */}
                             <Link href={{ pathname: '/merchant/home', query: { 
                                 payerRef:payerRef,
-                                envName: environment ? environment.name : localStorage.getItem("env")
+                                envName:envName
                             }}}>
-                                <a className="nav-link">Affiliates</a>
+                                <a className="nav-link">Payees</a>
                             </Link>
                         </li>
                         <li key="transactions" className="nav-item">
@@ -93,7 +98,7 @@ const MerchantNavBar = () => {
                                 { 
                                     pathname: `/merchant/transactions/${payerRef}`, 
                                     query: { 
-                                        envName: environment ? environment.name : localStorage.getItem("env")
+                                        envName:envName
                                     }
                                 }
                             }>
@@ -108,7 +113,7 @@ const MerchantNavBar = () => {
                                     pathname: `/merchant/1099Nec/${businessId}`, 
                                     query: { 
                                         payerRef:payerRef,
-                                        envName: environment ? environment.name : localStorage.getItem("env")
+                                        envName:envName
                                     }
                                 }
                             }>
@@ -122,7 +127,7 @@ const MerchantNavBar = () => {
                                 { 
                                     pathname: `/merchant/webhook`, 
                                     query: { 
-                                        envName: environment ? environment.name : localStorage.getItem("env")
+                                        envName:envName
                                     }
                                 }
                             }>
@@ -131,7 +136,7 @@ const MerchantNavBar = () => {
                         </li>
                     </ul>
 
-                    <span className="text-light">Environment : {environment ? environment.name : localStorage.getItem("env")}</span>
+                    <span className="text-light">Environment : {envName}</span>
                     <Link href='/merchant/profile'>
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>

@@ -143,7 +143,7 @@ const Records1099Nec = (props) => {
                 <table className="table table-hover table-striped table-responsive">
                     <thead>
                         <tr>
-                            <th>Affiliate Name</th>
+                            <th>Payee Name</th>
                             <th>Federal Status</th>
                             <th>TaxYear</th>
                             <th>Action</th>

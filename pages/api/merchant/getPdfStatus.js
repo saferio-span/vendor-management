@@ -1,5 +1,5 @@
 import connectDB from "../../../config/connectDB";
-import PdfUrls from "../../../models/1099PdfUrlModel"
+import PdfHook from "../../../models/PdfWebHookModel"
 
 connectDB()
 
@@ -7,7 +7,7 @@ export default async function handler(req,res)
 {
 	const envName = req.body.envName
 	try {
-		const data = await PdfUrls.find({environment:envName})
+		const data = await PdfHook.find({environment:envName})
 		res.status(200).json(data);
 	} catch (err) {
 		console.error(err);

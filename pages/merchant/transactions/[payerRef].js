@@ -225,7 +225,7 @@ const Transactions = (props) => {
                         previousLabel={"<"}
                         nextLabel={">"}
                         breakLabel={"..."}
-                        pageCount={pageCount}
+                        pageCount={pageCount?pageCount:0}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={3}
                         onPageChange={handlePageClick}

@@ -10,6 +10,7 @@ const VendorNavbar = () => {
     const [{ user_details,environment }, dispatch] = useUserValue();
     const [payeeRef,setPayeeRef] = useState();
     const [pdfUrl,setPdfUrl] = useState(null);
+    const [envName,setEnvName]=useState()
     const handleLogOut = ()=>{
         localStorage.clear();
         dispatch({
@@ -44,6 +45,7 @@ const VendorNavbar = () => {
 
     const setEnvironment = async()=>{
         const envName = localStorage.getItem('env')
+        setEnvName(envName)
         const googleEmail = localStorage.getItem('googleEmail')
         const envRes = await axios.post(`${origin}/api/getEnvByName`,{
             email: googleEmail,
@@ -64,10 +66,11 @@ const VendorNavbar = () => {
         //     Router.push('/vendor/login')
         // }
         fetchdata()
-        if(Object.keys(environment).length === 0)
+        if(environment === undefined)
         {
             setEnvironment()
         }
+        setEnvName(localStorage.getItem('id'))
         //eslint-disable-next-line
     }, [])
     return (

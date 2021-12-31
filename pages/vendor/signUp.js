@@ -4,7 +4,7 @@ import {states,statesShort} from "../../config/variables"
 import Link from "next/link";
 import axios from 'axios';
 import { toast,ToastContainer } from "react-toastify"
-import Router from 'next/router'
+import Router,{useRouter} from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
 import { useUserValue } from '../../contexts/UserContext'
@@ -60,6 +60,9 @@ const SignUp = (props) => {
 		// password: '',
         // confirmPassword:''
 	});
+
+    const router = useRouter()
+    const envName = router.query.envName
 
     const handleBusinessChange = (e)=>{
         if(e !== null)
@@ -121,20 +124,20 @@ const SignUp = (props) => {
 
             // if(values.password === values.confirmPassword)
             // {
-                console.log(
-                    {
-                        merchantID: values.merchantId,
-                        name: values.name,
-                        address1: values.address1,
-                        address2: values.address2,
-                        city: values.city,
-                        state: values.state,
-                        zip: values.zip,
-                        email: values.email,
-                        password: values.password,
-                        envName: environment ? environment.name : localStorage.getItem("env")
-                    }
-                )
+                // console.log(
+                //     {
+                //         merchantID: values.merchantId,
+                //         name: values.name,
+                //         address1: values.address1,
+                //         address2: values.address2,
+                //         city: values.city,
+                //         state: values.state,
+                //         zip: values.zip,
+                //         email: values.email,
+                //         password: values.password,
+                //         envName: environment ? environment.name : localStorage.getItem("env")
+                //     }
+                // )
                 // const res = await axios.post(`/api/affiliate/signUp`,{
                 //     merchantID: values.merchantId,
                 //     name: values.name,
@@ -158,7 +161,7 @@ const SignUp = (props) => {
                     zip: values.zip,
                     email: values.email,
                     password: values.password,
-                    envName: environment ? environment.name : localStorage.getItem("env")
+                    envName: envName
                 })
         
                 const user = await res.data
@@ -333,7 +336,7 @@ const SignUp = (props) => {
                 </form>
                 <br /><hr />
                 <div className="mb-5">
-                    Already have an account ? -<Link href='/vendor/login'>
+                    Already have an account ? -<Link href={{ pathname: '/vendor/login', query: { envName: envName}}}>
                         <a className="btn btn-link">Sign In !</a>
                     </Link>
                 </div>

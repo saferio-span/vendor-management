@@ -90,10 +90,8 @@ export default function Home(props) {
         affiliates.forEach(searchAff => {
           let amount = 0
           let transactionCount = 0
-
           let w9Status = searchAff.w9Status ? searchAff.w9Status : ""
           let tinStatus = searchAff.tinMatchingStatus ? searchAff.tinMatchingStatus : ""
-
           transactions.forEach(option => {
               if(option.payeeRef === searchAff.payeeRef)
               {
@@ -103,8 +101,6 @@ export default function Home(props) {
           })
           amount = String(amount)
           transactionCount = String(transactionCount)
-
-
           if(searchAff.name.includes(searchValue) || searchAff.payeeRef.includes(searchValue) || amount.includes(searchValue) || transactionCount.includes(searchValue) || w9Status.includes(searchValue) || tinStatus.includes(searchValue) )
           {
               searchResult.push(searchAff)
@@ -162,13 +158,13 @@ export default function Home(props) {
           </div>
           <div className="col-2 text-right">
             <Link href='/merchant/addAffiliates'>
-                <a className="btn btn-primary text-right"><i className="bi bi-person-plus-fill"></i> Add Affiliates</a>
+                <a className="btn btn-primary text-right"><i className="bi bi-person-plus-fill"></i> Add Payees</a>
             </Link>
           </div>
         </div>
         <div className="row mx-2 mb-3">
           <div className="col-2">
-            <h6 className="pt-2">Sort by affiliate</h6>
+            <h6 className="pt-2">Sort by payees</h6>
           </div>
           <div className="col-3">
             <Select
@@ -260,7 +256,7 @@ export default function Home(props) {
                     previousLabel={"<"}
                     nextLabel={">"}
                     breakLabel={"..."}
-                    pageCount={pageCount}
+                    pageCount={pageCount?pageCount:0}
                     marginPagesDisplayed={2}
                     pageRangeDisplayed={3}
                     onPageChange={handlePageClick}

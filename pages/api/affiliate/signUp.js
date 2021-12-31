@@ -6,7 +6,6 @@ connectDB()
 
 export default async function handler(req,res)
 {
-    const random = Math.floor((Math.random() * 1000000000) + 1);
     console.log(req.body)
     // res.status(200).send(businessID);
     const affiliate = new Affiliate()
@@ -19,7 +18,8 @@ export default async function handler(req,res)
     affiliate.zip = req.body.zip
     affiliate.email = req.body.email
     // affiliate.password = bcrypt.hashSync(req.body.password, 10)
-    affiliate.payeeRef = `Pe${random}`
+    affiliate.payeeRef = req.body.payeeRef
+    // affiliate.payeeRef = `Pe${random}`
     affiliate.environment = req.body.envName
 
     affiliate.save((err, userCreated)=>{

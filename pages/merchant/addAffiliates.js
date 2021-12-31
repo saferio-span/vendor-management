@@ -150,7 +150,7 @@ const AddAffiliates = () => {
     return (
         <>
             <MerchantNavBar />
-            <h1 className="d-flex justify-content-center align-items-center my-4 ">Add Affiliates</h1>
+            <h1 className="d-flex justify-content-center align-items-center my-4 ">Add Payees</h1>
             <div className="container bg-light">
                 <br />
                 <ToastContainer />

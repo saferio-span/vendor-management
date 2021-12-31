@@ -72,8 +72,8 @@ const AddEnv = (props) => {
         clientId:credentials ? credentials.clientId : "",
         clientSecret:credentials ? credentials.clientSecret : "",
         userToken:credentials ? credentials.userToken : "",
-        authUrl:credentials ? credentials.authUrl : "",
-        apiUrl:credentials ? credentials.apiUrl : "",
+        // authUrl:credentials ? credentials.authUrl : "",
+        // apiUrl:credentials ? credentials.apiUrl : "",
         pdfKey:credentials ? credentials.pdfKey : "",
         awsSecretKey:credentials ? credentials.awsSecretKey : "",
         awsAccessKey:credentials ? credentials.awsAccessKey : "",
@@ -83,18 +83,21 @@ const AddEnv = (props) => {
         clientId:credentials ? credentials.clientId : "",
         clientSecret:credentials ? credentials.clientSecret : "",
         userToken:credentials ? credentials.userToken : "",
-        authUrl:credentials ? credentials.authUrl : "",
-        apiUrl:credentials ? credentials.apiUrl : "",
+        // authUrl:credentials ? credentials.authUrl : "",
+        // apiUrl:credentials ? credentials.apiUrl : "",
         pdfKey:credentials ? credentials.pdfKey : ""
 	});
+    const [loading,setLoading] = useState(false)
 
     const handleSubmit =async (e)=>{
         e.preventDefault()
+        setLoading(true)
         // console.log(values)
         const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
+            setLoading(false)
             return false
         }
 
@@ -114,14 +117,14 @@ const AddEnv = (props) => {
         const res = await axios.post(`/api/updateEnv`,{
             id: credentials._id,
             update:{
-                clientId:values.clientId,
-                clientSecret:values.clientSecret,
-                userToken:values.userToken,
-                authUrl:values.authUrl,
-                apiUrl:values.apiUrl,
-                pdfKey:values.pdfKey,
-                awsSecretKey:values.awsSecretKey,
-                awsAccessKey:values.awsAccessKey,
+                clientId:values.clientId.trim(),
+                clientSecret:values.clientSecret.trim(),
+                userToken:values.userToken.trim(),
+                // authUrl:values.authUrl.trim(),
+                // apiUrl:values.apiUrl.trim(),
+                pdfKey:values.pdfKey.trim(),
+                awsSecretKey:values.awsSecretKey.trim(),
+                awsAccessKey:values.awsAccessKey.trim(),
             }
         })
 
@@ -131,11 +134,13 @@ const AddEnv = (props) => {
         if(envrn)
         {
             toast("Environment updated successfully")
+            setLoading(false)
             return true
         }
         else
         {
             toast("Environment cannot be updated")
+            setLoading(false)
             return false
         }
         
@@ -212,14 +217,14 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="state">Api Url<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="apiUrl" name="apiUrl" value={values.apiUrl} placeholder="Api Url" onChange={handleInputChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -246,14 +251,14 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="authUrl">Auth Url<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="authUrl" name="authUrl" placeholder="Auth Url" value={values.authUrl} onChange={handleInputChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -275,7 +280,8 @@ const AddEnv = (props) => {
                     <br />
                     <div className="row">
                         <div className="offset-11 col-1 mb-3">
-                            <input type="submit" name="submit" className="btn btn-danger float-right" />
+                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                            {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
                     </div>
                 </form>

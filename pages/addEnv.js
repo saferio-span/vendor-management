@@ -67,6 +67,7 @@ const AddEnv = (props) => {
     // console.log(credentials)
     const [showEnvName,setShowEnvName] = useState()
     const [showNote,setShowNote] = useState(false)
+    const [loading,setLoading] = useState(false)
     const [values, setValues] = useState({
         name:'',
         envType:'',
@@ -80,6 +81,7 @@ const AddEnv = (props) => {
         awsAccessKey:'',
         envName:showEnvName
 	});
+    console.log(showEnvName)
 
     const [validateValues, setValidateValues] = useState({
         name:'',
@@ -101,11 +103,13 @@ const AddEnv = (props) => {
 
     const handleSubmit =async (e)=>{
         e.preventDefault()
+        setLoading(true)
         console.log(values)
         const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
+            setLoading(false)
             return false
         }
 
@@ -124,16 +128,16 @@ const AddEnv = (props) => {
 
         const res = await axios.post(`/api/addEnv`,{
            name:showEnvName,
-           clientId:values.clientId,
-           clientSecret:values.clientSecret,
-           userToken:values.userToken,
-           environment:values.envType,
-           authUrl:values.authUrl,
-           apiUrl:values.apiUrl,
-           pdfKey:values.pdfKey,
-           awsSecretKey:values.awsSecretKey,
-           awsAccessKey:values.awsAccessKey,
-           email:session.user.email
+           clientId:values.clientId.trim(),
+           clientSecret:values.clientSecret.trim(),
+           userToken:values.userToken.trim(),
+           environment:values.envType.trim(),
+           authUrl:values.authUrl.trim(),
+           apiUrl:values.apiUrl.trim(),
+           pdfKey:values.pdfKey.trim(),
+           awsSecretKey:values.awsSecretKey.trim(),
+           awsAccessKey:values.awsAccessKey.trim(),
+           email:session.user.email.trim()
         })
 
         const envrn = await res.data
@@ -166,18 +170,21 @@ const AddEnv = (props) => {
                 envName:''
             });
             toast("Environment added successfully")
+            setLoading(false)
             setShowNote(true)
             return true
         }
         else
         {
             toast("Environment cannot be added")
+            setLoading(false)
             return false
         }
         
     }
 
     useEffect(()=>{
+        console.log(values.name,values.envType)
         if(values.name !== "" && values.envType !== "")
         {
             let tempEnvname = `${values.name}-${values.envType}`
@@ -214,10 +221,28 @@ const AddEnv = (props) => {
     const handleSelectChange = (e)=>{
         setShowEnvName("")
         setShowNote(false)
+        console.log(e)
         if(e !== null)
         {
-            setValues({ ...values, envType: e.value });
-            setValidateValues({ ...validateValues, envType: e.value })
+            // setValues({ ...values, envType: e.value });
+            // setValidateValues({ ...validateValues, envType: e.value })
+
+            if(e.value === "sandbox")
+            {
+                setValues({ ...values, envType: e.value, authUrl: "https://testoauth.expressauth.net/v2/tbsauth", apiUrl:"https://testapi.taxbandits.com/v1.6.1"});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://testoauth.expressauth.net/v2/tbsauth", apiUrl:"https://testapi.taxbandits.com/v1.6.1"})
+            }
+
+            if(e.value === "staging")
+            {
+                setValues({ ...values, envType: e.value, authUrl: "https://oauth.expressauth.net/v2/tbsauth", apiUrl:"https://api.taxbandits.com/v1.6.1"});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://oauth.expressauth.net/v2/tbsauth", apiUrl:"https://api.taxbandits.com/v1.6.1"})
+            }
+            if(e.value === "uat")
+            {
+                setValues({ ...values, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:"https://api.tbsuat.com/v1.6.1"});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:"hhttps://api.tbsuat.com/v1.6.1"})
+            }
         }
         else
         {
@@ -295,14 +320,14 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="state">Api Url<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="apiUrl" name="apiUrl" value={values.apiUrl} placeholder="Api Url" onChange={handleInputChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -329,14 +354,14 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="authUrl">Auth Url<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="authUrl" name="authUrl" placeholder="Auth Url" value={values.authUrl} onChange={handleInputChange} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -361,7 +386,8 @@ const AddEnv = (props) => {
                             {showEnvName && <p>Environment Name - {showEnvName}</p>}
                         </div>
                         <div className="offset-3 col-1 mb-3">
-                            <input type="submit" name="submit" className="btn btn-danger float-right" />
+                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                            {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
                     </div>
                 </form>
@@ -373,10 +399,32 @@ const AddEnv = (props) => {
                     <div className="card-header">
                         <h3>Webhook Configuration Note</h3>
                     </div>
-                    <div className="card-body lead">
-                        <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/whCertificate</b></span></p>
+                    <div className="card-body">
+                        <table className="table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>Event Type</th>
+                              <th>Callback URL</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>WhCertificate Status Change</td>
+                              <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/whCertificate</b></span></td>
+                            </tr>
+                            <tr>
+                              <td>Form 1099 Auto Generation</td>
+                              <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/1099Generation</b></span></td>
+                            </tr>
+                            <tr>
+                              <td>PDF Complete</td>
+                              <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/pdfUrl</b></span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        {/* <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/whCertificate</b></span></p>
                         <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/1099Generation</b></span></p>
-                        <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/pdfUrl</b></span></p>
+                        <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/pdfUrl</b></span></p> */}
                     </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import style from "../../styles/Login.module.css"
-import Router from 'next/router'
+import Router,{useRouter} from 'next/router'
 import Link from "next/link";
 import { toast,ToastContainer } from "react-toastify"
 import axios from "axios"
@@ -16,29 +16,48 @@ const Login = () => {
         email: '',
 		// password: '',
 	});
+    const router = useRouter()
+    const envName = router.query.envName
     
     const [{user_details,environment},dispatch] = useUserValue();
+    console.log(environment)
+
+    const setEnvironment = async()=>{
+        const envName = envName
+        const googleEmail = localStorage.getItem('googleEmail')
+        const envRes = await axios.post(`${origin}/api/getEnvByName`,{
+            email: googleEmail,
+            envName : envName
+        })
+        const environCreds = await envRes.data
+
+        // localStorage.clear();
+        dispatch({
+            type: actionTypes.SET_ENVIRONMENT_DETAILS,
+            data: environCreds[0],
+        })
+    }
     
     useEffect(()=>{
 
         // const sess_email = localStorage.getItem('email')
         // console.log(environment)
-        if(Object.keys(environment).length === 0)
+        if(environment === undefined)
         {
-            Router.push('/')
+            setEnvironment()
         }
-        else{
-            if(user_details)
-            {
-                Router.push({
-                    pathname: '/merchant/home',
-                    query: { 
-                        payerRef : user_details.payerRef,
-                        envName: environment ? environment.name : localStorage.getItem("env")
-                    }
-                })
-            }
+     
+        if(user_details)
+        {
+            Router.push({
+                pathname: '/merchant/home',
+                query: { 
+                    payerRef : user_details.payerRef,
+                    envName: environment != undefined ? environment.name : envName
+                }
+            })
         }
+        
 
         //eslint-disable-next-line  
     },[])
@@ -144,7 +163,7 @@ const Login = () => {
                         <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
                     </form>
                     <hr />
-                    Don{`'`}t have an account ? -<Link href='/merchant/signUp'>
+                    Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}>
                         <a className="btn btn-link">Sign Up !</a>
                     </Link>
                 </div>

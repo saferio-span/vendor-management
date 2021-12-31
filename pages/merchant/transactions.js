@@ -185,6 +185,7 @@ const Transactions = (props) => {
                         name="affiliates"
                         options={options}
                         onChange={handleSelectChange}
+                        id="affFilter"
                     />
                 </div>
                 <div className="col-2 offset-2 d-flex align-items-end flex-column">
@@ -234,7 +235,7 @@ const Transactions = (props) => {
                         previousLabel={"<"}
                         nextLabel={">"}
                         breakLabel={"..."}
-                        pageCount={pageCount}
+                        pageCount={pageCount?pageCount:0}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={3}
                         onPageChange={handlePageClick}
