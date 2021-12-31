@@ -13,18 +13,7 @@ const MerchantNavBar = () => {
     const [businessId,setBusinessId]=useState()
     const [{ user_details,environment }, dispatch] = useUserValue();
     const [envName,setEnvName]=useState()
-    const handleLogOut = ()=>{
-        localStorage.clear();
-        dispatch({
-            type: actionTypes.SET_USER_DETAILS,
-            data: null,
-        })
-        dispatch({
-            type: actionTypes.SET_ENVIRONMENT_DETAILS,
-            data: null,
-        })
-        Router.push('/')
-    }
+    
 
     const fetchdata = async ()=>{
         var id = localStorage.getItem('id')
@@ -71,6 +60,24 @@ const MerchantNavBar = () => {
         //eslint-disable-next-line
     }, [])
     // console.log(envName)
+    const handleLogOut = ()=>{
+        localStorage.clear();
+        dispatch({
+            type: actionTypes.SET_USER_DETAILS,
+            data: null,
+        })
+        dispatch({
+            type: actionTypes.SET_ENVIRONMENT_DETAILS,
+            data: null,
+        })
+        Router.push('/')
+        // Router.push({
+        //     pathname: '/merchant/login',
+        //     query: { 
+        //         envName: envName
+        //     }
+        // })
+    }
     
 
     return (

@@ -21,11 +21,10 @@ export default async function handler(req,res)
     // global.localStorage = new LocalStorage('./scratch');
     // global.localStorage.clear()
 
-    console.log(req.body.env)
     console.log(`Email : ${req.body.email}`)
     await Affiliate.find({
         email: req.body.email,
-        environment: req.body.env.name
+        environment: req.body.envName
     }, (err, user)=>{
       if (err){
         console.log(err)

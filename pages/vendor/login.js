@@ -17,6 +17,7 @@ const Login = () => {
         email: '',
 		// password: '',
 	});
+    const [loading,setLoading]=useState(false)
     const router = useRouter()
     const envName = router.query.envName
     
@@ -63,10 +64,12 @@ const Login = () => {
 
     const handleSubmit = async (e)=>{
         e.preventDefault()      
+        setLoading(true)
         const hasEmptyField = Object.values(values).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
+            setLoading(false)
             return false
         }
 
@@ -75,9 +78,7 @@ const Login = () => {
             const res = await axios.post(`/api/affiliate/login`,{
                 email: values.email,
                 // password: values.password,
-                env: environment,
-                apiUrl:environment.apiUrl,
-                authUrl:environment.authUrl
+                envName: envName,
             })
             const user = await res.data
             if(user.length)
@@ -94,6 +95,7 @@ const Login = () => {
                 //     query: { user_details: user_details },
                 // })
                 // Router.push(`/vendor/home/${user[0].payeeRef}`)
+                setLoading(false)
                 Router.push({
                     pathname: `/vendor/home/${user[0].payeeRef}`,
                     query: { envName: environment.name },
@@ -102,6 +104,7 @@ const Login = () => {
           } catch (error) {
             // toast.error("Invalid Email Id or Password")
             toast.error("Invalid Email Id")
+            setLoading(false)
             // console.log(error)
             return null
           }
@@ -168,7 +171,8 @@ const Login = () => {
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control my-2" id="password" name="password" placeholder="Password" onChange={handleInputChange} />
                         </div> */}
-                        <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
+                        <button type="submit" className="btn btn-success w-100 my-2 py-3" value="Submit" disabled={loading}>Sign In {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        {/* <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" /> */}
                     </form>
                     <hr />
                     <span>Don{`'`}t have an account ? -<Link href={

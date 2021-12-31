@@ -16,11 +16,12 @@ const Login = () => {
         email: '',
 		// password: '',
 	});
+    const [loading,setLoading]=useState(false)
     const router = useRouter()
     const envName = router.query.envName
     
     const [{user_details,environment},dispatch] = useUserValue();
-    console.log(environment)
+    // console.log(environment)
 
     const setEnvironment = async()=>{
         const envName = envName
@@ -64,11 +65,13 @@ const Login = () => {
     // if(session) return null
 
     const handleSubmit = async (e)=>{
-        e.preventDefault()      
+        e.preventDefault()    
+        setLoading(true)  
         const hasEmptyField = Object.values(values).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
+            setLoading(false)  
             return false
         }
 
@@ -93,16 +96,18 @@ const Login = () => {
 
                 // console.log(user[0])
                 // Router.push('/merchant/home')
+                setLoading(false)
                 Router.push({
                     pathname: '/merchant/home',
                     query: { 
                         payerRef : user[0].payerRef,
-                        envName: environment ? environment.name : localStorage.getItem("env")
+                        envName: envName
                     }
                 })
             }
           } catch (error) {
             // toast.error("Invalid Email Id or Password")
+            setLoading(false)
             toast.error("Invalid Email Id")
             // console.log(error)
             return null
@@ -160,7 +165,8 @@ const Login = () => {
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control my-2" id="password" name="password" placeholder="Password" onChange={handleInputChange} />
                         </div> */}
-                        <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" />
+                        {/* <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" /> */}
+                        <button type="submit" className="btn btn-success w-100 my-2 py-3" value="Submit" disabled={loading}>Sign In {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                     </form>
                     <hr />
                     Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}>

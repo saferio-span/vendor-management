@@ -206,7 +206,6 @@ const SignUp = () => {
                                     <div className="form-group my-2">
                                         <label htmlFor="state">State<span className="text-danger font-weight-bold">*</span> </label>
                                         <Select
-
                                             className="basic-single"
                                             classNamePrefix="select"
                                             defaultValue="0"

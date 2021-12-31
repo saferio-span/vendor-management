@@ -157,7 +157,7 @@ export default function Home(props) {
             <h4>Affiliates List</h4>
           </div>
           <div className="col-2 text-right">
-            <Link href='/merchant/addAffiliates'>
+            <Link href={{ pathname: '/merchant/addAffiliates', query: { envName: envName } }} >
                 <a className="btn btn-primary text-right"><i className="bi bi-person-plus-fill"></i> Add Payees</a>
             </Link>
           </div>

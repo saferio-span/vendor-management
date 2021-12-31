@@ -35,7 +35,9 @@ const SignUp = (props) => {
 
     var options = []
     const [{user_details,environment},dispatch] = useUserValue();
-    console.log(environment)
+    // console.log(environment)
+    const [random,setRandom]=useState(Math.floor((Math.random() * 1000000000) + 1))
+    const [loading,setLoading]=useState(false)
     const [values, setValues] = useState({
 		merchantId:'',
         name:'',
@@ -45,6 +47,7 @@ const SignUp = (props) => {
         state:'',
         zip:'',
         email: '',
+        payeeRef:`Pe${random}`
 		// password: '',
         // confirmPassword:''
 	});
@@ -57,6 +60,7 @@ const SignUp = (props) => {
         state:'',
         zip:'',
         email: '',
+        payeeRef:`Pe${random}`
 		// password: '',
         // confirmPassword:''
 	});
@@ -102,11 +106,12 @@ const SignUp = (props) => {
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
-        
+        setLoading(true)
         const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields which are mandatory(*)")
+            setLoading(false)
             return false
         }
 
@@ -117,6 +122,7 @@ const SignUp = (props) => {
         if(availablity.data.length > 0)
         {
             toast.error("Email has been used already. Please try again using another email")
+            setLoading(false)
             return false
         }
         else
@@ -161,12 +167,14 @@ const SignUp = (props) => {
                     zip: values.zip,
                     email: values.email,
                     password: values.password,
-                    envName: envName
+                    envName: envName,
+                    payeeRef: values.payeeRef
                 })
         
                 const user = await res.data
                 if(user)
                 {
+                    setRandom(Math.floor((Math.random() * 1000000000) + 1))
                     setValues({
                         merchantID: '',
                         name:'',
@@ -176,11 +184,23 @@ const SignUp = (props) => {
                         state:'',
                         zip:'',
                         email: '',
+                        payeeRef:`Pe${random}`
                         // password: '',
                         // confirmPassword:''
                     })
+                    setValidateValues({
+                        merchantId:'',
+                        name:'',
+                        address1:'',
+                        city:'',
+                        state:'',
+                        zip:'',
+                        email: '',
+                        payeeRef:`Pe${random}`
+                    })
                     toast("Account created successfully")
-                    Router.push('/vendor/login')
+                    setLoading(false)
+                    // Router.push('/vendor/login')
                     return true
                 }
                 else
@@ -207,7 +227,7 @@ const SignUp = (props) => {
 
     return (
         <>
-            <h1 className="d-flex justify-content-center align-items-center my-5 "> Sign Up</h1>
+            <h1 className="d-flex justify-content-center align-items-center my-5 ">Sign Up</h1>
             <div className="container bg-light">
                 <br />
                 <ToastContainer />
@@ -231,13 +251,18 @@ const SignUp = (props) => {
                                 />
                             </div>
                         </div>
-                        <div className="col-6"></div>
+                        <div className="col-6">
+                            <div className="form-group my-2">
+                                <label htmlFor="email">Payee Ref<span className="text-danger font-weight-bold">*</span></label>
+                                <input type="text" className="form-control" id="payeeRef" placeholder="Payee Ref" value={values.payeeRef} name="payeeRef" onChange={handleInputChange} />
+                            </div>
+                        </div>
                         <div className="col-6">
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="name">Name<span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="text" className="form-control" id="name" placeholder="Name" name="name" onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="name" placeholder="Name" name="name" value={values.name} onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -245,7 +270,7 @@ const SignUp = (props) => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="address1">Address 1<span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="text" className="form-control" id="address1" name="address1" placeholder="Address 1" onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="address1" name="address1" placeholder="Address 1" value={values.address1} onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +278,7 @@ const SignUp = (props) => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="city">City <span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="text" className="form-control" id="city" name="city" placeholder="City" onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="city" name="city" value={values.city} placeholder="City" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +286,7 @@ const SignUp = (props) => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="zip">ZIP <span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="text" className="form-control" id="zip" name="zip" placeholder="ZIP" onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="zip" name="zip" placeholder="ZIP" value={values.zip} onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -271,7 +296,7 @@ const SignUp = (props) => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="email">Email<span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="email" className="form-control" id="email" placeholder="Email" name="email" onChange={handleInputChange} />
+                                        <input type="email" className="form-control" id="email" placeholder="Email" name="email" value={values.email}  onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -279,7 +304,7 @@ const SignUp = (props) => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="address2">Address 2</label>
-                                        <input type="text" className="form-control" id="address2" name="address2" placeholder="Address 2" onChange={handleInputChange} />
+                                        <input type="text" className="form-control" id="address2" name="address2" placeholder="Address 2" value={values.address2} onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -329,8 +354,9 @@ const SignUp = (props) => {
                     </div> */}
                     <br />
                     <div className="row">
-                        <div className="offset-11 col-1">
-                            <input type="submit" name="submit" className="btn btn-danger float-right" />
+                        <div className="offset-10 col-2">
+                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                            {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
                     </div>
                 </form>

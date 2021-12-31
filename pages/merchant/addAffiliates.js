@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import Select from 'react-select'
 import {states,statesShort} from "../../config/variables"
-import Router from 'next/router'
+import Router,{useRouter} from 'next/router'
 import axios from 'axios';
 import { toast,ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +13,10 @@ const AddAffiliates = () => {
 
     var options = []
     const [{ user_details,environment }, dispatch] = useUserValue();
+    const [loading,setLoading]=useState(false)
+    const router = useRouter()
+    const envName = router.query.envName
+    const [random,setRandom]=useState(Math.floor((Math.random() * 1000000000) + 1))
     const [merchantID,setMerchantID] = useState();
     const [values, setValues] = useState({
 		name:'',
@@ -22,6 +26,7 @@ const AddAffiliates = () => {
         state:'',
         zip:'',
         email: '',
+        payeeRef:`Pe${random}`
         // password: ''
 	});
 
@@ -32,6 +37,7 @@ const AddAffiliates = () => {
         state:'',
         zip:'',
         email: '',
+        payeeRef:`Pe${random}`
 		// password: '',
 	});
 
@@ -46,11 +52,12 @@ const AddAffiliates = () => {
 
     const handleSubmit =async (e)=>{
         e.preventDefault()
-
+        setLoading(true)
         const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields which are mandatory(*)")
+            setLoading(false)
             return false
         }
 
@@ -61,6 +68,7 @@ const AddAffiliates = () => {
         if(availablity.data.length > 0)
         {
             toast.error("Email has been used already. Please try again using another email")
+            setLoading(false)
             return false
         }
         else
@@ -76,12 +84,14 @@ const AddAffiliates = () => {
                 zip: values.zip,
                 email: values.email,
                 // password: values.password,
-                envName: environment ? environment.name : localStorage.getItem("env")
+                envName: envName,
+                payeeRef: values.payeeRef
             })
 
             const user = await res.data
             if(user)
             {
+                setRandom(Math.floor((Math.random() * 1000000000) + 1))
                 setValues({
                     name:'',
                     address1:'',
@@ -90,23 +100,27 @@ const AddAffiliates = () => {
                     state:'',
                     zip:'',
                     email: '',
+                    payeeRef:`Pe${random}`
                     // password: ''
                 })
                 toast("Affiliate created successfully")
+                setLoading(false)
                 Router.push({
                     pathname: '/merchant/home',
-                    query: { 
+                    query: {
                         payerRef: user_details.payerRef,
-                        envName: environment ? environment.name : localStorage.getItem("env")
+                        envName:envName
                     }
                 })
                 return true
             }
             else
             {
+                setLoading(false)
                 toast("Affiliate cannot be created")
                 return false
             }
+            
         }
     }
 
@@ -202,6 +216,15 @@ const AddAffiliates = () => {
                             </div> 
                         </div>
                         <div className="col-6">
+                            
+                            <div className="row">
+                                <div className="col">
+                                <div className="form-group my-2">
+                                    <label htmlFor="email">Payee Ref<span className="text-danger font-weight-bold">*</span></label>
+                                    <input type="text" className="form-control" id="payeeRef" placeholder="Payee Ref" value={values.payeeRef} name="payeeRef" onChange={handleInputChange} />
+                                </div>
+                                </div>
+                            </div>
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -238,8 +261,9 @@ const AddAffiliates = () => {
                     </div>
                     <br />
                     <div className="row">
-                        <div className="offset-11 col-1">
-                            <input type="submit" name="submit" className="btn btn-danger float-right" />
+                        <div className="offset-10 col-2">
+                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                            {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
                     </div>
                 </form>

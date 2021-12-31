@@ -11,18 +11,7 @@ const VendorNavbar = () => {
     const [payeeRef,setPayeeRef] = useState();
     const [pdfUrl,setPdfUrl] = useState(null);
     const [envName,setEnvName]=useState()
-    const handleLogOut = ()=>{
-        localStorage.clear();
-        dispatch({
-            type: actionTypes.SET_USER_DETAILS,
-            data: null,
-        })
-        // dispatch({
-        //     type: actionTypes.SET_ENVIRONMENT_DETAILS,
-        //     data: null,
-        // })
-        Router.push('/vendor/login')
-    }
+    
 
     const fetchdata = async ()=>{
         var id = localStorage.getItem('id')
@@ -73,6 +62,25 @@ const VendorNavbar = () => {
         setEnvName(localStorage.getItem('id'))
         //eslint-disable-next-line
     }, [])
+
+    const handleLogOut = ()=>{
+        localStorage.clear();
+        dispatch({
+            type: actionTypes.SET_USER_DETAILS,
+            data: null,
+        })
+        dispatch({
+            type: actionTypes.SET_ENVIRONMENT_DETAILS,
+            data: null,
+        })
+        Router.push('/')
+        // Router.push({
+        //     pathname: '/vendor/login',
+        //     query: { 
+        //         envName: envName
+        //     }
+        // })
+    }
     return (
         <>
         <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
@@ -96,7 +104,7 @@ const VendorNavbar = () => {
                                         { 
                                             pathname: `/vendor/viewForms/${payeeRef}`, 
                                             query: { 
-                                                envName: environment ? environment.name : localStorage.getItem("env")
+                                                envName: envName
                                             }
                                         }
                                     }>
@@ -108,7 +116,7 @@ const VendorNavbar = () => {
                         
                     </ul>
 
-                    <span className="text-light">Environment : {environment ? environment.name : localStorage.getItem("env")}</span>
+                    <span className="text-light">Environment : {envName}</span>
                     <Link href='/vendor/profile'>
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>

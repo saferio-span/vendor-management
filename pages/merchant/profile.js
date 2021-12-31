@@ -9,6 +9,7 @@ import MerchantNavBar from "../../components/Layout/MerchantNavBar"
 const MerchantProfile = () => {
     var options = []
     const [{ user_details }, dispatch] = useUserValue();
+    const [loading,setLoading]=useState(false)
     const [businessId,setBusinessID] = useState()
     const [payerRef,setPayerRef] = useState('')
     const [values, setValues] = useState({
@@ -54,11 +55,12 @@ const MerchantProfile = () => {
 
     const handleSubmit =async (e)=>{
         e.preventDefault()
-
+        setLoading(true)
         const hasEmptyField = Object.values(values).some((element)=>element==='')
         if(hasEmptyField) 
         {
             toast.error("Please fill in all fields")
+            setLoading(false)
             return false
         }
 
@@ -80,11 +82,13 @@ const MerchantProfile = () => {
         const user = await res.data
         if(user)
         {
+            setLoading(false)
             toast("User updated successfully")
             return true
         }
         else
         {
+            setLoading(false)
             toast("User cannot updated")
             return false
         }
@@ -291,8 +295,9 @@ const MerchantProfile = () => {
 
                     <br />
                     <div className="row">
-                        <div className="offset-11 col-1">
-                            <input type="submit" name="submit" className="btn btn-danger float-right" />
+                        <div className="offset-10 col-2">
+                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                            {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
                     </div>
                 </form>
