@@ -7,7 +7,7 @@ export default async function handler(req,res)
 {
 	const envName = req.body.envName
 	try {
-		const trans = await Records1099.find({environment:envName}).sort({ FederalReturnStatusTs: 'desc' });
+		const trans = await Records1099.find({environment:envName}).sort({ date: 'desc' });
 		res.status(200).json(trans);
 	} catch (err) {
 		console.error(err);
