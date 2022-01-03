@@ -52,23 +52,34 @@ export const getServerSideProps = async (context)=>{
 const Records1099Nec = (props) => {
     const records = props.records
     const affiliates = props.affiliates
-    const [{ user_details,environment }, dispatch] = useUserValue();
+    const [{ user_details,environment }, dispatch] = useUserValue(false);
+    const router = useRouter()
+    const envName = router.query.envName
 
     const handleBtnClick =async(submissionId,recordId)=>{
+        setGetPdfLoading(true)
         const res =await axios.post(`/api/get1099Pdf`,{
             submissionId,
             recordId,
-            envName: environment ? environment.name : localStorage.getItem("env")
+            envName: envName
         })
-        const data = res.data
-        window.open(data.FilePath, "_blank")
+        const data = await res.data
+
+        if(data.status==202)
+        {
+            toast.error(data.message)
+        }
+        else
+        {
+            window.open(data.FilePath, "_blank")
+        }
     }
 
     const handleAwsBtnClick =async(submissionId,recordId)=>{
         const res =await axios.post(`/api/getAws1099Pdf`,{
             submissionId,
             recordId,
-            envName: environment ? environment.name : localStorage.getItem("env")
+            envName: envName
         })
         const data = await res.data
 
@@ -86,7 +97,7 @@ const Records1099Nec = (props) => {
                 data:{
                     urlLink:url,
                     recordId,
-                    envName: environment ? environment.name : localStorage.getItem("env")
+                    envName: envName
                 },
             })
 
@@ -96,7 +107,7 @@ const Records1099Nec = (props) => {
                 [pdfData], 
                 {type: 'application/pdf'});
             const fileURL = URL.createObjectURL(file);
-            console.log(fileURL)
+            // console.log(fileURL)
             window.open(fileURL,"_blank");
             
         }
@@ -109,7 +120,7 @@ const Records1099Nec = (props) => {
             recordId : props.recordId,
             payeeRef : props.payeeRef,
             payerRef : props.payerRef,
-            envName: environment ? environment.name : localStorage.getItem("env")
+            envName: envName
         }
 
         const res =await axios.post(`/api/getDistributionUrl`,distData)

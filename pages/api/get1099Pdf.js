@@ -68,7 +68,10 @@ export default async function handler(req,res)
         }
 	} catch (err) {
 		console.log(err)
-		res.status(err.response.status).send(`Cannot get pdf`);
+		res.status(202).send({
+			message:`Cannot get pdf`,
+			status:202
+		});
 	}
 }
 
