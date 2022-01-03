@@ -153,10 +153,10 @@ const Transactions = (props) => {
             <MerchantNavBar />
             <ToastContainer />
             <div className="row my-5 mx-2">
-                <div className="col-10">
+                <div className="col-8">
                     <h4>Transactions List</h4>
                 </div>
-                <div className="col-2 text-right d-flex flex-row-reverse">
+                <div className="col-4 text-right d-flex flex-row-reverse">
                     <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
                         <i className="bi bi-person-plus-fill"></i> Add Payments
                     </button>   
