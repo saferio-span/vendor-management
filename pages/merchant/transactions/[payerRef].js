@@ -144,6 +144,10 @@ const Transactions = (props) => {
         setSearchValue(e.target.value)
     }
 
+    const handleRefresh=()=>{
+        window.location.reload();
+      }
+
     return (
         <>
             <MerchantNavBar />
@@ -152,15 +156,16 @@ const Transactions = (props) => {
                 <div className="col-10">
                     <h4>Transactions List</h4>
                 </div>
-                <div className="col-2 text-right">
+                <div className="col-2 text-right d-flex flex-row-reverse">
                     <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
                         <i className="bi bi-person-plus-fill"></i> Add Payments
-                    </button>                    
+                    </button>   
+                    <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>                 
                 </div>
             </div>
             <div className="row mx-2 mb-3">
                 <div className="col-2">
-                    <h6 className="text-right pt-2">Sort by affiliate</h6>
+                    <h6 className="text-right pt-2">Sort by payee</h6>
                 </div>
                 <div className="col-3">
                     <Select
