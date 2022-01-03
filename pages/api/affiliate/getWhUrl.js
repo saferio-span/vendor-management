@@ -10,7 +10,7 @@ connectDB()
 export default async function handler(req,res)
 {
 
-    const { payeeId, fullName, address1, address2, city, stateName, zipCd, tinMatch,businessId,payerRef,envName  } =
+    const { payeeId, fullName, address1, address2, city, stateName, zipCd, tinMatch, businessId, payerRef, envName, returnUrl, successUrl} =
     req.body;
 	const cred = await Environment.find({name:req.body.envName})
 	console.log(cred)
@@ -87,7 +87,10 @@ export default async function handler(req,res)
 				Customization: {
 					BusinessLogoUrl:'https://www.spanenterprises.com/Content/Images/span-logo.png',
 				},
-				RedirectUrls: null
+				RedirectUrls: {
+					ReturnUrl:successUrl,
+					CancelUrl:returnUrl
+				}
 			},
 			options
 		);

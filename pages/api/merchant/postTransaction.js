@@ -82,10 +82,9 @@ export default async function handler(req,res)
 				SequenceId: sequenceId,
 				TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
 				TxnAmt: amount,
-				WHAmt: whAmount == "" ? "0" : whAmount
-						  
+				WHAmt: whAmount == "" ? "0" : whAmount		  
 			}
-			)
+		)
 						
 
 		try {

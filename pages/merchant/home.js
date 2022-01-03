@@ -66,7 +66,7 @@ export default function Home(props) {
   // const pageCount = 5;
   for(const key in props.affiliates )
   {
-      options.push({ value: optionAff[key].payeeRef, label: optionAff[key].name })
+      options.push({ key: optionAff[key].payeeRef, value: optionAff[key].payeeRef, label: optionAff[key].name })
   }
 
   useEffect(()=>{
@@ -139,6 +139,10 @@ export default function Home(props) {
       setSearchValue(e.target.value)
   }
 
+  const handleRefresh=()=>{
+    window.location.reload();
+  }
+
   const getReqRevUrl =async ()=>{
     const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
       businessId : user_details.businessID,
@@ -153,13 +157,14 @@ export default function Home(props) {
         <MerchantNavBar />
         <ToastContainer />
         <div className="row my-5 mx-2">
-          <div className="col-10">
-            <h4>Affiliates List</h4>
+          <div className="col-9">
+            <h4>Payee List</h4>
           </div>
-          <div className="col-2 text-right">
+          <div className="col-3 text-right d-flex flex-row-reverse">
             <Link href={{ pathname: '/merchant/addAffiliates', query: { envName: envName } }} >
-                <a className="btn btn-primary text-right"><i className="bi bi-person-plus-fill"></i> Add Payees</a>
+                <a className="btn btn-primary text-right mr-1"><i className="bi bi-person-plus-fill"></i> Add Payees</a>
             </Link>
+            <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>
           </div>
         </div>
         <div className="row mx-2 mb-3">
@@ -230,7 +235,7 @@ export default function Home(props) {
                           <div className="row">
                             <div className="col-3 p-0">{details.w9Status !== "-" ? <><Link href={{ pathname: `/merchant/w9Form/${details.payeeRef}`, query: { envName: envName } }} ><a className="btn btn-sm btn-warning"><i className="bi bi-file-earmark-pdf"></i> W9</a></Link></> : <></> }</div>
                             <div className="col-3 p-0"><button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button></div>
-                            <div className="col-4 p-0"><button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+                            <div className="col p-0"><button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
                                 const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
                                   businessId : user_details.businessID,
                                   payeeRef: details.payeeRef,

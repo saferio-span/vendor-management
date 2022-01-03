@@ -190,16 +190,20 @@ export default function Home(props) {
     const handleSearchChange = (e)=>{
         setSearchValue(e.target.value)
     }
+    const handleRefresh=()=>{
+        window.location.reload();
+      }
 
     return (
         <>
             <VendorNavbar />
             <ToastContainer />
             <div className="row my-5 mx-2">
-                <div className="col-8">
+                <div className="col-6">
                     <h4>Transactions List</h4>
                 </div>
-                <div className="col-4">
+                <div className="col-6 d-flex flex-row-reverse">
+                    <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>
                     { record && record.map(data=>{
                      return data.Form1099NECRecords.map((formRecord)=>{
                         if(formRecord.PayeeRef == payeeRef)
@@ -210,9 +214,10 @@ export default function Home(props) {
                                 recordId:formRecord.RecordId
                             }
                             return (<> 
-                            <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
-                            <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
-                            <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button></>)
+                                <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button>
+                                <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
+                                <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
+                            </>)
                         }
                         else{
                             return(<></>)

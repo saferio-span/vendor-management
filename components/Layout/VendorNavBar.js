@@ -59,7 +59,7 @@ const VendorNavbar = () => {
         {
             setEnvironment()
         }
-        setEnvName(localStorage.getItem('id'))
+        setEnvName(localStorage.getItem('env'))
         //eslint-disable-next-line
     }, [])
 

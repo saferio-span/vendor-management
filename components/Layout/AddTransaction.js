@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import Select from 'react-select'
 import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
@@ -14,6 +14,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
     const options = []
     const [{ user_details,environment }, dispatch] = useUserValue();
     const sequenceId = Math.floor((Math.random() * 1000000000) + 1)
+    const [envName,setEnvName] = useState()
 
     let affiliateName = affiliates.map(affiliate =>{
         if(affiliate.payeeRef === defaultAffiliate)
@@ -54,6 +55,10 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
         //     }
         // }
     }
+
+    useEffect(() => {
+        setEnvName(localStorage.getItem("env"))
+    }, [])
 
     const closeModel = (e)=>{
         setValues({
@@ -115,14 +120,15 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 selectedDate : values.date,
                 sequenceId : values.sequenceId,
                 whAmount: values.whAmount,
-                envName: environment ? environment.name : localStorage.getItem("env")
+                envName: envName
             })
             const result = await res.data
 
+            // if(true)
             if(res.status == 200)
             {
                 console.log(`Transaction Result`)
-                console.log(result)
+                // console.log(result)
                 if(result)
                 {
                     setValues({
@@ -185,7 +191,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                         <div className="form-group my-2">
                                             {defaultAffiliate !== "" ?
                                             <>
-                                                <label htmlFor="amount">Affiliate</label>
+                                                <label htmlFor="amount">Payee</label>
                                                 <h5 className="mt-1">
                                                     {affiliateName}
                                                 </h5>

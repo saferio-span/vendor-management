@@ -7,21 +7,49 @@ import axios from "axios"
 import 'react-toastify/dist/ReactToastify.css';
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
-import { credentials,urls } from '../../config/variables';
+// import { credentials,urls } from '../../config/variables';
+import Select from 'react-select'
+import absoluteUrl from 'next-absolute-url'
 
+export const getServerSideProps = async (context)=>{
+    const { req,query } = context;
+    const { origin } = absoluteUrl(req)
+  
+    const affiliateRes = await axios.post(`${origin}/api/affiliate/getAll`,{
+      envName: query.envName,
+    })
+  
+    const affiliate = await affiliateRes.data
+
+    return{
+      props:{ 
+        affiliate
+      }
+    }
+}
 // const Login = ({providers,session,host}) => {
-const Login = () => {
+const Login = (props) => {
     // console.log({session,host})
+    const affiliates = props.affiliate
     var options = []
-    const [values, setValues] = useState({
-        email: '',
-		// password: '',
-	});
+    // const [values, setValues] = useState({
+    //     email: '',
+	// 	// password: '',
+	// });
+    const [affiliateId,setAffiliateId]=useState("")
     const [loading,setLoading]=useState(false)
     const router = useRouter()
     const envName = router.query.envName
     
     const [{user_details,environment},dispatch] = useUserValue();
+
+    if(affiliates)
+    {   
+        for(const key in affiliates )
+        {
+            options.push({ key: affiliates[key]._id, value: affiliates[key]._id, label: affiliates[key].name })
+        }
+    }
     
     const setEnvironment = async()=>{
         const envName = envName
@@ -65,49 +93,66 @@ const Login = () => {
     const handleSubmit = async (e)=>{
         e.preventDefault()      
         setLoading(true)
-        const hasEmptyField = Object.values(values).some((element)=>element==='')
-        if(hasEmptyField) 
+        // const hasEmptyField = Object.values(values).some((element)=>element==='')
+        if(affiliateId=="") 
         {
-            toast.error("Please fill in all fields")
+            toast.error("Please select payee to login")
             setLoading(false)
             return false
         }
+        else
+        {
+            const user = affiliates.filter(data=>data._id==affiliateId)
 
-        try {
-
-            const res = await axios.post(`/api/affiliate/login`,{
-                email: values.email,
-                // password: values.password,
-                envName: envName,
+            localStorage.setItem('email',user[0].email)
+            localStorage.setItem('name',user[0].name)
+            localStorage.setItem('id',user[0]._id)
+            dispatch({
+                type: actionTypes.SET_USER_DETAILS,
+                data: user[0],
             })
-            const user = await res.data
-            if(user.length)
-            {
-                localStorage.setItem('email',user[0].email)
-                localStorage.setItem('name',user[0].name)
-                localStorage.setItem('id',user[0]._id)
-                dispatch({
-                    type: actionTypes.SET_USER_DETAILS,
-                    data: user[0],
-                })
-                // Router.push({
-                //     pathname: '/vendor/home',
-                //     query: { user_details: user_details },
-                // })
-                // Router.push(`/vendor/home/${user[0].payeeRef}`)
-                setLoading(false)
-                Router.push({
-                    pathname: `/vendor/home/${user[0].payeeRef}`,
-                    query: { envName: environment.name },
-                })
-            }
-          } catch (error) {
-            // toast.error("Invalid Email Id or Password")
-            toast.error("Invalid Email Id")
             setLoading(false)
-            // console.log(error)
-            return null
-          }
+            Router.push({
+                pathname: `/vendor/home/${user[0].payeeRef}`,
+                query: { envName: environment.name },
+            })
+        }
+
+        // try {
+
+        //     const res = await axios.post(`/api/affiliate/login`,{
+        //         email: values.email,
+        //         // password: values.password,
+        //         envName: envName,
+        //     })
+        //     const user = await res.data
+        //     if(user.length)
+        //     {
+        //         localStorage.setItem('email',user[0].email)
+        //         localStorage.setItem('name',user[0].name)
+        //         localStorage.setItem('id',user[0]._id)
+        //         dispatch({
+        //             type: actionTypes.SET_USER_DETAILS,
+        //             data: user[0],
+        //         })
+        //         // Router.push({
+        //         //     pathname: '/vendor/home',
+        //         //     query: { user_details: user_details },
+        //         // })
+        //         // Router.push(`/vendor/home/${user[0].payeeRef}`)
+        //         setLoading(false)
+        //         Router.push({
+        //             pathname: `/vendor/home/${user[0].payeeRef}`,
+        //             query: { envName: environment.name },
+        //         })
+        //     }
+        //   } catch (error) {
+        //     // toast.error("Invalid Email Id or Password")
+        //     toast.error("Invalid Email Id")
+        //     setLoading(false)
+        //     // console.log(error)
+        //     return null
+        //   }
 
 
         // signIn(providers.credentials.id,{
@@ -121,16 +166,17 @@ const Login = () => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
 	};
-
-
-    if(credentials)
-    {   
-        for(const key in credentials )
+ 
+    const handleSelectChange = (e)=>{
+        if(e !== null)
         {
-            options.push({ value: credentials[key].name, label: credentials[key].name })
+            setAffiliateId(e.value);
+        }
+        else
+        {
+            setAffiliateId("");
         }
     }
- 
     return (
         <>
             <ToastContainer />
@@ -164,8 +210,18 @@ const Login = () => {
                     <hr /> */}
                     <form onSubmit={handleSubmit}>
                         <div className="form-group my-2">
-                            <label htmlFor="email">Email</label>
-                            <input type="email" className="form-control my-2" id="email" name="email" placeholder="Email" onChange={handleInputChange} />
+                            <label htmlFor="email" className='my-1'>Payee</label>
+                            <Select
+                                className="basic-single"
+                                classNamePrefix="select"
+                                defaultValue="0"
+                                isSearchable="true"
+                                isClearable="true"
+                                name="payee"
+                                options={options}
+                                onChange={handleSelectChange}
+                            />
+                            {/* <input type="email" className="form-control my-2" id="email" name="email" placeholder="Email" onChange={handleInputChange} /> */}
                         </div>
                         {/* <div className="form-group my-2">
                             <label htmlFor="password">Password</label>

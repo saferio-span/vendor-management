@@ -7,22 +7,47 @@ import axios from "axios"
 import 'react-toastify/dist/ReactToastify.css';
 import { useUserValue } from '../../contexts/UserContext'
 import { actionTypes } from "../../contexts/userReducer"
+import Select from 'react-select'
+import absoluteUrl from 'next-absolute-url'
 import { credentials,urls } from '../../config/variables';
 
+export const getServerSideProps = async (context)=>{
+    const { req,query } = context;
+    const { origin } = absoluteUrl(req)
+  
+    const merchantRes = await axios.post(`${origin}/api/merchant/getAll`,{
+      envName: query.envName,
+    })
+  
+    const merchant = await merchantRes.data
+
+    return{
+      props:{ 
+        merchant
+      }
+    }
+}
+
 // const Login = ({providers,session,host}) => {
-const Login = () => {
+const Login = (props) => {
     // console.log(credentials)
-    const [values, setValues] = useState({
-        email: '',
-		// password: '',
-	});
+    const merchants = props.merchant
+    // const [values, setValues] = useState({
+    //     email: '',
+	// 	// password: '',
+	// });
+    const [merchantId,setMerchantId]= useState("")
     const [loading,setLoading]=useState(false)
     const router = useRouter()
     const envName = router.query.envName
+    const options = []
     
     const [{user_details,environment},dispatch] = useUserValue();
     // console.log(environment)
-
+    for(const key in merchants )
+    {
+        options.push({ value: merchants[key]._id, label: merchants[key].name,key: merchants[key]._id })
+    }
     const setEnvironment = async()=>{
         const envName = envName
         const googleEmail = localStorage.getItem('googleEmail')
@@ -67,51 +92,72 @@ const Login = () => {
     const handleSubmit = async (e)=>{
         e.preventDefault()    
         setLoading(true)  
-        const hasEmptyField = Object.values(values).some((element)=>element==='')
-        if(hasEmptyField) 
+        
+        // const hasEmptyField = Object.values(values).some((element)=>element==='')
+        if(merchantId=="") 
         {
-            toast.error("Please fill in all fields")
+            toast.error("Please select payer to login")
             setLoading(false)  
             return false
         }
+        else
+        {
+            const user = merchants.filter(data=>data._id==merchantId)
 
-        try {
-
-            const res = await axios.post(`/api/merchant/login`,{
-                email: values.email,
-                // password: values.password,
-                env: environment
+            localStorage.setItem('email',user[0].email)
+            localStorage.setItem('id',user[0]._id)
+            localStorage.setItem('name',user[0].name)
+            dispatch({
+                type: actionTypes.SET_USER_DETAILS,
+                data: user[0],
             })
-
-            const user = await res.data
-            if(user.length)
-            {
-                localStorage.setItem('email',user[0].email)
-                localStorage.setItem('id',user[0]._id)
-                localStorage.setItem('name',user[0].name)
-                dispatch({
-                    type: actionTypes.SET_USER_DETAILS,
-                    data: user[0],
-                })
-
-                // console.log(user[0])
-                // Router.push('/merchant/home')
-                setLoading(false)
-                Router.push({
-                    pathname: '/merchant/home',
-                    query: { 
-                        payerRef : user[0].payerRef,
-                        envName: envName
-                    }
-                })
-            }
-          } catch (error) {
-            // toast.error("Invalid Email Id or Password")
             setLoading(false)
-            toast.error("Invalid Email Id")
-            // console.log(error)
-            return null
-          }
+            Router.push({
+                pathname: '/merchant/home',
+                query: { 
+                    payerRef : user[0].payerRef,
+                    envName: envName
+                }
+            })
+        }
+
+        // try {
+
+            // const res = await axios.post(`/api/merchant/login`,{
+            //     email: values.email,
+            //     // password: values.password,
+            //     env: environment
+            // })
+
+            // const user = await res.data
+            // if(user.length)
+            // {
+                // localStorage.setItem('email',user[0].email)
+                // localStorage.setItem('id',user[0]._id)
+                // localStorage.setItem('name',user[0].name)
+                // dispatch({
+                //     type: actionTypes.SET_USER_DETAILS,
+                //     data: user[0],
+                // })
+
+                // // console.log(user[0])
+                // // Router.push('/merchant/home')
+                // setLoading(false)
+                // Router.push({
+                //     pathname: '/merchant/home',
+                //     query: { 
+                //         payerRef : user[0].payerRef,
+                //         envName: envName
+                //     }
+                // })
+            // }
+        //   } catch (error) {
+        //     // toast.error("Invalid Email Id or Password")
+        //     setLoading(false)
+        //     toast.error("Invalid Email Id")
+        //     // console.log(error)
+        //     return null
+        //   }
 
 
         // signIn(providers.credentials.id,{
@@ -126,16 +172,16 @@ const Login = () => {
 		setValues({ ...values, [name]: value });
 	};
 
-    // const handleSelectChange = (e)=>{
-    //     if(e !== null)
-    //     {
-    //         setValues({ ...values, environment: e.value });
-    //     }
-    //     else
-    //     {
-    //         setValues({ ...values, environment: "" });
-    //     }
-    // }
+    const handleSelectChange = (e)=>{
+        if(e !== null)
+        {
+            setMerchantId(e.value);
+        }
+        else
+        {
+            setValues("");
+        }
+    }
  
     return (
         <>
@@ -158,8 +204,18 @@ const Login = () => {
                     
                     <form onSubmit={handleSubmit}>
                         <div className="form-group my-2">
-                            <label htmlFor="email">Email</label>
-                            <input type="email" className="form-control my-2" id="email" name="email" placeholder="Email" onChange={handleInputChange} />
+                            <label htmlFor="email" className='my-1'>Payer</label>
+                            <Select
+                                className="basic-single"
+                                classNamePrefix="select"
+                                defaultValue="0"
+                                isSearchable="true"
+                                isClearable="true"
+                                name="payer"
+                                options={options}
+                                onChange={handleSelectChange}
+                            />
+                            {/* <input type="email" className="form-control my-2" id="email" name="email" placeholder="Email" onChange={handleInputChange} /> */}
                         </div>
                         {/* <div className="form-group my-2">
                             <label htmlFor="password">Password</label>

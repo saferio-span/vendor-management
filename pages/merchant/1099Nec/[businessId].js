@@ -125,6 +125,9 @@ const Records1099Nec = (props) => {
         }
 
     }
+    const handleRefresh=()=>{
+        window.location.reload();
+    }
     return (
         <>
             <MerchantNavBar />
@@ -132,6 +135,9 @@ const Records1099Nec = (props) => {
             <div className="row my-5 mx-2">
                 <div className="col-10">
                     <h4>1099 List</h4>
+                </div>
+                <div className="col-2 d-flex flex-row-reverse">
+                    <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>
                 </div>
                 <div className="col-12 lead">
                     Get your 1099 pdf using taxbandits <Link href='https://onlineaccess.taxbandits.com/?ref=menu_onlineportal&_ga=2.33902503.746927293.1640586911-1927950019.1635500618'>

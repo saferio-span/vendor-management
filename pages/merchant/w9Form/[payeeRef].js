@@ -8,6 +8,7 @@ import Router from 'next/router'
 import { toast, ToastContainer } from "react-toastify"
 import moment from 'moment'
 import 'react-toastify/dist/ReactToastify.css';
+import MoonLoader from "react-spinners/MoonLoader";
 
 export const getServerSideProps = async (context)=>{
     const { params,req,query } = context;
@@ -41,6 +42,7 @@ export const getServerSideProps = async (context)=>{
 }
 
 const ViewForms = (props) => {
+    const [loading,setLoading]=useState(true)
     const [{user_details,environment},dispatch] = useUserValue();
     // console.log(props)
 
@@ -61,7 +63,12 @@ const ViewForms = (props) => {
                   <Link href={url}>
                     <a target="_blank">{url}</a>
                   </Link>
-                  <iframe className="my-1" title="wh" width="100%" height="600" src={url} />
+                  {loading && <>
+                      <div className='my-5 d-flex justify-content-center'>
+                          <MoonLoader className="my-5" color="#F26C20" loading={loading} size={100} />
+                      </div>
+                  </>}
+                  <iframe className="my-1" title="wh" width="100%" height="600" onLoad={()=>setLoading(false)} src={url} />
                 </>
               }
               {

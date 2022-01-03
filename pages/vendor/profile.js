@@ -11,6 +11,7 @@ const MerchantProfile = () => {
     var options = []
     const [{ user_details,environment}, dispatch] = useUserValue();
     const [loading,setLoading]=useState(false)
+    const [whLoading,setWhLoading]=useState(false)
     const [values, setValues] = useState({
         id:"",
         name: '',
@@ -22,6 +23,7 @@ const MerchantProfile = () => {
         zip: '',
 	});     
     const [payeeRef,setPayeeRef] = useState('')
+    const [envName,setEnvName] = useState('')
 
     useEffect(()=>{
         if(user_details)
@@ -40,6 +42,7 @@ const MerchantProfile = () => {
             });
             setPayeeRef(data.payeeRef)
         }
+        setEnvName(localStorage.getItem("env"))
         //eslint-disable-next-line
     },[user_details])
 
@@ -275,17 +278,22 @@ const MerchantProfile = () => {
                     }}
                 > */}
                 {/* <Link href={`/vendor/completeWh?id=${values.id}`}> */}
-                <Link href={
-                    { 
-                        pathname: `/vendor/completeWh`, 
-                        query: {
-                            id: values.id,
-                            envName: environment ? environment.name : localStorage.getItem("env")
+                {
+                    !whLoading && <Link href={
+                        { 
+                            pathname: `/vendor/completeWh`, 
+                            query: {
+                                id: values.id,
+                                envName: envName
+                            }
                         }
-                    }
-                }>
-                    <a className="btn btn-warning position-absolute top-50 start-50 translate-middle">Complete Wh</a>
-                </Link>
+                    }>
+                        <a className="btn btn-warning position-absolute top-50 start-50 translate-middle" onClick={()=>setWhLoading(true)}>Complete Wh</a>
+                    </Link>
+                }
+                {
+                    whLoading && <button className='btn btn-warning position-absolute top-50 start-50 translate-middle' disabled>Complete Wh <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span></button>
+                }
             </div>
         </>
     )

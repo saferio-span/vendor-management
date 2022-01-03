@@ -201,7 +201,7 @@ const Transactions = (props) => {
                 <table className="table table-hover table-striped table-responsive">
                 <thead>
                     <tr>
-                        <th>Affiliate Name</th>
+                        <th>Payee Name</th>
                         <th>Money</th>
                         <th>Description</th>
                         <th>Unique Id</th>

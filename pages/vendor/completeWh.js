@@ -1,10 +1,11 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Link from "next/link";
 import axios from 'axios';
 import Router from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
 import absoluteUrl from 'next-absolute-url'
 import VendorNavbar from '../../components/Layout/VendorNavBar'
+import MoonLoader from "react-spinners/MoonLoader";
 
 
 export const getServerSideProps = async (context)=>{
@@ -12,6 +13,7 @@ export const getServerSideProps = async (context)=>{
     const { req } = context;
     const { id,envName } = context.query;
     const { origin } = absoluteUrl(req)
+    console.log(origin)
   
     const affiliateRes = await axios.get(`${origin}/api/affiliate/${id}`)
     const result = await affiliateRes.data
@@ -30,7 +32,9 @@ export const getServerSideProps = async (context)=>{
         tinMatch:true,
         businessId : merchantData.businessId,
         payerRef : merchantData.payerRef,
-        envName : envName
+        envName : envName,
+        successUrl : `${origin}/vendor/home/${affiliateData[0].payeeRef}`,
+        returnUrl :`${origin}/vendor/profile`
     })
 
     const whdata = await res.data
@@ -55,10 +59,18 @@ export const getServerSideProps = async (context)=>{
 
 const CompleteWh = ({whdata}) => {
 
+    const [loading,setLoading]=useState(true)
+
     if(whdata === "Access token not set")
     {
         Router.push(`/profile`)
     }
+    const override = {
+        display: "block",
+        margin: "0 auto",
+        borderColor: "red"
+    }
+    
 
     const safariFix = (w9Url) => {
 		var is_safari = navigator.userAgent.indexOf('Safari') > -1;
@@ -82,6 +94,10 @@ const CompleteWh = ({whdata}) => {
 			}
 		}
 	};
+    
+    const handleLoader = ()=>{
+        setLoading(false)
+    }
 
     return (
         <>
@@ -104,15 +120,21 @@ const CompleteWh = ({whdata}) => {
                     <Link href={whdata.Url}>
                         <a target="_blank">{whdata.Url}</a>
                     </Link>
-
+                    {loading && <>
+                        <div className='my-5 d-flex justify-content-center'>
+                            <MoonLoader className="my-5" color="#F26C20" loading={loading} css={{override}} size={100} />
+                        </div>
+                    </>}
                     {/* {safariFix(whdata.Url)} */}
-                    <iframe className="my-5" title="W9" width="100%" height="800" src={whdata.Url} />
+                    <iframe className="my-5" title="W9" width="100%" height="800" onLoad={handleLoader} src={whdata.Url} />
                 </>
             }
 
             {!whdata.Url && <>
                 <h1 className="my-5"> Cannot load W9 Form</h1>
             </>}
+
+            {/* {loading && <GridLoader color="#F26C20" loading={loading} size={150} />} */}
             
             </div>
         </>
