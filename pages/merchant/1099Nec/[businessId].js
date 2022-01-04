@@ -57,7 +57,6 @@ const Records1099Nec = (props) => {
     const envName = router.query.envName
 
     const handleBtnClick =async(submissionId,recordId)=>{
-        setGetPdfLoading(true)
         const res =await axios.post(`/api/get1099Pdf`,{
             submissionId,
             recordId,

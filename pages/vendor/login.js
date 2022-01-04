@@ -47,7 +47,8 @@ const Login = (props) => {
     {   
         for(const key in affiliates )
         {
-            options.push({ key: affiliates[key]._id, value: affiliates[key]._id, label: affiliates[key].name })
+            const name = `${affiliates[key].name} (${affiliates[key].email})`
+            options.push({ key: affiliates[key]._id, value: affiliates[key]._id, label: name })
         }
     }
     

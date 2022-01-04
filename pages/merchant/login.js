@@ -46,7 +46,8 @@ const Login = (props) => {
     // console.log(environment)
     for(const key in merchants )
     {
-        options.push({ value: merchants[key]._id, label: merchants[key].name,key: merchants[key]._id })
+        const name = `${merchants[key].name} (${merchants[key].email})`
+        options.push({ value: merchants[key]._id, label: name,key: merchants[key]._id })
     }
     const setEnvironment = async()=>{
         const envName = envName

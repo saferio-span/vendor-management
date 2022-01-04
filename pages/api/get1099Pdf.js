@@ -55,14 +55,16 @@ export default async function handler(req,res)
 	};
 
 	const endPoint = `${apiUrl}/Form1099NEC/GetPdf?SubmissionId=${submissionId}&RecordIds=${recordId}&TINMaskType=UNMASKED`;
-	console.log(endPoint);
+	// console.log(endPoint);
 	try {
 		const output = await axios.get(endPoint,options);
 
         if(output.data.StatusCode == 200)
         {
+			console.log(`RecordId : ${output.data.Form1099NecRecords[0].RecordId}`)
            const pdfData = await PdfUrls.findOne({RecordId:output.data.Form1099NecRecords[0].RecordId})
         //    const pdfData = await res.data
+			console.log(`Url data from db`)
            console.log(pdfData)
            res.status(200).send(pdfData);
         }

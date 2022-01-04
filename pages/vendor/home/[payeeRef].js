@@ -8,6 +8,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { useUserValue } from '../../../contexts/UserContext'
 import { toast, ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router'
 
 export const getServerSideProps = async (context)=>{
     const { params,req,query } = context;
@@ -54,6 +55,8 @@ export default function Home(props) {
     const businessId = props.merchant.businessId
     const payerRef = props.merchant.payerRef
     const record = props.record
+    const router = useRouter()
+    const envName = router.query.envName
 
     // const businessId = ""
     // const payerRef = ""
@@ -76,9 +79,10 @@ export default function Home(props) {
         const res =await axios.post(`/api/get1099Pdf`,{
             submissionId:props.submissionId,
             recordId:props.recordId,
-            envName: environment ? environment.name : localStorage.getItem("env")
+            envName: envName
         })
         const data = res.data
+
         window.open(data.FilePath, "_blank")
     }
 
@@ -86,7 +90,7 @@ export default function Home(props) {
         const res =await axios.post(`/api/getAws1099Pdf`,{
             submissionId:props.submissionId,
             recordId:props.recordId,
-            envName: environment ? environment.name : localStorage.getItem("env")
+            envName: envName
         })
         const data = await res.data
         console.log(data)
@@ -105,7 +109,7 @@ export default function Home(props) {
                 data:{
                     urlLink:url,
                     recordId:props.recordId,
-                    envName: environment ? environment.name : localStorage.getItem("env")
+                    envName: envName
                 },
                 
             })
@@ -129,7 +133,7 @@ export default function Home(props) {
             recordId : props.recordId,
             payeeRef : user_details.payeeRef,
             payerRef : payerRef,
-            envName: environment ? environment.name : localStorage.getItem("env")
+            envName: envName
         }
 
         const res =await axios.post(`/api/getDistributionUrl`,distData)
