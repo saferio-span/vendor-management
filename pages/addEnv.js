@@ -97,6 +97,7 @@ const AddEnv = (props) => {
 
     var options = [
         { value: "sandbox", label: "Sandbox" },
+        { value: "sprint", label: "Sprint" },
         { value: "staging", label: "Staging" },
         { value: "uat", label: "UAT" }
     ]
@@ -241,7 +242,12 @@ const AddEnv = (props) => {
             if(e.value === "uat")
             {
                 setValues({ ...values, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:"https://api.tbsuat.com/v1.6.1"});
-                setValidateValues({ ...validateValues, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:"hhttps://api.tbsuat.com/v1.6.1"})
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:"https://api.tbsuat.com/v1.6.1"})
+            }
+            if(e.value === "sprint")
+            {
+                setValues({ ...values, envType: e.value, authUrl: "http://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "http://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"})
             }
         }
         else

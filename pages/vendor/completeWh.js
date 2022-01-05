@@ -117,8 +117,8 @@ const CompleteWh = ({whdata}) => {
                     <div><span className="badge rounded-pill bg-secondary px-2 py-2">To get a TIN Match failure, the last three digits of the TIN must
                                 be Zeroes (eg: 123-45-6000)</span></div>
                     
-                    <Link href={whdata.Url}>
-                        <a target="_blank">{whdata.Url}</a>
+                    <Link href={`${whdata.Url}&hb=true`}>
+                        <a target="_blank">{`${whdata.Url}&hb=true`}</a>
                     </Link>
                     {loading && <>
                         <div className='my-5 d-flex justify-content-center'>
@@ -126,7 +126,7 @@ const CompleteWh = ({whdata}) => {
                         </div>
                     </>}
                     {/* {safariFix(whdata.Url)} */}
-                    <iframe className="my-5" title="W9" width="100%" height="800" onLoad={handleLoader} src={whdata.Url} />
+                    <iframe className="my-5" title="W9" width="100%" height="800" onLoad={handleLoader} src={`${whdata.Url}&hb=true`} />
                 </>
             }
 

@@ -94,7 +94,7 @@ export default async function handler(req,res)
 			},
 			options
 		);
-
+		// console.log(output.data)
 		res.status(200).send(output.data);
 	} catch (err) {
 		// console.log(err)
