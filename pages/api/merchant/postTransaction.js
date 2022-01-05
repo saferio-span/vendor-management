@@ -20,8 +20,45 @@ export default async function handler(req,res)
 	// const apiUrl = global.localStorage.getItem('apiUrl')
 	// const authUrl = global.localStorage.getItem('authUrl')
 
-    const { amount,payeeRef,description,businessId,payerRef,selectedDate,sequenceId,whAmount,envName } = req.body;
+    const { payeeRefs,businessId,payerRef,transactions,envName } = req.body;
 	console.log(req.body)
+
+	const data = {}
+	data.SubmissionId = null
+	data.TxnData=[]
+	data.TxnData[0]={}
+	data.TxnData[0].Business = {
+		PayerRef: null,
+		BusinessId: businessId,
+		TINType: null,
+		TIN: null
+	}
+	data.TxnData[0].Recipients = []
+
+	payeeRefs.forEach((payee, index)=>{
+		const transOfPayee = []
+		transactions.forEach(trans=>{
+			if(payee==trans.payeeRef)
+			{
+				transOfPayee.push({
+					SequenceId:trans.sequenceId,
+					TxnDate: moment(trans.selectedDate).format("MM/DD/YYYY"),
+					TxnAmt: trans.amount,
+					WHAmt: trans.whAmount == '' ? '0' : trans.whAmount
+				})
+			}
+		})
+		const recepientData = {
+			PayeeRef: payee,
+			RecipientId: null,
+			TINType: null,
+			TIN: null,
+			Txns: transOfPayee
+		}
+		data.TxnData[0].Recipients.push(recepientData)
+	})
+	console.log(data)
+	// res.status(200).json(data)
 
     // const cred = credentials.filter((user)=>user.name===envName)
 	const cred = await Environment.find({name:envName})
@@ -72,57 +109,58 @@ export default async function handler(req,res)
 		// const sequenceID = Math.floor((Math.random() * 1000000000) + 1)
 		// console.log(endPoint);
 
-		console.log(
-			{
-				PayerRef: null,
-				BusinessId: businessId,
-				TINType: null,
-				TIN: null,
-				PayeeRef: payeeRef,	  
-				SequenceId: sequenceId,
-				TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
-				TxnAmt: amount,
-				WHAmt: whAmount == "" ? "0" : whAmount		  
-			}
-		)
+		// console.log(
+		// 	{
+		// 		PayerRef: null,
+		// 		BusinessId: businessId,
+		// 		TINType: null,
+		// 		TIN: null,
+		// 		PayeeRef: payeeRef,	  
+		// 		SequenceId: sequenceId,
+		// 		TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
+		// 		TxnAmt: amount,
+		// 		WHAmt: whAmount == "" ? "0" : whAmount		  
+		// 	}
+		// )
 						
 
 		try {
 
-			await axios.post(
-				endPoint,
-				{
-					SubmissionId: null,
-					TxnData: [
-					  {
-						Business: {
-						  PayerRef: null,
-						  BusinessId: businessId,
-						  TINType: null,
-						  TIN: null
-						},
-						Recipients: [
-						  {
-							PayeeRef: payeeRef,
-							RecipientId: null,
-							TINType: null,
-							TIN: null,
-							Txns: [
-							  {
-								SequenceId: sequenceId,
-								TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
-								TxnAmt: amount,
-								WHAmt: whAmount == "" ? "0" : whAmount
-							  }
-							]
-						  }
-						]
-					  }
-					]
-				  },
-				options
-			);
+			// await axios.post(
+			// 	endPoint,
+			// 	{
+			// 		SubmissionId: null,
+			// 		TxnData: [
+			// 		  {
+			// 			Business: {
+			// 			  PayerRef: null,
+			// 			  BusinessId: businessId,
+			// 			  TINType: null,
+			// 			  TIN: null
+			// 			},
+			// 			Recipients: [
+			// 			  {
+			// 				PayeeRef: payeeRef,
+			// 				RecipientId: null,
+			// 				TINType: null,
+			// 				TIN: null,
+			// 				Txns: [
+			// 				  {
+			// 					SequenceId: sequenceId,
+			// 					TxnDate: moment(selectedDate).format("MM/DD/YYYY"),
+			// 					TxnAmt: amount,
+			// 					WHAmt: whAmount == "" ? "0" : whAmount
+			// 				  }
+			// 				]
+			// 			  }
+			// 			]
+			// 		  }
+			// 		]
+			// 	  },
+			// 	options
+			// );
 
+			await axios.post(endPoint,data,options);
 			success = true
 
 		} catch (err) {
@@ -135,23 +173,29 @@ export default async function handler(req,res)
 
 		if(success)
 		{
-			const transaction = new Transactions()
-			transaction.sequenceId = sequenceId
-			transaction.txnAmt = amount
-			transaction.whAmt = whAmount
-			transaction.description = description
-			transaction.payeeRef = payeeRef
-			transaction.payerRef = payerRef
-			transaction.businessId = businessId
-			transaction.transactionDate = moment(selectedDate).format("MM/DD/YYYY"),
+			transactions.forEach(async(trans)=>{
+				const transaction = new Transactions()
+				transaction.sequenceId = trans.sequenceId
+				transaction.txnAmt = trans.amount
+				transaction.whAmt = trans.whAmount
+				transaction.description = trans.description
+				transaction.payeeRef = trans.payeeRef
+				transaction.payerRef = payerRef
+				transaction.businessId = businessId
+				transaction.transactionDate = moment(trans.selectedDate).format("MM/DD/YYYY")
+
+				await transaction.save()
+			})
 			
-			transaction.save((err, trans)=>{
-				if (err) {
-					res.status(401).send(err);
-				} else {
-					res.status(200).send(trans);
-				}
-			});
+			res.status(200).send(data);
+			// transaction.save((err, trans)=>{
+			// 	if (err) {
+			// 		res.status(401).send(err);
+			// 	} else {
+			// 		res.status(200).send(trans);
+			// 	}
+			// });
+
 		}	
 
 	}
