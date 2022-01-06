@@ -384,6 +384,14 @@ const Home=(props)=>{
                                   <td>PDF Complete</td>
                                   <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></td>
                                 </tr>
+                                {
+                                  variation != "t0-1" && <>
+                                    <tr>
+                                      <td>Business Complete</td>
+                                      <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/businessComplete</b></span></td>
+                                    </tr>
+                                  </>
+                                }
                               </tbody>
                             </table>
                                 {/* <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
