@@ -42,7 +42,7 @@ const Login = (props) => {
     const envName = router.query.envName
     const options = []
     
-    const [{user_details,environment},dispatch] = useUserValue();
+    const [{user_details,environment,variation},dispatch] = useUserValue();
     // console.log(environment)
     for(const key in merchants )
     {
@@ -82,6 +82,14 @@ const Login = (props) => {
                     payerRef : user_details.payerRef,
                     envName: environment != undefined ? environment.name : envName
                 }
+            })
+        }
+
+        if(variation == "")
+        {
+            dispatch({
+                type: actionTypes.SET_VARIATION_DETAILS,
+                data: localStorage.getItem('variant'),
             })
         }
         
@@ -226,13 +234,12 @@ const Login = (props) => {
                         <button type="submit" className="btn btn-success w-100 my-2 py-3" value="Submit" disabled={loading}>Sign In {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                     </form>
                     <hr />
-                    Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}>
-                        <a className="btn btn-link">Sign Up !</a>
-                    </Link>
+                    {variation == "t0-1" && <>Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}><a className="btn btn-link">Sign Up !</a></Link></>}
+                    {variation == "r0-1" && <>Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUpPif', query: { envName: envName}}}><a className="btn btn-link">Sign Up !</a></Link></>}
+                    {variation == "all" && <>Have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}><a className="btn btn-sm btn-link">Sign Up (BC)! </a></Link> | <Link href={{ pathname: '/merchant/signUpPif', query: { envName: envName}}}><a className="btn btn-sm btn-link">Sign Up (PIF)! </a></Link></>}
                 </div>
             </div>
-        </>
-        
+        </>   
     )
 }
 
