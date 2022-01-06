@@ -74,6 +74,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
             description:'',
             date: '',
         })
+        setMultipleTransactions([])
     }
 
     const handleSelectChange = (e)=>{
@@ -124,21 +125,22 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 sequenceId : values.sequenceId,
                 whAmount: values.whAmount,
             }
-            // console.log(data)
+            console.log(data)
             // transactions.push(data)
             setMultipleTransactions(previousState=>([...previousState,data]))
+            const newSeqId = Math.floor((Math.random() * 1000000000) + 1)
             setValues({
                 amount:'',
                 whAmount:'',
                 payeeRef : defaultAffiliate !== "" ? defaultAffiliate : '' ,
                 description:'',
-                sequenceId: sequenceId,
+                sequenceId: newSeqId,
                 date: '',
             })
             setValidateValues({
                 amount:'',
                 payeeRef : defaultAffiliate !== "" ? defaultAffiliate : '' ,
-                sequenceId: sequenceId,
+                sequenceId: newSeqId,
                 date: '',
             })
         }
@@ -229,6 +231,9 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
         setMultipleTransactions(updatedTransaction)
     }
     
+    const handleDeleteAll = ()=>{
+        setMultipleTransactions([])
+    }
 
     const handleSubmit = async ()=>{
         // e.preventDefault()
@@ -294,7 +299,6 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 toast.error(res.data.Message)
                 // console.log(res)
             }
-
     }
 
     return (
@@ -431,7 +435,11 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                     </>
                                 }
                             </div>
-                            <div className="modal-footer">
+                            <div className="modal-footer">{
+                                    multipleTransactions.length > 0 && <>
+                                <button className='btn btn-danger' onClick={()=>{if(window.confirm("Are you sure? You want to delete all record !")){
+                                                                            handleDeleteAll()
+                                                                        }}}>Delete All <i className="bi bi-trash"></i></button></>}
                                 <button type="button" className="btn btn-secondary" onClick={closeModel} data-bs-dismiss="modal">Close</button>
                                 <button type="button" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                                 {/* <input type="submit" name="submit" className="btn btn-primary" onClick={handleSubmit} /> */}

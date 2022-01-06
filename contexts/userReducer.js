@@ -4,6 +4,7 @@ export const initialState = {
   user_details_status:true,
   transaction_details: null,
   environment:{},
+  variation:""
 };
 
 export const actionTypes = {
@@ -12,6 +13,7 @@ export const actionTypes = {
   SET_USER_DETAILS_STATUS: 'SET_USER_DETAILS_STATUS',
   SET_TRANSACTION_DETAILS: 'SET_TRANSACTION_DETAILS',
   SET_ENVIRONMENT_DETAILS: 'SET_ENVIRONMENT_DETAILS',
+  SET_VARIATION_DETAILS: 'SET_VARIATION_DETAILS',
 };
 
 const reducer = (state, action) => {
@@ -45,6 +47,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         environment: action.data,
+      };
+    case actionTypes.SET_VARIATION_DETAILS:
+      return {
+        ...state,
+        variation: action.data,
       };
     default:
       return state;

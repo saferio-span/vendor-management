@@ -11,6 +11,7 @@ import AddTransaction from "../../components/Layout/AddTransaction";
 import ReactPaginate from "react-paginate"
 import { useUserValue } from '../../contexts/UserContext'
 import { useRouter } from 'next/router'
+import { actionTypes } from "../../contexts/userReducer"
 
 export const getServerSideProps = async (context)=>{
   const { req,query } = context;
@@ -59,7 +60,7 @@ export default function Home(props) {
   const [pageNum,setPageNum] = useState(1)
   const [pageCount,setPageCount] = useState()
   const [searchValue,setSearchValue] = useState("")
-  const [{user_details,environment},dispatch] = useUserValue();
+  const [{user_details,environment,variation},dispatch] = useUserValue();
   const transactions = props.transactions
   const envName = router.query.envName
   
@@ -116,6 +117,13 @@ export default function Home(props) {
         setLimitAffiliates(sortedResult)
     }
 
+    if(variation == "")
+    {
+      dispatch({
+        type: actionTypes.SET_VARIATION_DETAILS,
+        data: localStorage.getItem('variant'),
+      })
+    }
     //eslint-disable-next-line
   },[affiliates,payeeRef,pageNum,pageCount,searchValue])
 
@@ -217,8 +225,6 @@ export default function Home(props) {
                           transactionCount++
                         }
                     })
-
-                  
                     return (
                     <>
                     <tr key={details._id}>
@@ -233,17 +239,24 @@ export default function Home(props) {
                         <td>{details.tinMatchingStatus ? details.tinMatchingStatus : "-"}</td>
                         <td>  
                           <div className="row">
-                            <div className="col-3 p-0">{details.w9Status !== "-" ? <><Link href={{ pathname: `/merchant/w9Form/${details.payeeRef}`, query: { envName: envName } }} ><a className="btn btn-sm btn-warning"><i className="bi bi-file-earmark-pdf"></i> W9</a></Link></> : <></> }</div>
-                            <div className="col-3 p-0"><button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button></div>
-                            <div className="col p-0"><button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
-                                const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
-                                  businessId : user_details.businessID,
-                                  payeeRef: details.payeeRef,
-                                  envName: envName
-                                })
+                            <div className="col p-0">
+                              {details.w9Status !== "-" ? <>
+                              <Link href={{ pathname: `/merchant/w9Form/${details.payeeRef}`, query: { envName: envName } }} ><a className="btn btn-sm btn-warning mx-1"><i className="bi bi-file-earmark-pdf"></i> W9</a></Link></> : <><button className="btn btn-sm btn-warning mx-1" disabled><i className="bi bi-file-earmark-pdf"></i> W9</button></> }
+                              <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
+                            
+                              {variation != "t0-1" && <>
+                                <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+                                    const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
+                                      businessId : user_details.businessID,
+                                      payeeRef: details.payeeRef,
+                                      envName: envName
+                                    })
 
-                                window.open(`${res.data.ReviewUrl}`, '_blank');
-                              }}><i className="bi bi-eye"></i> 1099-NEC</button></div>
+                                    window.open(`${res.data.ReviewUrl}`, '_blank');
+                                  }}><i className="bi bi-eye"></i> 1099-NEC</button>
+                                
+                              </>}
+                            </div>
                           </div>
                         </td>
                     </tr>

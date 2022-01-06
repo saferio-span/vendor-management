@@ -60,7 +60,7 @@ export default function Home(props) {
 
     // const businessId = ""
     // const payerRef = ""
-    const [{ user_details,environment }, dispatch] = useUserValue();
+    const [{ user_details,environment,variation }, dispatch] = useUserValue();
     const [limitTransactions,setLimitTrans] =  useState([])
     const [pageNum,setPageNum] = useState(1)
     const [pageCount,setPageCount] = useState()
@@ -188,6 +188,15 @@ export default function Home(props) {
         //     })
             
         // }
+
+        if(variation == "")
+        {
+        dispatch({
+            type: actionTypes.SET_VARIATION_DETAILS,
+            data: localStorage.getItem('variant'),
+        })
+        }
+
         //eslint-disable-next-line
       },[pageNum,pageCount,searchValue])
 
@@ -208,26 +217,38 @@ export default function Home(props) {
                 </div>
                 <div className="col-6 d-flex flex-row-reverse">
                     <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>
-                    { record && record.map(data=>{
-                     return data.Form1099NECRecords.map((formRecord)=>{
-                        if(formRecord.PayeeRef == payeeRef)
-                        {
-                            const distProps = {
-                                submissionId:data.SubmissionId,
-                                payeeRef:formRecord.PayeeRef,
-                                recordId:formRecord.RecordId
-                            }
-                            return (<> 
-                                <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button>
-                                <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
-                                <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
-                            </>)
-                        }
-                        else{
-                            return(<></>)
-                        }
-                    })
-                })}
+                    {variation != "t0-1" && <>
+                      <button className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+                          const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
+                            businessId : businessId,
+                            payeeRef: payeeRef,
+                            envName: envName
+                          })
+                          window.open(`${res.data.ReviewUrl}`, '_blank');
+                        }}><i className="bi bi-eye"></i> 1099-NEC</button>
+                    </>}
+                    {variation != "r0-1" && <>
+                        { record && record.map(data=>{
+                            return data.Form1099NECRecords.map((formRecord)=>{
+                                if(formRecord.PayeeRef == payeeRef)
+                                {
+                                    const distProps = {
+                                        submissionId:data.SubmissionId,
+                                        payeeRef:formRecord.PayeeRef,
+                                        recordId:formRecord.RecordId
+                                    }
+                                    return (<> 
+                                        <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button>
+                                        <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
+                                        <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
+                                    </>)
+                                }
+                                else{
+                                    return(<></>)
+                                }
+                            })
+                        })}
+                    </>}
                 </div>
             </div>
             <div className="row mx-2 mb-3">

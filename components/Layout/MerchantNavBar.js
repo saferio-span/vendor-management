@@ -11,7 +11,7 @@ const MerchantNavBar = () => {
     
     const [payerRef,setPayerRef]=useState()
     const [businessId,setBusinessId]=useState()
-    const [{ user_details,environment }, dispatch] = useUserValue();
+    const [{ user_details,environment,variation }, dispatch] = useUserValue();
     const [envName,setEnvName]=useState()
     
 
@@ -54,6 +54,13 @@ const MerchantNavBar = () => {
         {
             setEnvironment()
             // Router.push('/merchant/login')
+        }
+        if(variation == "")
+        {
+            dispatch({
+                type: actionTypes.SET_VARIATION_DETAILS,
+                data: localStorage.getItem('variant'),
+            })
         }
         setEnvName(localStorage.getItem('env'))
         // console.log(localStorage.getItem('env'))
@@ -113,21 +120,23 @@ const MerchantNavBar = () => {
                                 <a className="nav-link">Transactions</a>
                             </Link>
                         </li>
-                        <li key="1099NECTMG" className="nav-item">
-                            {/* <Link href={`/merchant/transactions/${payerRef}`}> */}
-                            <Link href={
-                                { 
-                                    pathname: `/merchant/1099Nec/${businessId}`, 
-                                    query: { 
-                                        payerRef:payerRef,
-                                        envName:envName
+                        {variation != "r0-1" && <>
+                            <li key="1099NECTMG" className="nav-item">
+                                {/* <Link href={`/merchant/transactions/${payerRef}`}> */}
+                                <Link href={
+                                    { 
+                                        pathname: `/merchant/1099Nec/${businessId}`, 
+                                        query: { 
+                                            payerRef:payerRef,
+                                            envName:envName
+                                        }
                                     }
-                                }
-                            }>
-
-                                <a className="nav-link">1099 NEC</a>
-                            </Link>
-                        </li>
+                                }>
+                                    <a className="nav-link">1099 NEC</a>
+                                </Link>
+                            </li>
+                        </>}
+                        
                         <li key="webhook" className="nav-item">
                             {/* <Link href={`/merchant/transactions/${payerRef}`}> */}
                             <Link href={

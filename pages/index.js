@@ -75,12 +75,19 @@ const Home=(props)=>{
   const [showNote,setShowNote]=useState(false)
   const [showEnv,setShowEnv]=useState(false)
   const [showEnvPage,setShowEnvPage]=useState(false)
+  const [variation,setVariation]=useState("")
   // console.log(credentials)
   var options = []
   for(const key in credentials )
   {
       options.push({ value: credentials[key].name, label: credentials[key].name })
   }
+
+  var variations = [
+    {value: "t0-1", label: "T0-1"},
+    {value: "r0-1", label: "R0-1"},
+    {value: "all", label: "All"}
+  ]
   // console.log(`Session`)
   // console.log(props.session)
   // console.log(`Session`)
@@ -116,6 +123,10 @@ const Home=(props)=>{
     {
       toast.error("Please select environment")
     }
+    else if(variation == "")
+    {
+      toast.error("Please select variation")
+    }
     else
     {
       // Router.push('/merchant/login')
@@ -132,6 +143,10 @@ const Home=(props)=>{
     if(details === null)
     {
       toast.error("Please select environment")
+    }
+    else if(variation == "")
+    {
+      toast.error("Please select variation")
     }
     else
     {
@@ -188,6 +203,27 @@ const Home=(props)=>{
     }
   }
 
+  const handleVariationChange = (e)=>{
+    console.log(e)
+    if(e == null)
+    {
+      dispatch({
+        type: actionTypes.SET_VARIATION_DETAILS,
+        data: null,
+      })
+      setVariation("")
+    }
+    else
+    {
+      dispatch({
+        type: actionTypes.SET_VARIATION_DETAILS,
+        data: e.value,
+      })
+      localStorage.setItem('variant',e.value)
+      setVariation("e.value")
+    }
+  }
+
   useEffect(() => {
 
     if(session !== null)
@@ -240,7 +276,25 @@ const Home=(props)=>{
               </div>
             </div>
             <div className="row">
-              <div className="col-4 offset-4">
+              <div className="col-2 offset-4">
+                <div className="form-group my-2">
+                    <label htmlFor="variation">Variations </label>
+                    <Select
+                        className="basic-single my-2"
+                        classNamePrefix="select"
+                        defaultValue="0"
+                        isSearchable="true"
+                        isClearable="true"
+                        id="variation"
+                        instanceId="variation"
+                        name="variation"
+                        options={variations}
+                        onChange={handleVariationChange}
+                    />
+                    {/* <input type="text" name="env" onChange={handleEnvChange} autoComplete="off" value={inputVal} className="form-control" placeholder="Environment Name"/> */}
+                </div>
+              </div>
+              <div className="col-2">
                 <div className="form-group my-2">
                     <label htmlFor="env">Environment </label>
                     <Select
