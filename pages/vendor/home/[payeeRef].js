@@ -83,7 +83,22 @@ export default function Home(props) {
         })
         const data = res.data
 
-        window.open(data.FilePath, "_blank")
+        if(data.status==202)
+        {
+            toast.error(data.message)
+        }
+        else
+        {
+            if(data.pdfData == null)
+            {
+                toast.success(data.recordMessage.Message)
+            }
+            else
+            {   
+                window.open(data.pdfData.FilePath, "_blank")
+            }
+        }
+
     }
 
     const handleAwsBtnClick =async(props)=>{

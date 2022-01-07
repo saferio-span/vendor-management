@@ -65,7 +65,7 @@ const Records1099Nec = (props) => {
     const router = useRouter()
     const envName = router.query.envName
 
-    const handleBtnClick =async(submissionId,recordId,payeeRef)=>{
+    const handleBtnClick =async(submissionId,recordId)=>{
 
         const res =await axios.post(`/api/get1099Pdf`,{
             submissionId,
@@ -74,13 +74,21 @@ const Records1099Nec = (props) => {
         })
         const data = await res.data
 
+        
         if(data.status==202)
         {
             toast.error(data.message)
         }
         else
         {
-            window.open(data.FilePath, "_blank")
+            if(data.pdfData == null)
+            {
+                toast.success(data.recordMessage.Message)
+            }
+            else
+            {   
+                window.open(data.pdfData.FilePath, "_blank")
+            }
         }
     }
 
@@ -184,8 +192,7 @@ const Records1099Nec = (props) => {
                                     const d2 = new Date().getTime()
                                     // var diff =(pdfData.date.getTime()-moment(new Date()).format('YYYY-MM-DDTHH:MM:ssZ').getTime()) / 1000
                                     var diff =(d2-d1) / 1000
-                                    // console.log(moment(new Date()).format('YYYY-MM-DDTHH:MM:ssZ'))
-                                    diff /= (60 * 60);
+                                    diff /= (60 * 60);  
                                     // console.log(diff)
                                     if(diff < 24)
                                     {

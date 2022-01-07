@@ -66,7 +66,11 @@ export default async function handler(req,res)
         //    const pdfData = await res.data
 			console.log(`Url data from db`)
            console.log(pdfData)
-           res.status(200).send(pdfData);
+           res.status(200).send({
+			   pdfData:pdfData,
+			   recordMessage : output.data.Form1099NecRecords[0]
+		   });
+
         }
 	} catch (err) {
 		console.log(err)
