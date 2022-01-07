@@ -13,6 +13,7 @@ import Select from 'react-select'
 import ReactPaginate from "react-paginate"
 import { useRouter } from 'next/router'
 import W9Pdf from "../../../components/Layout/W9Pdf";
+import $ from "jquery"
 
 export const getServerSideProps = async (context)=>{
     const { params,req,query } = context;
@@ -38,12 +39,18 @@ export const getServerSideProps = async (context)=>{
         envName: query.envName
     })
     const records = await recordsRes.data
-    console.log(records)
+    // console.log(records)
+
+    const pdfUrlRes = await axios.post(`${origin}/api/merchant/getAllStoredPdfUrl`,{
+        envName: query.envName
+    })
+    const pdfUrls = await pdfUrlRes.data
 
     return{
       props:{
         affiliates,
-        records
+        records,
+        pdfUrls
        }
     }
 }
@@ -52,11 +59,14 @@ export const getServerSideProps = async (context)=>{
 const Records1099Nec = (props) => {
     const records = props.records
     const affiliates = props.affiliates
-    const [{ user_details,environment }, dispatch] = useUserValue(false);
+    const pdfUrls = props.pdfUrls
+
+    const [{ user_details,environment }, dispatch] = useUserValue();
     const router = useRouter()
     const envName = router.query.envName
 
-    const handleBtnClick =async(submissionId,recordId)=>{
+    const handleBtnClick =async(submissionId,recordId,payeeRef)=>{
+
         const res =await axios.post(`/api/get1099Pdf`,{
             submissionId,
             recordId,
@@ -168,6 +178,24 @@ const Records1099Nec = (props) => {
                     <tbody>
                         {records && records.map((details) => {
                             return details.Form1099NECRecords.map((record)=>{
+                                var button = ""
+                                pdfUrls.forEach((pdfData)=>{
+                                    const d1 = new Date(pdfData.date).getTime()
+                                    const d2 = new Date().getTime()
+                                    // var diff =(pdfData.date.getTime()-moment(new Date()).format('YYYY-MM-DDTHH:MM:ssZ').getTime()) / 1000
+                                    var diff =(d2-d1) / 1000
+                                    // console.log(moment(new Date()).format('YYYY-MM-DDTHH:MM:ssZ'))
+                                    diff /= (60 * 60);
+                                    // console.log(diff)
+                                    if(diff < 24)
+                                    {
+                                        button = <Link href='${pdfData.FilePath}'><a className="btn btn-primary mx-1">Download 1099 Pdf zip</a></Link>
+                                    }
+                                    else
+                                    {
+                                        button = ``
+                                    }
+                                })
                                 let name = ''
                                 affiliates.forEach(option => {
                                     if(option.payeeRef === record.PayeeRef)
@@ -181,14 +209,15 @@ const Records1099Nec = (props) => {
                                     payeeRef:record.PayeeRef,
                                     recordId:record.RecordId
                                 }
+
                                 return (
                                 <tr key={details._id}>
                                     <td>{name}</td>
                                     <td>{record.FederalReturn.Status}</td>
                                     <td>{details.TaxYear}</td>
                                     <td>
-                                        <button className="btn btn-primary mx-1" onClick={async() => handleBtnClick(details.SubmissionId,record.RecordId)}>Get 1099 Pdf</button>
-                                        <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId)}>AWS 1099 Pdf</button>
+                                        {button != '' ? button : <button className="btn btn-primary mx-1" id={record.PayeeRef} onClick={async() => handleBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef)}>Get 1099 Pdf</button>}
+                                        <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId)}>Request 1099 Pdf</button>
                                         <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)}>Get Dist 1099 Pdf</button>
                                         {/* <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} onClick={async() => handleDistBtnClick(distProps)} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Distribution 1099 Pdf</button> */}
                                     </td>

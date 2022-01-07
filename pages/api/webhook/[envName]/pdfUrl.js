@@ -12,7 +12,7 @@ export default async function handler(req,res)
 	});
 
 	await pdfHook.save()
-	PdfUrls.find({
+	PdfUrls.findOne({
 		RecordId: req.body.Records[0].RecordId
 	},async (err,data)=>{
 		if (err){
@@ -42,6 +42,12 @@ export default async function handler(req,res)
 					console.error(err.message);
 					res.status(500).send('server Error');
 				}
+			}
+			else{
+				data.FileName= req.body.Records[0].FileName
+				data.FilePath= req.body.Records[0].FilePath
+				data.date= Date.now()
+				data.save()
 			}
 		}
 	})
