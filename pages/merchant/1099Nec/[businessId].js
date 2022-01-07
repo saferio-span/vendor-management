@@ -188,20 +188,24 @@ const Records1099Nec = (props) => {
                             return details.Form1099NECRecords.map((record)=>{
                                 var button = ""
                                 pdfUrls.forEach((pdfData)=>{
-                                    const d1 = new Date(pdfData.date).getTime()
-                                    const d2 = new Date().getTime()
-                                    // var diff =(pdfData.date.getTime()-moment(new Date()).format('YYYY-MM-DDTHH:MM:ssZ').getTime()) / 1000
-                                    var diff =(d2-d1) / 1000
-                                    diff /= (60 * 60);  
-                                    // console.log(diff)
-                                    if(diff < 24)
+                                    if(record.RecordId == pdfData.RecordId)
                                     {
-                                        button = <Link href='${pdfData.FilePath}'><a className="btn btn-primary mx-1">Download 1099 Pdf zip</a></Link>
+                                        const d1 = new Date(pdfData.date).getTime()
+                                        const d2 = new Date().getTime()
+                                        // var diff =(pdfData.date.getTime()-moment(new Date()).format('YYYY-MM-DDTHH:MM:ssZ').getTime()) / 1000
+                                        var diff =(d2-d1) / 1000
+                                        diff /= (60 * 60);  
+                                        // console.log(diff)
+                                        if(diff < 24)
+                                        {
+                                            button = <Link href={pdfData.FilePath}><a className="btn btn-primary mx-1" target="_blank">Download 1099 Pdf zip</a></Link>
+                                        }
+                                        else
+                                        {
+                                            button = ``
+                                        }
                                     }
-                                    else
-                                    {
-                                        button = ``
-                                    }
+                                    
                                 })
                                 let name = ''
                                 affiliates.forEach(option => {

@@ -22,7 +22,7 @@ export default async function handler(req,res)
 		}
 		else
 		{
-			if(data.length==0)
+			if(data==null)
             {
 				const newPdfResponse = await new PdfUrls({
 					SubmissionId: req.body.SubmissionId,
