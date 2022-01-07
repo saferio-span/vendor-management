@@ -56,6 +56,6 @@ export default async function handler(req,res)
 				await PdfUrls.findOneAndUpdate(filter, update);
 			}
 		}
-	})
+	}).clone().catch(function(err){ console.log(err)})
 	res.status(200).json();
 }
