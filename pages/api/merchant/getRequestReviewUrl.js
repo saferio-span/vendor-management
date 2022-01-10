@@ -66,6 +66,7 @@ export default async function handler(req,res)
                     },
                     Customization: {
                         DefaultView: null,
+						BusinessLogoUrl: "https://image.shutterstock.com/z/stock-vector-shield-safety-logo-icon-protection-logo-illustration-design-flat-style-business-safety-anti-1260966370.jpg",
                         ReturnUrl: "https://abccompany.com/return"
                     }
 				  },

@@ -92,7 +92,12 @@ const VendorNavbar = () => {
                 <div className="collapse navbar-collapse" id="navbarScroll">
                     <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                         <li key="Home" className="nav-item">
-                            <Link href={`/vendor/home/${payeeRef}`}>
+                            <Link href={{ 
+                                pathname: `/vendor/home/${payeeRef}`, 
+                                query: { 
+                                    envName: envName
+                                }
+                            }}>
                                 <a className="nav-link">Home</a>
                             </Link>
                         </li>
@@ -117,7 +122,12 @@ const VendorNavbar = () => {
                     </ul>
 
                     <span className="text-light">Environment : {envName}</span>
-                    <Link href='/vendor/profile'>
+                    <Link href={{ 
+                        pathname: `/vendor/profile`, 
+                        query: { 
+                            envName: envName
+                        }
+                    }} >
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>
                     <button className="btn btn-danger my-2 float-end" onClick={handleLogOut}>Logout <i className="bi bi-box-arrow-right"></i></button>

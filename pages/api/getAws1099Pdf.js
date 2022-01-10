@@ -4,7 +4,9 @@ import Environment from "../../models/envModel"
 
 export default async function handler(req,res)
 {
-	const { submissionId,recordId,envName } = req.body;
+	const { submissionId,recordId,envName,draft } = req.body;
+
+	console.log(draft)
     // const cred = credentials.filter((user)=>user.name===envName)
 	const cred = await Environment.find({name:envName})
     const apiUrl = cred[0].apiUrl
@@ -48,31 +50,50 @@ export default async function handler(req,res)
 			},
 		};
 	
-		const endPoint = `${apiUrl}/Form1099NEC/RequestPdfUrls`;
+		let endPoint = `${apiUrl}/Form1099NEC/RequestPdfUrls`;
+		let data = {
+			SubmissionId: null,
+			RecordIds:[
+			 {
+			  RecordId: recordId
+			 }
+			],
+			Customization: {
+				TINMaskType: "Masked",
+			},
+		}
+		if(draft)
+		{
+			endPoint = `${apiUrl}/Form1099NEC/RequestDraftPdfUrl`;
+			data = {
+				RecordId:recordId
+			}
+		}
+		console.log(endPoint)
 
 		try {
 
 			const output = await axios.post(
 				endPoint,
-				{
-                    SubmissionId: null,
-                    RecordIds:[
-                     {
-                      RecordId: recordId
-                     }
-                    ],
-                    Customization: {
-                        TINMaskType: "Masked",
-                    },
-                },
+				data,
                 options
 			);
 			
             res.status(200).send(output.data);
 
 		} catch (err) {
-            err.response.data.Form1099NecRecords.ErrorRecords[0].status=202
-			res.status(202).send(err.response.data.Form1099NecRecords.ErrorRecords[0]);
+			if(!draft)
+			{
+				err.response.data.Form1099NecRecords.ErrorRecords[0].status=202
+				res.status(202).send(err.response.data.Form1099NecRecords.ErrorRecords[0]);
+			}
+			else
+			{
+				err.response.data.Error.status=202
+				// console.log(err.response.data)
+				res.status(202).send(err.response.data.Error);
+			}
+            
 		}	
 	}
 	else{

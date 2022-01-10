@@ -96,7 +96,6 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 
         if(name !== "whAmount" && name !== "description")
         {
-            console.log(name)
             setValidateValues({ ...validateValues, [name]: value });
         }
 	};
@@ -107,7 +106,6 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 	};
 
     const handleAddTransaction = ()=>{
-        console.log("Add is called")
         const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
@@ -125,7 +123,6 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 sequenceId : values.sequenceId,
                 whAmount: values.whAmount,
             }
-            console.log(data)
             // transactions.push(data)
             setMultipleTransactions(previousState=>([...previousState,data]))
             const newSeqId = Math.floor((Math.random() * 1000000000) + 1)
@@ -237,8 +234,6 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
 
     const handleSubmit = async ()=>{
         // e.preventDefault()
-        console.log("Submit is called")
-        console.log(multipleTransactions)
         const payeeRefs= []
         if(defaultAffiliate != "")
         {
@@ -254,7 +249,6 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 }
             })
         }
-        console.log(payeeRefs)
 
             const res = await axios.post(`/api/merchant/postTransaction`,{
                 payeeRefs : payeeRefs,
@@ -264,14 +258,10 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                 envName: envName
             })
             const result = await res.data
-            console.log(result)
 
             // if(true)
             if(res.status == 200)
-            {
-                console.log(`Transaction Result`)
-                // console.log(result)
-                
+            {                
                 router.replace(router.asPath);
                 if(defaultAffiliate !== "")
                 {

@@ -25,7 +25,6 @@ export const getServerSideProps = async (context)=>{
             envName : query.envName
         })
         const environCreds = await envRes.data
-        console.log(environCreds)
         return{
             props:{ 
                 url:origin,

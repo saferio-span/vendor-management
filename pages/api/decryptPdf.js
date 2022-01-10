@@ -7,15 +7,12 @@ export default async function handler(req,res)
     const url = req.body.urlLink
     const recordId = req.body.recordId
     const envName = req.body.envName
-    console.log(envName)
 
     const cred = await Environment.find({name:envName})
-    console.log(cred)
     const awsAccessKey = cred[0].awsAccessKey
 	const awsSecretKey = cred[0].awsSecretKey
 	const pdfKey = cred[0].pdfKey
     const urlParts = url.split('.com/');
-    console.log(urlParts[1])
     AWS.config.update({ region: "us-east-1" });// don't change this US-East-01
 
     const s3 = new AWS.S3({
@@ -32,12 +29,10 @@ export default async function handler(req,res)
         SSECustomerKey: ssecKey,
     }
 
-    console.log("Getting Pdf Buffer")
     s3.getObject(params, function(err, data) {
         // Handle any error and exit
         if (err)
         {
-            console.log(err)
             return err;          
         }
         res.status(200).send(data.Body)        

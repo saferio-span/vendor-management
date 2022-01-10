@@ -81,7 +81,6 @@ const AddEnv = (props) => {
         awsAccessKey:'',
         envName:showEnvName
 	});
-    console.log(showEnvName)
 
     const [validateValues, setValidateValues] = useState({
         name:'',
@@ -105,7 +104,6 @@ const AddEnv = (props) => {
     const handleSubmit =async (e)=>{
         e.preventDefault()
         setLoading(true)
-        console.log(values)
         const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
@@ -185,7 +183,6 @@ const AddEnv = (props) => {
     }
 
     useEffect(()=>{
-        console.log(values.name,values.envType)
         if(values.name !== "" && values.envType !== "")
         {
             let tempEnvname = `${values.name}-${values.envType}`
@@ -222,7 +219,6 @@ const AddEnv = (props) => {
     const handleSelectChange = (e)=>{
         setShowEnvName("")
         setShowNote(false)
-        console.log(e)
         if(e !== null)
         {
             // setValues({ ...values, envType: e.value });
@@ -419,12 +415,17 @@ const AddEnv = (props) => {
                               <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/whCertificate</b></span></td>
                             </tr>
                             <tr>
-                              <td>Form 1099 Auto Generation</td>
-                              <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/1099Generation</b></span></td>
+                                <td>Form 1099 Auto Generation</td>
+                                <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/1099Generation</b></span></td>
                             </tr>
                             <tr>
-                              <td>PDF Complete</td>
-                              <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/pdfUrl</b></span></td>
+                                <td>PDF Complete</td>
+                                <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/pdfUrl</b></span></td>
+                            </tr>
+    
+                            <tr>
+                              <td>Business Complete</td>
+                              <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/businessComplete</b></span></td>
                             </tr>
                           </tbody>
                         </table>

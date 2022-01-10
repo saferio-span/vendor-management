@@ -6,6 +6,7 @@ import moment from 'moment'
 import ReactPaginate from "react-paginate"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useUserValue } from '../../../contexts/UserContext'
+import { actionTypes } from "../../../contexts/userReducer"
 import { toast, ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router'
@@ -53,10 +54,11 @@ export const getServerSideProps = async (context)=>{
 export default function Home(props) {
     const transactions = props.transactions
     const businessId = props.merchant.businessId
-    const payerRef = props.merchant.payerRef
+    // const payerRef = props.merchant.payerRef
     const record = props.record
     const router = useRouter()
     const envName = router.query.envName
+    // console.log(`Payer Ref : ${payerRef}`)
 
     // const businessId = ""
     // const payerRef = ""
@@ -65,6 +67,11 @@ export default function Home(props) {
     const [pageNum,setPageNum] = useState(1)
     const [pageCount,setPageCount] = useState()
     const [searchValue,setSearchValue] = useState("")
+    const [getPdfLoading,setGetPdfLoading] = useState(false)
+    const [requestPdfLoading,setRequestPdfLoading] = useState(false)
+    const [draftPdfLoading,setDraftPdfLoading] = useState(false)
+    const [distUrlLoading,setDistUrlLoading] = useState(false)
+    const [refersionLoading,setRefersionLoading] = useState(false)
     const payeeRef = user_details ? user_details.payeeRef : ""
     
     // const [submissionId,setSubmissionId] = useState("")
@@ -76,6 +83,7 @@ export default function Home(props) {
     }
 
     const handle1099Click = async(props)=>{
+        setGetPdfLoading(true)
         const res =await axios.post(`/api/get1099Pdf`,{
             submissionId:props.submissionId,
             recordId:props.recordId,
@@ -85,6 +93,7 @@ export default function Home(props) {
 
         if(data.status==202)
         {
+            setGetPdfLoading(false)
             toast.error(data.message)
         }
         else
@@ -97,36 +106,62 @@ export default function Home(props) {
             {   
                 window.open(data.pdfData.FilePath, "_blank")
             }
+            setGetPdfLoading(false)
         }
 
     }
 
-    const handleAwsBtnClick =async(props)=>{
+    const handleAwsBtnClick =async(props,draft)=>{
+        
+        if(draft)
+        {
+            setDraftPdfLoading(true)
+        }
+        else
+        {
+            setRequestPdfLoading(true)
+        }
         const res =await axios.post(`/api/getAws1099Pdf`,{
             submissionId:props.submissionId,
             recordId:props.recordId,
-            envName: envName
+            envName: envName,
+            draft
         })
         const data = await res.data
-        console.log(data)
+        // console.log(data)
 
         if(data.status == 202)
         {
             toast.error(data.Message)
+            if(draft)
+            {
+                setDraftPdfLoading(false)
+            }
+            else
+            {
+                setRequestPdfLoading(false)
+            }
         }
         else{
             // console.log(data)
-           const url = data.Form1099NecRecords.SuccessRecords[0].Files.Copy1.Masked
+           let url = ""
+           if(draft)
+           {
+             url = data.DraftPdfUrl
+           }
+           else
+           {
+             url = data.Form1099NecRecords.SuccessRecords[0].Files.Copy1.Masked
+           }
            console.log(url)
-           const res = await axios(`/api/decryptPdf`,{
+           const res =await axios(`/api/decryptPdf`,{
                 method: 'post',
                 responseType: 'blob',
                 data:{
-                    urlLink:url,
+                    urlLink: url,
                     recordId:props.recordId,
                     envName: envName
                 },
-                
             })
 
             const pdfData = await res.data
@@ -135,19 +170,29 @@ export default function Home(props) {
                 [pdfData], 
                 {type: 'application/pdf'});
             const fileURL = URL.createObjectURL(file);
-            console.log(fileURL)
+            // console.log(fileURL)
+            if(draft)
+            {
+                setDraftPdfLoading(false)
+            }
+            else
+            {
+                setRequestPdfLoading(false)
+            }
             window.open(fileURL,"_blank");
+            
         
         }
     }
 
     const handleDistBtnClick = async(props)=>{
         // console.log(user_details)
+        setDistUrlLoading(true)
         const distData = {
             businessId : businessId,
             recordId : props.recordId,
             payeeRef : user_details.payeeRef,
-            payerRef : payerRef,
+            // payerRef : payerRef,
             envName: envName
         }
 
@@ -155,6 +200,7 @@ export default function Home(props) {
         const data = await res.data
 
         // console.log(data)
+        setDistUrlLoading(false)
         if(data.status == 202)
         {
             toast.error(data.Message)
@@ -206,10 +252,10 @@ export default function Home(props) {
 
         if(variation == "")
         {
-        dispatch({
-            type: actionTypes.SET_VARIATION_DETAILS,
-            data: localStorage.getItem('variant'),
-        })
+            dispatch({
+                type: actionTypes.SET_VARIATION_DETAILS,
+                data: localStorage.getItem('variant'),
+            })
         }
 
         //eslint-disable-next-line
@@ -227,20 +273,22 @@ export default function Home(props) {
             <VendorNavbar />
             <ToastContainer />
             <div className="row my-5 mx-2">
-                <div className="col-6">
+                <div className="col-3">
                     <h4>Transactions List</h4>
                 </div>
-                <div className="col-6 d-flex flex-row-reverse">
+                <div className="col-9 d-flex flex-row-reverse">
                     <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>
                     {variation != "t0-1" && <>
                       <button className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+                          setRefersionLoading(true)
                           const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
                             businessId : businessId,
                             payeeRef: payeeRef,
                             envName: envName
                           })
+                          setRefersionLoading(false)
                           window.open(`${res.data.ReviewUrl}`, '_blank');
-                        }}><i className="bi bi-eye"></i> 1099-NEC</button>
+                        }} disabled={refersionLoading}><i className="bi bi-eye"></i> 1099-NEC {refersionLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                     </>}
                     {variation != "r0-1" && <>
                         { record && record.map(data=>{
@@ -253,9 +301,10 @@ export default function Home(props) {
                                         recordId:formRecord.RecordId
                                     }
                                     return (<> 
-                                        <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)}><i className="bi bi-download"/> Get Dist 1099 Pdf</button>
-                                        <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps)}><i className="bi bi-download" /> AWS 1099 Pdf</button>
-                                        <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)}><i className="bi bi-download"></i> Get 1099 Pdf</button> 
+                                        <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)} disabled={distUrlLoading}><i className="bi bi-download"/> Get Dist 1099 Pdf {distUrlLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                        <button className="btn btn-info mx-1" onClick={()=>handleAwsBtnClick(distProps,true)} disabled={draftPdfLoading}><i className="bi bi-download" /> Request Draft Pdf {draftPdfLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                        <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps,false)} disabled={requestPdfLoading}><i className="bi bi-download" /> Request 1099 Pdf {requestPdfLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                        <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)} disabled={getPdfLoading}><i className="bi bi-download"></i> Get 1099 Pdf {getPdfLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button> 
                                     </>)
                                 }
                                 else{

@@ -6,7 +6,6 @@ connectDB()
 export default async function handler(req,res)
 {
     const environ = new Environment()
-    console.log(req.body)
 	environ.name = req.body.name.trim()
     environ.clientId = req.body.clientId.trim()
     environ.clientSecret = req.body.clientSecret.trim()

@@ -4,7 +4,7 @@ import Environment from "../../models/envModel"
 
 export default async function handler(req,res)
 {
-	const { businessId,recordId,payeeRef,payerRef,envName } = req.body;
+	const { businessId,recordId,payeeRef,logoUrl,envName } = req.body;
     // const cred = credentials.filter((user)=>user.name===envName)
 	const cred = await Environment.find({name:envName})
     const apiUrl = cred[0].apiUrl
@@ -59,13 +59,13 @@ export default async function handler(req,res)
                     RecordId:recordId,
                     Business: {
                         BusinessId :businessId,
-                        PayerRef: payerRef
+                        // PayerRef: payerRef
                      },
                     Recipient: {
                         PayeeRef: payeeRef,
                      },
                      Customization: {
-                        BusinessLogoUrl: "//logo.clearbit.com/refersion.com",
+                        BusinessLogoUrl: logoUrl,
                         ReturnUrl: "https://example.com",
                         CancelUrl: "https://example.com",
                         ExpiryTime: "5"

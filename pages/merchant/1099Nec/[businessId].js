@@ -50,7 +50,8 @@ export const getServerSideProps = async (context)=>{
       props:{
         affiliates,
         records,
-        pdfUrls
+        pdfUrls,
+        origin
        }
     }
 }
@@ -60,10 +61,14 @@ const Records1099Nec = (props) => {
     const records = props.records
     const affiliates = props.affiliates
     const pdfUrls = props.pdfUrls
+    const origin = props.origin
+
+    // console.log(origin)
 
     const [{ user_details,environment }, dispatch] = useUserValue();
     const router = useRouter()
     const envName = router.query.envName
+    // const payerRef = router.query.payerRef
 
     const handleBtnClick =async(submissionId,recordId)=>{
 
@@ -92,21 +97,32 @@ const Records1099Nec = (props) => {
         }
     }
 
-    const handleAwsBtnClick =async(submissionId,recordId)=>{
+    const handleAwsBtnClick =async(submissionId,recordId,draft)=>{
         const res =await axios.post(`/api/getAws1099Pdf`,{
             submissionId,
             recordId,
-            envName: envName
+            envName: envName,
+            draft
         })
         const data = await res.data
 
         if(data.status == 202)
         {
+            console.log(data)
             toast.error(data.Message)
         }
         else{
             console.log(data)
-           const url = data.Form1099NecRecords.SuccessRecords[0].Files.Copy1.Masked
+           let url = ""
+
+           if(draft)
+           {
+             url = data.DraftPdfUrl
+           }
+           else
+           {
+             url = data.Form1099NecRecords.SuccessRecords[0].Files.Copy1.Masked
+           }
            console.log(url)
            const res =await axios(`/api/decryptPdf`,{
                 method: 'post',
@@ -136,7 +152,8 @@ const Records1099Nec = (props) => {
             businessId : user_details.businessID,
             recordId : props.recordId,
             payeeRef : props.payeeRef,
-            payerRef : props.payerRef,
+            // payerRef : payerRef,
+            logoUrl : `${origin}/yourLogo.png`,
             envName: envName
         }
 
@@ -228,7 +245,8 @@ const Records1099Nec = (props) => {
                                     <td>{details.TaxYear}</td>
                                     <td>
                                         {button != '' ? button : <button className="btn btn-primary mx-1" id={record.PayeeRef} onClick={async() => handleBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef)}>Get 1099 Pdf</button>}
-                                        <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId)}>Request 1099 Pdf</button>
+                                        <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,false)}>Request 1099 Pdf</button>
+                                        <button className="btn btn-info mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,true)}>Request Draft Pdf</button>
                                         <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)}>Get Dist 1099 Pdf</button>
                                         {/* <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} onClick={async() => handleDistBtnClick(distProps)} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Distribution 1099 Pdf</button> */}
                                     </td>

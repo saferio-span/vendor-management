@@ -9,8 +9,6 @@ export const getServerSideProps = async (context)=>{
 
     const res = await axios.get(`${origin}/api/getPdfUrl`)
     const urlData= await res.data
-
-    console.log(urlData)
     
         return{
           props:{
@@ -22,17 +20,12 @@ export const getServerSideProps = async (context)=>{
 
 const WebHook = (props) => {
 
-    // console.log(props.affiliates)
-    console.log(props.data)
-
     const handleUrl=async(url)=>{
-        console.log(url)
         const res = await axios.post(`/api/decryptPdf`,{
             urlLink:url,
             envName:"Saferio-sandbox"
         })
         const result = await res.data
-        console.log(result)
     }
 
     return (

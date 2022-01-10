@@ -10,8 +10,8 @@ import absoluteUrl from 'next-absolute-url'
 import AddTransaction from "../../components/Layout/AddTransaction";
 import ReactPaginate from "react-paginate"
 import { useUserValue } from '../../contexts/UserContext'
-import { useRouter } from 'next/router'
 import { actionTypes } from "../../contexts/userReducer"
+import { useRouter } from 'next/router'
 
 export const getServerSideProps = async (context)=>{
   const { req,query } = context;

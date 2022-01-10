@@ -88,12 +88,12 @@ const Home=(props)=>{
     {value: "r0-1", label: "R0-1"},
     {value: "all", label: "All"}
   ]
+  
   // console.log(`Session`)
   // console.log(props.session)
   // console.log(`Session`)
 
   const handleSelectChange=async(e)=>{
-    console.log(e)
     if(e == null)
     {
       dispatch({
@@ -204,7 +204,7 @@ const Home=(props)=>{
   }
 
   const handleVariationChange = (e)=>{
-    console.log(e)
+
     if(e == null)
     {
       dispatch({
@@ -220,7 +220,7 @@ const Home=(props)=>{
         data: e.value,
       })
       localStorage.setItem('variant',e.value)
-      setVariation("e.value")
+      setVariation(e.value)
     }
   }
 
@@ -235,7 +235,7 @@ const Home=(props)=>{
   //eslint-disable-next-line
   }, [])
 
-  // console.log(filterCred)
+  // console.log(variation)
 
   return (
     <div>
@@ -372,26 +372,30 @@ const Home=(props)=>{
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>WhCertificate Status Change</td>
-                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></td>
-                                </tr>
-                                <tr>
-                                  <td>Form 1099 Auto Generation</td>
-                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></td>
-                                </tr>
-                                <tr>
-                                  <td>PDF Complete</td>
-                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></td>
-                                </tr>
-                                {
-                                  variation != "t0-1" && <>
-                                    <tr>
-                                      <td>Business Complete</td>
-                                      <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/businessComplete</b></span></td>
-                                    </tr>
-                                  </>
-                                }
+                              <tr>
+                                <td>WhCertificate Status Change</td>
+                                <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></td>
+                              </tr>
+                              {
+                                variation != "r0-1" && <>
+                                  <tr>
+                                      <td>Form 1099 Auto Generation</td>
+                                      <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></td>
+                                  </tr>
+                                  <tr>
+                                      <td>PDF Complete</td>
+                                      <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></td>
+                                  </tr>
+                                </>
+                              }
+                              {
+                                variation != "t0-1" && <>
+                                  <tr>
+                                    <td>Business Complete</td>
+                                    <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/businessComplete</b></span></td>
+                                  </tr>
+                                </>
+                              }
                               </tbody>
                             </table>
                                 {/* <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
