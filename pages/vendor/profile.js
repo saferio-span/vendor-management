@@ -12,6 +12,8 @@ const MerchantProfile = () => {
     const [{ user_details,environment}, dispatch] = useUserValue();
     const [loading,setLoading]=useState(false)
     const [whLoading,setWhLoading]=useState(false)
+    const [whLoadingTin,setWhLoadingTin]=useState(false)
+    const [btnDisable,setBtnDisable] = useState(false)
     const [values, setValues] = useState({
         id:"",
         name: '',
@@ -268,36 +270,53 @@ const MerchantProfile = () => {
                         </div>
                     </div>
                 </form>
-            </div>    
-            <hr />
-            <br />
-            <div className="position-relative my-2">
-                {/* <Link href={{
-                    pathname: '/vendor/w9/[id]',
-                    query: { id: user_details._id },
-                    }}
-                > */}
-                {/* <Link href={`/vendor/completeWh?id=${values.id}`}> */}
-                {
-                    !whLoading && <Link href={
-                        { 
-                            pathname: `/vendor/completeWh`, 
-                            query: {
-                                id: values.id,
-                                envName: envName
-                            }
+                <hr />
+                <div className="row text-center pb-3">
+                    <div className="col-3 offset-3">
+                        {
+                            !btnDisable && <Link href={
+                                { 
+                                    pathname: `/vendor/completeWh`, 
+                                    query: {
+                                        id: values.id,
+                                        envName: envName,
+                                        tin:true
+                                    }
+                                }
+                            }>
+                                <a className="btn btn-warning" onClick={()=>{
+                                    setBtnDisable(true)
+                                    setWhLoadingTin(true)
+                                    }}>Wh with Tin</a>
+                            </Link>
                         }
-                    }>
-                        <a className="btn btn-warning position-absolute top-50 start-50 translate-middle" onClick={()=>setWhLoading(true)}>Complete Wh</a>
-                    </Link>
-                }
-                {
-                    whLoading && <button className='btn btn-warning position-absolute top-50 start-50 translate-middle' disabled>Wh with Tin<span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span></button>
-                }
-                {
-                    whLoading && <button className='btn btn-warning position-absolute top-50 start-50 translate-middle' disabled>Wh without Tin<span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span></button>
-                }
-            </div>
+                        {
+                            btnDisable && <button className='btn btn-warning' disabled>Wh with Tin {whLoadingTin && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        }
+                    </div>
+                    <div className="col-3">
+                        {
+                            !btnDisable && <Link href={
+                                { 
+                                    pathname: `/vendor/completeWh`, 
+                                    query: {
+                                        id: values.id,
+                                        envName: envName,
+                                        tin:false
+                                    }
+                                }
+                            }>
+                                <a className="btn btn-warning" onClick={()=>{
+                                    setBtnDisable(true)
+                                    setWhLoading(true)}}>Wh without Tin</a>
+                            </Link>
+                        }
+                        {
+                            btnDisable && <button className='btn btn-warning' disabled>Wh without Tin {whLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        }
+                    </div>
+                </div>
+            </div>             
         </>
     )
 }

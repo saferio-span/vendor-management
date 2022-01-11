@@ -38,6 +38,9 @@ const affiliateSchema = new mongoose.Schema({
     type: String,
     default: '-'
   },
+  formType :{
+    type: String,
+  },
   tinMatchingStatus : {
     type: String,
     default: '-'

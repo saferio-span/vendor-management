@@ -64,11 +64,20 @@ export default function Home(props) {
   const transactions = props.transactions
   const envName = router.query.envName
   
+  const initalLoaders = {}
+  
   // const pageCount = 5;
   for(const key in props.affiliates )
   {
       options.push({ key: optionAff[key].payeeRef, value: optionAff[key].payeeRef, label: optionAff[key].name })
+      const w9 = `${optionAff[key].payeeRef}_w9`
+      const ref1099 = `${optionAff[key].payeeRef}_1099`
+      initalLoaders[w9] = false
+      initalLoaders[ref1099] = false
   }
+  const [loaders,setLoaders] = useState(initalLoaders)
+  // console.log(loaders)
+
 
   useEffect(()=>{
     setLimitAffiliates([])
@@ -124,6 +133,7 @@ export default function Home(props) {
         data: localStorage.getItem('variant'),
       })
     }
+    // console.log(loaders)
     //eslint-disable-next-line
   },[affiliates,payeeRef,pageNum,pageCount,searchValue])
 
@@ -149,6 +159,14 @@ export default function Home(props) {
 
   const handleRefresh=()=>{
     window.location.reload();
+  }
+
+  const handleW9Click = (payeeRef)=>{
+    const loaderName = `${payeeRef}_w9`
+    setLoaders({ ...loaders, [loaderName] : true });
+    router.push({ 
+      pathname: `/merchant/w9Form/${payeeRef}`, 
+      query: { envName: envName } })
   }
 
   const getReqRevUrl =async ()=>{
@@ -215,8 +233,18 @@ export default function Home(props) {
               </thead>
               <tbody>
                 {limitAffiliates && limitAffiliates.map((details) => {
+                    // console.log(details)
                     let amount = 0
                     let transactionCount = 0
+                    let w9ButtonName = "W9"
+
+                    if(details.formType)
+                    {
+                      if(details.formType == "FormW8Ben")
+                      {
+                        w9ButtonName = "W8Ben"
+                      }
+                    }
 
                     transactions.forEach(option => {
                         if(option.payeeRef === details.payeeRef)
@@ -241,19 +269,24 @@ export default function Home(props) {
                           <div className="row">
                             <div className="col p-0">
                               {details.w9Status !== "-" ? <>
-                              <Link href={{ pathname: `/merchant/w9Form/${details.payeeRef}`, query: { envName: envName } }} ><a className="btn btn-sm btn-warning mx-1"><i className="bi bi-file-earmark-pdf"></i> W9</a></Link></> : <><button className="btn btn-sm btn-warning mx-1" disabled><i className="bi bi-file-earmark-pdf"></i> W9</button></> }
+                                <button className="btn btn-sm btn-warning mx-1" onClick={()=>handleW9Click(details.payeeRef)} disabled={loaders[`${details.payeeRef}_w9`]}><i className="bi bi-file-earmark-pdf"></i> {w9ButtonName} {loaders[`${details.payeeRef}_w9`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button></> : <><button className="btn btn-sm btn-warning mx-1" disabled><i className="bi bi-file-earmark-pdf"></i> W9</button>
+                              </> 
+                              }
                               <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
                             
                               {variation != "t0-1" && <>
                                 <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+                                    const loaderName = `${details.payeeRef}_1099`
+                                    setLoaders({ ...loaders, [loaderName] : true });
+                                    
                                     const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
                                       businessId : user_details.businessID,
                                       payeeRef: details.payeeRef,
                                       envName: envName
                                     })
-
+                                    setLoaders({ ...loaders, [loaderName] : false });
                                     window.open(`${res.data.ReviewUrl}`, '_blank');
-                                  }}><i className="bi bi-eye"></i> 1099-NEC</button>
+                                  }} disabled={loaders[`${details.payeeRef}_1099`]}><i className="bi bi-eye"></i> 1099-NEC {loaders[`${details.payeeRef}_1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                 
                               </>}
                             </div>

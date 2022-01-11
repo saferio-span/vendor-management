@@ -49,7 +49,7 @@ const ViewForms = (props) => {
     let url = ""
     if(props.error === null)
     {
-      url = props.forms.FormType === "FormW8Ben" ? props.forms.FormW8Ben.PdfUrl : props.forms.FormW9.PdfUrl
+      url = props.forms.FormType === "FormW8BEN" ? props.forms.FormW8Ben.PdfUrl : props.forms.FormW9.PdfUrl
     }
     
     return (

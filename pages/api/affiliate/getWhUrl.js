@@ -10,7 +10,7 @@ connectDB()
 export default async function handler(req,res)
 {
 
-    const { payeeId, fullName, address1, address2, city, stateName, zipCd, tinMatch, businessId, payerRef, envName, returnUrl, successUrl} =
+    const { payeeId, fullName, address1, address2, city, stateName, zipCd, tinMatch, businessId, payerRef, envName, returnUrl, successUrl, tin} =
     req.body;
 	const cred = await Environment.find({name:req.body.envName})
 	console.log(cred)
@@ -82,7 +82,7 @@ export default async function handler(req,res)
 						ZipCd: zipCd
 					},
 					ForeignAddress: null,
-					IsTINMatching: true,
+					IsTINMatching: tin,
 				},
 				Customization: {
 					BusinessLogoUrl:'https://www.spanenterprises.com/Content/Images/span-logo.png',

@@ -11,7 +11,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 export const getServerSideProps = async (context)=>{
 
     const { req } = context;
-    const { id,envName } = context.query;
+    const { id,envName,tin } = context.query;
     const { origin } = absoluteUrl(req)
     console.log(origin)
   
@@ -34,7 +34,8 @@ export const getServerSideProps = async (context)=>{
         payerRef : merchantData.payerRef,
         envName : envName,
         successUrl : `${origin}/vendor/home/${affiliateData[0].payeeRef}`,
-        returnUrl :`${origin}/vendor/profile`
+        returnUrl :`${origin}/vendor/profile`,
+        tin
     })
 
     const whdata = await res.data

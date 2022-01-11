@@ -63,15 +63,37 @@ const Records1099Nec = (props) => {
     const pdfUrls = props.pdfUrls
     const origin = props.origin
 
+    console.log(records)
+
     // console.log(origin)
 
     const [{ user_details,environment }, dispatch] = useUserValue();
     const router = useRouter()
     const envName = router.query.envName
+    
+    const initalLoaders = {}
+    records.forEach(details=>{
+        details.Form1099NECRecords.forEach(data=>{
+            const payee = data.PayeeRef
+            const get1099 = `${payee}_get1099`
+            const download1099 = `${payee}_download1099`
+            const request1099 = `${payee}_request1099`
+            const draft1099 = `${payee}_draft1099`
+            const dist = `${payee}_dist`
+            initalLoaders[get1099] = false
+            initalLoaders[download1099] = false
+            initalLoaders[request1099] = false
+            initalLoaders[draft1099] = false
+            initalLoaders[dist] = false
+        })
+    })
+    const [loaders,setLoaders] = useState(initalLoaders)
+
+    console.log(loaders)
     // const payerRef = router.query.payerRef
 
-    const handleBtnClick =async(submissionId,recordId)=>{
-
+    const handleBtnClick =async(submissionId,recordId,payeeRef)=>{
+        setLoaders({ ...loaders, [`${payeeRef}_get1099`] : true });
         const res =await axios.post(`/api/get1099Pdf`,{
             submissionId,
             recordId,
@@ -83,21 +105,32 @@ const Records1099Nec = (props) => {
         if(data.status==202)
         {
             toast.error(data.message)
+            setLoaders({ ...loaders, [`${payeeRef}_get1099`] : false });
         }
         else
         {
             if(data.pdfData == null)
             {
+                setLoaders({ ...loaders, [`${payeeRef}_get1099`] : false });
                 toast.success(data.recordMessage.Message)
             }
             else
             {   
+                setLoaders({ ...loaders, [`${payeeRef}_get1099`] : false });
                 window.open(data.pdfData.FilePath, "_blank")
             }
         }
     }
 
-    const handleAwsBtnClick =async(submissionId,recordId,draft)=>{
+    const handleAwsBtnClick =async(submissionId,recordId,payeeRef,draft)=>{
+        if(draft)
+        {
+            setLoaders({ ...loaders, [`${payeeRef}_draft1099`] : true });
+        }
+        else
+        {
+            setLoaders({ ...loaders, [`${payeeRef}_request1099`] : true });
+        }
         const res =await axios.post(`/api/getAws1099Pdf`,{
             submissionId,
             recordId,
@@ -140,6 +173,14 @@ const Records1099Nec = (props) => {
                 [pdfData], 
                 {type: 'application/pdf'});
             const fileURL = URL.createObjectURL(file);
+            if(draft)
+            {
+                setLoaders({ ...loaders, [`${payeeRef}_draft1099`] : false });
+            }
+            else
+            {
+                setLoaders({ ...loaders, [`${payeeRef}_request1099`] : false });
+            }
             // console.log(fileURL)
             window.open(fileURL,"_blank");
             
@@ -147,6 +188,9 @@ const Records1099Nec = (props) => {
     }
 
     const handleDistBtnClick = async(props)=>{
+
+        const payeeRef = props.payeeRef
+        setLoaders({ ...loaders, [`${payeeRef}_dist`] : true });
         // console.log(user_details)
         const distData = {
             businessId : user_details.businessID,
@@ -164,8 +208,10 @@ const Records1099Nec = (props) => {
         if(data.status == 202)
         {
             toast.error(data.Message)
+            setLoaders({ ...loaders, [`${payeeRef}_dist`] : false });
         }else
         {
+            setLoaders({ ...loaders, [`${payeeRef}_dist`] : false });
             window.open(data.DistributionUrl,"_blank");
         }
 
@@ -244,10 +290,10 @@ const Records1099Nec = (props) => {
                                     <td>{record.FederalReturn.Status}</td>
                                     <td>{details.TaxYear}</td>
                                     <td>
-                                        {button != '' ? button : <button className="btn btn-primary mx-1" id={record.PayeeRef} onClick={async() => handleBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef)}>Get 1099 Pdf</button>}
-                                        <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,false)}>Request 1099 Pdf</button>
-                                        <button className="btn btn-info mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,true)}>Request Draft Pdf</button>
-                                        <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)}>Get Dist 1099 Pdf</button>
+                                        {button != '' ? button : <button className="btn btn-primary mx-1" id={record.PayeeRef} onClick={async() => handleBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef)} disabled = {loaders[`${record.PayeeRef}_get1099`]}>Get 1099 Pdf {loaders[`${record.PayeeRef}_get1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>}
+                                        <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef,false)} disabled = {loaders[`${record.PayeeRef}_request1099`]}>Request 1099 Pdf {loaders[`${record.PayeeRef}_request1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                        <button className="btn btn-info mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef,true)} disabled = {loaders[`${record.PayeeRef}_draft1099`]}>Request Draft Pdf {loaders[`${record.PayeeRef}_draft1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                        <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)} disabled = {loaders[`${record.PayeeRef}_dist`]}>Get Dist 1099 Pdf {loaders[`${record.PayeeRef}_dist`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                         {/* <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} onClick={async() => handleDistBtnClick(distProps)} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Distribution 1099 Pdf</button> */}
                                     </td>
                                 </tr>)
