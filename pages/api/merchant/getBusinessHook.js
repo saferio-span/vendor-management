@@ -7,7 +7,7 @@ export default async function handler(req,res)
 {
 	const envName = req.body.envName
 	try {
-		const data = await BusinessComplete.find({environment:envName})
+		const data = await BusinessComplete.find({environment:envName}).sort({ date: 'desc' });
 		res.status(200).json(data);
 	} catch (err) {
 		console.error(err);

@@ -292,7 +292,10 @@ const MerchantProfile = () => {
                     </Link>
                 }
                 {
-                    whLoading && <button className='btn btn-warning position-absolute top-50 start-50 translate-middle' disabled>Complete Wh <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span></button>
+                    whLoading && <button className='btn btn-warning position-absolute top-50 start-50 translate-middle' disabled>Wh with Tin<span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span></button>
+                }
+                {
+                    whLoading && <button className='btn btn-warning position-absolute top-50 start-50 translate-middle' disabled>Wh without Tin<span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span></button>
                 }
             </div>
         </>
