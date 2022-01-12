@@ -278,7 +278,7 @@ export default function Home(props) {
                 </div>
                 <div className="col-9 d-flex flex-row-reverse">
                     <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>
-                    {variation != "t0-1" && <>
+                    {/* {variation != "t0-1" && <>
                       <button className="btn btn-sm btn-primary mx-1" onClick={async()=>{
                           setRefersionLoading(true)
                           const res = await axios.post(`/api/merchant/getRequestReviewUrl`,{
@@ -289,7 +289,7 @@ export default function Home(props) {
                           setRefersionLoading(false)
                           window.open(`${res.data.ReviewUrl}`, '_blank');
                         }} disabled={refersionLoading}><i className="bi bi-eye"></i> 1099-NEC {refersionLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
-                    </>}
+                    </>} */}
                     {variation != "r0-1" && <>
                         { record && record.map(data=>{
                             return data.Form1099NECRecords.map((formRecord)=>{

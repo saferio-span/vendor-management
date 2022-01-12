@@ -76,7 +76,6 @@ export default async function handler(req,res)
 
 		} catch (err) {
 			// console.log(err.response.data.Errors[0])
-			success = false
 			res.status(202).send(err.response.data.Errors[0]);
 		}
 	}

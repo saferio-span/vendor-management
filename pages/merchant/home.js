@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react"
 import MerchantNavBar from "../../components/Layout/MerchantNavBar"
 import Link from "next/link";
-import { ToastContainer } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import axios from "axios";
 import Select from 'react-select'
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -284,8 +284,16 @@ export default function Home(props) {
                                       payeeRef: details.payeeRef,
                                       envName: envName
                                     })
+                                    if(res.status == 202)
+                                    {
+                                      toast.error(res.data.Message)
+                                    }
+                                    else
+                                    {
+                                      window.open(`${res.data.ReviewUrl}`, '_blank');
+                                    }
                                     setLoaders({ ...loaders, [loaderName] : false });
-                                    window.open(`${res.data.ReviewUrl}`, '_blank');
+                                    
                                   }} disabled={loaders[`${details.payeeRef}_1099`]}><i className="bi bi-eye"></i> 1099-NEC {loaders[`${details.payeeRef}_1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                 
                               </>}
