@@ -13,7 +13,5 @@ module.exports = {
     DATABASE_URL: "mongodb+srv://span-dev:Span2021@cluster0.ni9kd.mongodb.net/vendor-management?retryWrites=true&w=majority",
     NEXTAUTH_URL: "http://localhost:3000",
   },
-  node: {
-    fs: 'empty',
-  }
+  target: 'serverless',
 }
