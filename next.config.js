@@ -13,14 +13,7 @@ module.exports = {
     DATABASE_URL: "mongodb+srv://span-dev:Span2021@cluster0.ni9kd.mongodb.net/vendor-management?retryWrites=true&w=majority",
     NEXTAUTH_URL: "http://localhost:3000",
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-        // don't resolve 'fs' module on the client to prevent this error on build --> Error: Can't resolve 'fs'
-        config.resolve.fallback = {
-            fs: false
-        }
-    }
-
-    return config;
+  node: {
+    fs: 'empty',
   }
 }
