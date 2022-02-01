@@ -249,7 +249,7 @@ export default function Home(props) {
                     transactions.forEach(option => {
                         if(option.payeeRef === details.payeeRef)
                         {
-                          amount += parseInt(option.txnAmt)
+                          amount += Number(option.txnAmt)
                           transactionCount++
                         }
                     })
