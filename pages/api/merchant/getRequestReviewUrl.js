@@ -65,7 +65,7 @@ export default async function handler(req,res)
                         PayeeRef: payeeRef,
                     },
                     Customization: {
-                        DefaultView: null,
+                        DefaultView: "Form1099",
 						BusinessLogoUrl: "https://image.shutterstock.com/z/stock-vector-shield-safety-logo-icon-protection-logo-illustration-design-flat-style-business-safety-anti-1260966370.jpg",
                         ReturnUrl: "https://abccompany.com/return"
                     }

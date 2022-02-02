@@ -25,8 +25,8 @@ export const getServerSideProps = async (context)=>{
     })
     
     const merchant = await merchantRes.data
-    console.log(`Merchant`)
-    console.log(merchant)
+    // console.log(`Merchant`)
+    // console.log(merchant)
     
     const res = await axios.post(`${origin}/api/affiliate/getAllByMerchnatId`,{
         merchantId : merchant[0]._id,

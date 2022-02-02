@@ -6,7 +6,7 @@ connectDB()
 
 export default async function handler(req,res)
 {
-    console.log(req.body)
+    // console.log(req.body)
     // res.status(200).send(businessID);
     const affiliate = new Affiliate()
 	affiliate.name = req.body.name
