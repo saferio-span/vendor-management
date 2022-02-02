@@ -15,7 +15,7 @@ export const getServerSideProps = async (context)=>{
     const { req,query } = context;
     const { origin } = absoluteUrl(req)
   
-    console.log(envName);
+    console.log(query.envName);
     const merchantRes = await axios.post(`${origin}/api/merchant/getAll`,{
       envName: query.envName,
     })
