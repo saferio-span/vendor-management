@@ -15,11 +15,14 @@ export const getServerSideProps = async (context)=>{
     const { req,query } = context;
     const { origin } = absoluteUrl(req)
   
+    console.log(envName);
     const merchantRes = await axios.post(`${origin}/api/merchant/getAll`,{
       envName: query.envName,
     })
   
     const merchant = await merchantRes.data
+
+    console.log(merchant);
 
     return{
       props:{ 
@@ -32,6 +35,8 @@ export const getServerSideProps = async (context)=>{
 const Login = (props) => {
     // console.log(credentials)
     const merchants = props.merchant
+
+    console.log(merchants);
     // const [values, setValues] = useState({
     //     email: '',
 	// 	// password: '',
