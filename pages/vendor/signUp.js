@@ -96,7 +96,18 @@ const SignUp = (props) => {
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
-		setValues({ ...values, [name]: value });
+
+        if(name == "zip")
+        {
+            if(value.length <= 9)
+            {
+                setValues({ ...values, [name]: value });
+            }
+        }
+        else
+        {
+            setValues({ ...values, [name]: value });
+        }
 
         if(name !== "address2")
         {
@@ -113,6 +124,18 @@ const SignUp = (props) => {
             toast.error("Please fill in all fields which are mandatory(*)")
             setLoading(false)
             return false
+        }
+        else
+        {
+            if(values.zip.length < 9)
+            {
+                if(values.zip.length != 5)
+                {
+                    toast.error("Enter valid zipcode (5 or 9 digit)")
+                    setLoading(false)
+                    return false
+                }
+            }
         }
 
         const availablity = await axios.post(`/api/affiliate/findByEmail/${values.email}`,{
@@ -286,7 +309,7 @@ const SignUp = (props) => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="zip">ZIP <span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="text" className="form-control" id="zip" name="zip" placeholder="ZIP" value={values.zip} onChange={handleInputChange} />
+                                        <input type="number" className="form-control" id="zip" name="zip" placeholder="ZIP" value={values.zip} onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>

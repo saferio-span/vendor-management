@@ -60,6 +60,18 @@ const AddAffiliates = () => {
             setLoading(false)
             return false
         }
+        else
+        {
+            if(values.zip.length < 9)
+            {
+                if(values.zip.length != 5)
+                {
+                    toast.error("Enter valid zipcode (5 or 9 digit)")
+                    setLoading(false)
+                    return false
+                }
+            }
+        }
 
         const availablity = await axios.post(`/api/affiliate/findByEmail/${values.email}`,{
             envName: environment ? environment.name : localStorage.getItem("env")
@@ -126,7 +138,18 @@ const AddAffiliates = () => {
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
-		setValues({ ...values, [name]: value });
+
+		if(name == "zip")
+        {
+            if(value.length <= 9)
+            {
+                setValues({ ...values, [name]: value });
+            }
+        }
+        else
+        {
+            setValues({ ...values, [name]: value });
+        }
 
         if(name !== "address2")
         {
@@ -245,7 +268,7 @@ const AddAffiliates = () => {
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="zip">ZIP<span className="text-danger font-weight-bold">*</span> </label>
-                                        <input type="text" className="form-control" id="zip" name="zip" placeholder="ZIP" onChange={handleInputChange} />
+                                        <input type="number" className="form-control" id="zip" name="zip" placeholder="ZIP" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>

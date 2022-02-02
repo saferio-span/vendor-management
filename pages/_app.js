@@ -1,4 +1,4 @@
-// import '../styles/globals.css'
+import '../styles/globals.css'
 import React from 'react'
 import Head from 'next/head'
 import {Provider} from "next-auth/client"
