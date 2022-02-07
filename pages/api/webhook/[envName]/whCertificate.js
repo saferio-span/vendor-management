@@ -1,6 +1,8 @@
 import connectDB from "../../../../config/connectDB";
 import Affiliate from "../../../../models/affiliateModel"
 import WHResponse from "../../../../models/wHResponseModel"
+import Merchant from "../../../models/merchantModel"
+
 connectDB()
 
 export default async function handler(req,res)
@@ -37,9 +39,11 @@ export default async function handler(req,res)
             payeeRef = req.body.FormW8Ben.PayeeRef
         }
 
+        const merchant = await Merchant.find({ _id: id })
+
         if(affiliate)
         {
-            await Affiliate.findOneAndUpdate({payeeRef: payeeRef },affiliate,function (err, user) {
+            await Affiliate.findOneAndUpdate({payeeRef: payeeRef,merchantID: merchant._id },affiliate,function (err, user) {
                 if (err){
                     console.log(err)
                 }

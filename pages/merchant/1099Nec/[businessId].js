@@ -259,7 +259,7 @@ const Records1099Nec = (props) => {
                                         var diff =(d2-d1) / 1000
                                         diff /= (60 * 60);  
                                         // console.log(diff)
-                                        if(diff < 24)
+                                        if(diff < 20)
                                         {
                                             button = <Link href={pdfData.FilePath}><a className="btn btn-primary mx-1" target="_blank">Download 1099 Pdf zip</a></Link>
                                         }
