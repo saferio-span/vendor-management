@@ -22,6 +22,8 @@ export default async function handler(req,res)
         const affiliate = {}
         var payeeRef = ""
 
+        var payerRef = ""
+
         if(req.body.FormType == "FormW9")
         {
             affiliate.w9Status = req.body.FormW9.W9Status
@@ -31,15 +33,18 @@ export default async function handler(req,res)
             }
             affiliate.pdfUrl = req.body.FormW9.PdfUrl
             payeeRef = req.body.FormW9.PayeeRef
+            payerRef = req.body.FormW9.Requester.PayerRef
         }
         else
         {
             affiliate.w9Status = req.body.FormW8Ben.W8BENStatus
             affiliate.pdfUrl = req.body.FormW8Ben.PdfUrl
             payeeRef = req.body.FormW8Ben.PayeeRef
+            payerRef = req.body.FormW8Ben.Requester.PayerRef
         }
 
-        const merchant = await Merchant.find({ _id: id })
+        const merchant = await Merchant.find({ payerRef: payerRef })
+        console.log(merchant);
 
         if(affiliate)
         {
