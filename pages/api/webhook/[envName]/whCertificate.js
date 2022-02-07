@@ -1,7 +1,7 @@
 import connectDB from "../../../../config/connectDB";
 import Affiliate from "../../../../models/affiliateModel"
 import WHResponse from "../../../../models/wHResponseModel"
-import Merchant from "../../../models/merchantModel"
+import Merchant from "../../../../models/merchantModel"
 
 connectDB()
 
