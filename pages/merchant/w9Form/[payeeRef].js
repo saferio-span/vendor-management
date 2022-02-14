@@ -37,7 +37,6 @@ export const getServerSideProps = async (context)=>{
         forms,
         error,
         payeeRef:params.payeeRef,
-        pageUrl:req.url
       }
     } 
 }
@@ -55,7 +54,7 @@ const ViewForms = (props) => {
     
     return (
         <>
-            <MerchantNavBar prevPageUrl={props.pageUrl} />
+            <MerchantNavBar />
             <ToastContainer />
             <div className="container">
               <h1>Completed WhCertificate </h1>

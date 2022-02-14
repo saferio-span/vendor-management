@@ -83,7 +83,7 @@ const WebHook = (props) => {
 
     return (
         <>
-            <MerchantNavBar prevPageUrl={props.pageUrl} />
+            <MerchantNavBar />
             <div className="container">
                 <ul className="nav nav-tabs my-2">
                     <li className="nav-item">

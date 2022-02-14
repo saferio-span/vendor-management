@@ -28,8 +28,6 @@ const VendorProfile = () => {
     const [payeeRef,setPayeeRef] = useState('')
     const [envName,setEnvName] = useState('')
     const router = useRouter()
-    const [backUrl,setbackUrl] = useState(router.query.backUrl)
-    
 
     useEffect(()=>{
         if(user_details)
@@ -49,20 +47,6 @@ const VendorProfile = () => {
             setPayeeRef(data.payeeRef)
         }
         setEnvName(localStorage.getItem("env"))
-        if(backUrl != "")
-        {
-            if(backUrl.includes("/_next/data/development"))
-            {
-                // console.log("Includes True")
-                setbackUrl(backUrl.split('/_next/data/development').join(''))
-            }
-
-            if(backUrl.includes(".json"))
-            {
-                // console.log("Includes Json True")
-                setbackUrl(backUrl.split('.json').join(''))
-            }
-        }
         //eslint-disable-next-line
     },[user_details])
 
@@ -192,17 +176,16 @@ const VendorProfile = () => {
         <>
             <VendorNavbar prevPageUrl="" />
             <ToastContainer />
-            <div className="row">
-                <div className="col-4 offset-4">
-                    <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
-                </div>
-                <div className="col-4 d-flex justify-content-center align-items-end">
-                    <Link href={`${backUrl}`}>
-                        <a className="btn btn-danger my-2 mx-2 float-end"><i className="bi bi-arrow-left-circle"></i> Back</a>
-                    </Link>
-                </div>
-            </div>
+            
             <div className="container bg-light my-3">
+                <div className="row">
+                    <div className="col-4 offset-4">
+                        <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
+                    </div>
+                    <div className="col-4 text-end">
+                        <button className="btn btn-danger my-2 mx-2" onClick={()=>router.back()}><i className="bi bi-arrow-left-circle"></i> Back</button>
+                    </div>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="row">
                         <p className="my-2" >Payee Ref : <b className="text-primary">{payeeRef}</b></p>

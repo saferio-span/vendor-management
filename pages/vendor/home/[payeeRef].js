@@ -47,7 +47,6 @@ export const getServerSideProps = async (context)=>{
         transactions,
         record,
         merchant,
-        pageUrl:req.url
       }
     }
 }
@@ -271,7 +270,7 @@ export default function Home(props) {
 
     return (
         <>
-            <VendorNavbar prevPageUrl={props.pageUrl}  />
+            <VendorNavbar />
             <ToastContainer />
             <div className="row my-5 mx-2">
                 <div className="col-3">
@@ -349,7 +348,7 @@ export default function Home(props) {
                 </table>
             </div>
             <div className="row">
-                <div className="col offset-s4">
+                <div className="col offset-s4 px-0">
                     <ReactPaginate
                         previousLabel={"<"}
                         nextLabel={">"}

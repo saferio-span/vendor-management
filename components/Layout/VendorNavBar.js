@@ -11,12 +11,6 @@ const VendorNavbar = (props) => {
     const [payeeRef,setPayeeRef] = useState();
     const [pdfUrl,setPdfUrl] = useState(null);
     const [envName,setEnvName]=useState()
-    let backUrl = props.prevPageUrl
-
-    if(backUrl.indexOf("/_next/data/development") !== -1)
-    {
-        backUrl.replace("/_next/data/development", '')
-    }
 
     const fetchdata = async ()=>{
         var id = localStorage.getItem('id')
@@ -130,7 +124,6 @@ const VendorNavbar = (props) => {
                     <Link href={{ 
                         pathname: `/vendor/profile`, 
                         query: { 
-                            backUrl:backUrl,
                             envName:envName
                         }
                     }} >

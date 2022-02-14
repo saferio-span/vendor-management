@@ -7,18 +7,12 @@ import axios from 'axios';
 // import { credentials } from '../../config/variables';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const MerchantNavBar = (props) => {
+const MerchantNavBar = () => {
     
     const [payerRef,setPayerRef]=useState()
     const [businessId,setBusinessId]=useState()
     const [{ user_details,environment,variation }, dispatch] = useUserValue();
     const [envName,setEnvName]=useState()
-    let backUrl = props.prevPageUrl
-
-    if(backUrl.indexOf("/_next/data/development") !== -1)
-    {
-        backUrl.replace("/_next/data/development", '')
-    }
     
 
     const fetchdata = async ()=>{
@@ -163,7 +157,6 @@ const MerchantNavBar = (props) => {
                                 { 
                                     pathname: `/merchant/profile`, 
                                     query: { 
-                                        backUrl:backUrl,
                                         envName:envName
                                     }
                                 }

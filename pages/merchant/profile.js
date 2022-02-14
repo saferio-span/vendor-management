@@ -15,7 +15,6 @@ const MerchantProfile = () => {
     const [businessId,setBusinessID] = useState()
     const [payerRef,setPayerRef] = useState('')
     const router = useRouter()
-    const [backUrl,setbackUrl] = useState(router.query.backUrl)
     // console.log(backUrl)
     const [values, setValues] = useState({
 		businessName:'',
@@ -54,21 +53,6 @@ const MerchantProfile = () => {
             });
             setPayerRef(data.payerRef)
             setBusinessID(data.businessID)
-        }
-
-        if(backUrl != "")
-        {
-            if(backUrl.includes("/_next/data/development"))
-            {
-                // console.log("Includes True")
-                setbackUrl(backUrl.split('/_next/data/development').join(''))
-            }
-
-            if(backUrl.includes(".json"))
-            {
-                // console.log("Includes Json True")
-                setbackUrl(backUrl.split('.json').join(''))
-            }
         }
         //eslint-disable-next-line
     },[user_details])
@@ -207,9 +191,7 @@ const MerchantProfile = () => {
                         <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
                     </div>
                     <div className="col-4 text-end">
-                        <Link href={`${backUrl}`}>
-                            <a className="btn btn-danger my-2 mx-2"><i className="bi bi-arrow-left-circle"></i> Back</a>
-                        </Link>
+                        <button className="btn btn-danger my-2 mx-2" onClick={()=>router.back()}><i className="bi bi-arrow-left-circle"></i> Back</button>
                     </div>
                 </div>
                 <form onSubmit={handleSubmit}>
