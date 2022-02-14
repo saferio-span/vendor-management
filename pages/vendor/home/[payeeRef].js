@@ -46,7 +46,8 @@ export const getServerSideProps = async (context)=>{
       props:{
         transactions,
         record,
-        merchant
+        merchant,
+        pageUrl:req.url
       }
     }
 }
@@ -270,7 +271,7 @@ export default function Home(props) {
 
     return (
         <>
-            <VendorNavbar />
+            <VendorNavbar prevPageUrl={props.pageUrl}  />
             <ToastContainer />
             <div className="row my-5 mx-2">
                 <div className="col-3">

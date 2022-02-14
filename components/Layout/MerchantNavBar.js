@@ -7,12 +7,18 @@ import axios from 'axios';
 // import { credentials } from '../../config/variables';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const MerchantNavBar = () => {
+const MerchantNavBar = (props) => {
     
     const [payerRef,setPayerRef]=useState()
     const [businessId,setBusinessId]=useState()
     const [{ user_details,environment,variation }, dispatch] = useUserValue();
     const [envName,setEnvName]=useState()
+    let backUrl = props.prevPageUrl
+
+    if(backUrl.indexOf("/_next/data/development") !== -1)
+    {
+        backUrl.replace("/_next/data/development", '')
+    }
     
 
     const fetchdata = async ()=>{
@@ -153,7 +159,15 @@ const MerchantNavBar = () => {
                     </ul>
 
                     <span className="text-light">Environment : {envName}</span>
-                    <Link href='/merchant/profile'>
+                    <Link href={
+                                { 
+                                    pathname: `/merchant/profile`, 
+                                    query: { 
+                                        backUrl:backUrl,
+                                        envName:envName
+                                    }
+                                }
+                            }>
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>
                     </Link>
                     {/* <button className="btn btn-outline-primary my-2 mx-2 float-end" data-bs-toggle="modal" data-bs-target="#merchantProfileModal" ><i className="bi bi-person-circle"></i> Profile</button> */}

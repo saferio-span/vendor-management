@@ -51,7 +51,8 @@ export const getServerSideProps = async (context)=>{
         affiliates,
         records,
         pdfUrls,
-        origin
+        origin,
+        pageUrl:req.url
        }
     }
 }
@@ -221,7 +222,7 @@ const Records1099Nec = (props) => {
     }
     return (
         <>
-            <MerchantNavBar />
+            <MerchantNavBar prevPageUrl={props.pageUrl} />
             <ToastContainer />
             <div className="row my-5 mx-2">
                 <div className="col-10">

@@ -40,7 +40,8 @@ export const getServerSideProps = async (context)=>{
           webHook,
           webHook1099,
           webHookPdf,
-          webHookBusiness
+          webHookBusiness,
+          pageUrl:req.url
         }
     }
 }
@@ -82,7 +83,7 @@ const WebHook = (props) => {
 
     return (
         <>
-            <MerchantNavBar />
+            <MerchantNavBar prevPageUrl={props.pageUrl} />
             <div className="container">
                 <ul className="nav nav-tabs my-2">
                     <li className="nav-item">

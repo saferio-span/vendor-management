@@ -5,6 +5,8 @@ import axios from 'axios'
 import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
 import MerchantNavBar from "../../components/Layout/MerchantNavBar"
+import Link from "next/link";
+import { useRouter } from 'next/router'
 
 const MerchantProfile = () => {
     var options = []
@@ -12,6 +14,9 @@ const MerchantProfile = () => {
     const [loading,setLoading]=useState(false)
     const [businessId,setBusinessID] = useState()
     const [payerRef,setPayerRef] = useState('')
+    const router = useRouter()
+    const [backUrl,setbackUrl] = useState(router.query.backUrl)
+    // console.log(backUrl)
     const [values, setValues] = useState({
 		businessName:'',
         ein:'',
@@ -50,6 +55,21 @@ const MerchantProfile = () => {
             setPayerRef(data.payerRef)
             setBusinessID(data.businessID)
         }
+
+        if(backUrl != "")
+        {
+            if(backUrl.includes("/_next/data/development"))
+            {
+                // console.log("Includes True")
+                setbackUrl(backUrl.split('/_next/data/development').join(''))
+            }
+
+            if(backUrl.includes(".json"))
+            {
+                // console.log("Includes Json True")
+                setbackUrl(backUrl.split('.json').join(''))
+            }
+        }
         //eslint-disable-next-line
     },[user_details])
 
@@ -62,6 +82,18 @@ const MerchantProfile = () => {
             toast.error("Please fill in all fields")
             setLoading(false)
             return false
+        }
+        else
+        {
+            if(values.zip.length < 9)
+            {
+                if(values.zip.length != 5)
+                {
+                    toast.error("Enter valid zipcode (5 or 9 digit)")
+                    setLoading(false)
+                    return false
+                }
+            }
         }
 
         const res = await axios.post(`/api/merchant/updateMerchant`,{
@@ -127,7 +159,17 @@ const MerchantProfile = () => {
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
-		setValues({ ...values, [name]: value });
+        if(name == "zip")
+        {
+            if(value.length <= 9)
+            {
+                setValues({ ...values, [name]: value });
+            }
+        }
+        else
+        {
+            setValues({ ...values, [name]: value });
+        }
 	};
 
     // const handlePasswordChange = (e) => {
@@ -157,10 +199,19 @@ const MerchantProfile = () => {
 
     return (
         <>
-            <MerchantNavBar />
-            <ToastContainer />
-            <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
+            <MerchantNavBar prevPageUrl="" />
+            <ToastContainer />            
             <div className="container bg-light my-3">
+                <div className="row">
+                    <div className="col-4 offset-4">
+                        <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
+                    </div>
+                    <div className="col-4 text-end">
+                        <Link href={`${backUrl}`}>
+                            <a className="btn btn-danger my-2 mx-2"><i className="bi bi-arrow-left-circle"></i> Back</a>
+                        </Link>
+                    </div>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="row">
                         <div className="col-6">

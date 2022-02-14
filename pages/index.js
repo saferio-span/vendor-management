@@ -86,6 +86,7 @@ const Home=(props)=>{
   var variations = [
     {value: "t0-1", label: "T0-1"},
     {value: "r0-1", label: "R0-1"},
+    // {value: "g0-1", label: "G0-1"},
     {value: "all", label: "All"}
   ]
   
@@ -224,6 +225,10 @@ const Home=(props)=>{
     }
   }
 
+  const handleAdminLogin = ()=>{
+
+  }
+
   useEffect(() => {
 
     if(session !== null)
@@ -333,29 +338,57 @@ const Home=(props)=>{
               </div>
             </div>
             <hr />
-              <>
-                <div className="row my-5">
-                  <div className="col-2 offset-4">
-                    {/* <Link href='/merchant/login'> */}
-                        <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Payer Login</a>
-                    {/* </Link> */}
-                    
-                  </div>
-                  <div className="col-2">
-                    {/* <Link href='/vendor/login'> */}
-                        <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
-                    {/* </Link> */}
-                  </div>
-                  {/* <div className="col-2">
-                    
-                  </div> */}
-                  {/* <div className="col-3 offset-1">
-                    <Link href='/webHook'>
-                        <a className="btn btn-warning mx-5" onClick={handleWebhook} >Webhook</a>
-                    </Link>
-                  </div> */}
+            {
+              variation != "g0-1" && <>
+              <div className="row my-5">
+                <div className="col-2 offset-4">
+                  {/* <Link href='/merchant/login'> */}
+                      <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Payer Login</a>
+                  {/* </Link> */}
+                  
                 </div>
-              </>
+                <div className="col-2">
+                  {/* <Link href='/vendor/login'> */}
+                      <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
+                  {/* </Link> */}
+                </div>
+                {/* <div className="col-2">
+                  
+                </div> */}
+                {/* <div className="col-3 offset-1">
+                  <Link href='/webHook'>
+                      <a className="btn btn-warning mx-5" onClick={handleWebhook} >Webhook</a>
+                  </Link>
+                </div> */}
+              </div>
+            </>
+            }
+
+            {
+              variation == "g0-1" && <>
+              <div className="row my-5">
+                <div className="col-4 d-flex justify-content-center">
+                  {/* <Link href='/merchant/login'> */}
+                      <a className="btn btn-primary mx-5" onClick={handleMerchantLogin}>Payer Login</a>
+                  {/* </Link> */}
+                  
+                </div>
+                <div className="col-4 d-flex justify-content-center">
+                  {/* <Link href='/vendor/login'> */}
+                    <a className="btn btn-success mx-5" onClick={handleAdminLogin}>G-Admin Login</a>
+                  {/* </Link> */}
+                </div>
+                {/* <div className="col-2">
+                  
+                </div> */}
+                <div className="col-4 d-flex justify-content-center">
+                  {/* <Link href='/webHook'> */}
+                    <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
+                  {/* </Link> */}
+                </div>
+              </div></>
+            }
+              
 
               {showNote && 
                     <div className="container">

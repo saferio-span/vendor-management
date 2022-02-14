@@ -34,6 +34,7 @@ export const getServerSideProps = async (context)=>{
 const SignUp = (props) => {
 
     var options = []
+    const variation = localStorage.getItem("variant")
     const [{user_details,environment},dispatch] = useUserValue();
     // console.log(environment)
     const [random,setRandom]=useState(Math.floor((Math.random() * 1000000000) + 1))

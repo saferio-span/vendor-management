@@ -14,9 +14,9 @@ import { actionTypes } from "../../contexts/userReducer"
 import { useRouter } from 'next/router'
 
 export const getServerSideProps = async (context)=>{
+  
   const { req,query } = context;
   const { origin } = absoluteUrl(req)
-
   const merchantRes = await axios.post(`${origin}/api/merchant/getByPayerRef`,{
     payerRef: query.payerRef,
     envName: query.envName,
@@ -44,7 +44,8 @@ export const getServerSideProps = async (context)=>{
   return{
     props:{ 
       affiliates,
-      transactions
+      transactions,
+      pageUrl:req.url
     }
   }
 }
@@ -180,7 +181,7 @@ export default function Home(props) {
 
   return (
     <>
-        <MerchantNavBar />
+        <MerchantNavBar prevPageUrl={props.pageUrl} />
         <ToastContainer />
         <div className="row my-5 mx-2">
           <div className="col-9">

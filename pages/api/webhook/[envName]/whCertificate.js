@@ -12,6 +12,13 @@ export default async function handler(req,res)
 		...req.body,
         environment:envName
 	});
+
+    console.log("Wh Store Header")
+
+	console.log(req.headers);
+
+	console.log("Wh Store Header End")
+
 	console.log("Wh Store Body")
 
 	console.log(req.body);

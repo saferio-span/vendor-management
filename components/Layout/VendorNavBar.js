@@ -6,12 +6,17 @@ import Link from "next/link";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from 'axios';
 
-const VendorNavbar = () => {
+const VendorNavbar = (props) => {
     const [{ user_details,environment }, dispatch] = useUserValue();
     const [payeeRef,setPayeeRef] = useState();
     const [pdfUrl,setPdfUrl] = useState(null);
     const [envName,setEnvName]=useState()
-    
+    let backUrl = props.prevPageUrl
+
+    if(backUrl.indexOf("/_next/data/development") !== -1)
+    {
+        backUrl.replace("/_next/data/development", '')
+    }
 
     const fetchdata = async ()=>{
         var id = localStorage.getItem('id')
@@ -125,7 +130,8 @@ const VendorNavbar = () => {
                     <Link href={{ 
                         pathname: `/vendor/profile`, 
                         query: { 
-                            envName: envName
+                            backUrl:backUrl,
+                            envName:envName
                         }
                     }} >
                         <a className="btn btn-outline-primary my-2 mx-2 float-end"><i className="bi bi-person-circle"></i> Profile</a>

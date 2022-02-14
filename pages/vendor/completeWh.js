@@ -51,7 +51,8 @@ export const getServerSideProps = async (context)=>{
 
     return {
         props : {
-            whdata
+            whdata,
+            pageUrl:req.url
         }
       }
 
@@ -102,7 +103,7 @@ const CompleteWh = ({whdata}) => {
 
     return (
         <>
-            <VendorNavbar />
+            <VendorNavbar prevPageUrl={props.pageUrl} />
             <div className="container">
                 <div className="row">
                     <div className="col-11"><h1>Complete your Wh</h1></div>

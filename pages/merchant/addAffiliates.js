@@ -8,8 +8,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useUserValue } from '../../contexts/UserContext'
 import MerchantNavBar from "../../components/Layout/MerchantNavBar"
 
+export const getServerSideProps = async (context)=>{
+    const { req } = context;
+  
+    return{
+      props:{
+        pageUrl:req.url
+      }
+    } 
+}
 
-const AddAffiliates = () => {
+const AddAffiliates = (props) => {
 
     var options = []
     const [{ user_details,environment }, dispatch] = useUserValue();
@@ -186,7 +195,7 @@ const AddAffiliates = () => {
 
     return (
         <>
-            <MerchantNavBar />
+            <MerchantNavBar prevPageUrl={props.pageUrl} />
             <h1 className="d-flex justify-content-center align-items-center my-4 ">Add Payees</h1>
             <div className="container bg-light">
                 <br />

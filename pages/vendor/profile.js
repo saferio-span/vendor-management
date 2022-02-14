@@ -6,8 +6,9 @@ import { useUserValue } from '../../contexts/UserContext'
 import { toast,ToastContainer } from "react-toastify"
 import VendorNavbar from '../../components/Layout/VendorNavBar'
 import Link from "next/link";
+import { useRouter } from 'next/router'
 
-const MerchantProfile = () => {
+const VendorProfile = () => {
     var options = []
     const [{ user_details,environment}, dispatch] = useUserValue();
     const [loading,setLoading]=useState(false)
@@ -26,6 +27,9 @@ const MerchantProfile = () => {
 	});     
     const [payeeRef,setPayeeRef] = useState('')
     const [envName,setEnvName] = useState('')
+    const router = useRouter()
+    const [backUrl,setbackUrl] = useState(router.query.backUrl)
+    
 
     useEffect(()=>{
         if(user_details)
@@ -45,6 +49,20 @@ const MerchantProfile = () => {
             setPayeeRef(data.payeeRef)
         }
         setEnvName(localStorage.getItem("env"))
+        if(backUrl != "")
+        {
+            if(backUrl.includes("/_next/data/development"))
+            {
+                // console.log("Includes True")
+                setbackUrl(backUrl.split('/_next/data/development').join(''))
+            }
+
+            if(backUrl.includes(".json"))
+            {
+                // console.log("Includes Json True")
+                setbackUrl(backUrl.split('.json').join(''))
+            }
+        }
         //eslint-disable-next-line
     },[user_details])
 
@@ -57,6 +75,18 @@ const MerchantProfile = () => {
             toast.error("Please fill in all fields")
             setLoading(false)
             return false
+        }
+        else
+        {
+            if(values.zip.length < 9)
+            {
+                if(values.zip.length != 5)
+                {
+                    toast.error("Enter valid zipcode (5 or 9 digit)")
+                    setLoading(false)
+                    return false
+                }
+            }
         }
 
         const res = await axios.post(`/api/affiliate/updateVendor`,{
@@ -120,7 +150,17 @@ const MerchantProfile = () => {
 
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
-		setValues({ ...values, [name]: value });
+		if(name == "zip")
+        {
+            if(value.length <= 9)
+            {
+                setValues({ ...values, [name]: value });
+            }
+        }
+        else
+        {
+            setValues({ ...values, [name]: value });
+        }
 	};
 
     // const handlePasswordChange = (e) => {
@@ -150,9 +190,18 @@ const MerchantProfile = () => {
 
     return (
         <>
-            <VendorNavbar />
+            <VendorNavbar prevPageUrl="" />
             <ToastContainer />
-            <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
+            <div className="row">
+                <div className="col-4 offset-4">
+                    <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
+                </div>
+                <div className="col-4 d-flex justify-content-center align-items-end">
+                    <Link href={`${backUrl}`}>
+                        <a className="btn btn-danger my-2 mx-2 float-end"><i className="bi bi-arrow-left-circle"></i> Back</a>
+                    </Link>
+                </div>
+            </div>
             <div className="container bg-light my-3">
                 <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -321,4 +370,4 @@ const MerchantProfile = () => {
     )
 }
 
-export default MerchantProfile
+export default VendorProfile
