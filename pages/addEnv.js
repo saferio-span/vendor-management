@@ -242,8 +242,8 @@ const AddEnv = (props) => {
             }
             if(e.value === "sprint")
             {
-                setValues({ ...values, envType: e.value, authUrl: "http://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"});
-                setValidateValues({ ...validateValues, envType: e.value, authUrl: "http://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"})
+                setValues({ ...values, envType: e.value, authUrl: "https://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"})
             }
         }
         else
