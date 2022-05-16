@@ -79,7 +79,8 @@ const AddEnv = (props) => {
         pdfKey:'',
         awsSecretKey:'',
         awsAccessKey:'',
-        envName:showEnvName
+        envName:showEnvName,
+        version:''
 	});
 
     const [validateValues, setValidateValues] = useState({
@@ -91,7 +92,8 @@ const AddEnv = (props) => {
         authUrl:'',
         apiUrl:'',
         pdfKey:'',
-        envName:showEnvName
+        envName:showEnvName,
+        version:''
 	});
 
     var options = [
@@ -104,6 +106,7 @@ const AddEnv = (props) => {
     const handleSubmit =async (e)=>{
         e.preventDefault()
         setLoading(true)
+        console.log(`Values Got`,values)
         const hasEmptyField = Object.values(validateValues).some((element)=>element==='')
         if(hasEmptyField) 
         {
@@ -124,6 +127,8 @@ const AddEnv = (props) => {
         //     awsSecretKey:values.awsSecretKey,
         //     awsAccessKey:values.awsAccessKey,
         // })
+        const updatedApiUrl = `${values.apiUrl}${values.version}`;
+        console.log(`updatedApiUrl`,updatedApiUrl);
 
         const res = await axios.post(`/api/addEnv`,{
            name:showEnvName,
@@ -132,12 +137,26 @@ const AddEnv = (props) => {
            userToken:values.userToken.trim(),
            environment:values.envType.trim(),
            authUrl:values.authUrl.trim(),
-           apiUrl:values.apiUrl.trim(),
+           apiUrl:updatedApiUrl.trim(),
            pdfKey:values.pdfKey.trim(),
            awsSecretKey:values.awsSecretKey.trim(),
            awsAccessKey:values.awsAccessKey.trim(),
            email:session.user.email.trim()
         })
+
+        // console.log(`Res`, {
+        //     name:showEnvName,
+        //     clientId:values.clientId.trim(),
+        //     clientSecret:values.clientSecret.trim(),
+        //     userToken:values.userToken.trim(),
+        //     environment:values.envType.trim(),
+        //     authUrl:values.authUrl.trim(),
+        //     apiUrl:updatedApiUrl.trim(),
+        //     pdfKey:values.pdfKey.trim(),
+        //     awsSecretKey:values.awsSecretKey.trim(),
+        //     awsAccessKey:values.awsAccessKey.trim(),
+        //     email:session.user.email.trim()
+        //  })
 
         const envrn = await res.data
         // console.log(`Created Env`)
@@ -155,7 +174,8 @@ const AddEnv = (props) => {
                 pdfKey:'',
                 awsSecretKey:'',
                 awsAccessKey:'',
-                envName:''
+                envName:'',
+                version:''
             });
             setValidateValues({
                 name:'',
@@ -166,7 +186,8 @@ const AddEnv = (props) => {
                 authUrl:'',
                 apiUrl:'',
                 pdfKey:'',
-                envName:''
+                envName:'',
+                version:''
             });
             toast("Environment added successfully")
             setLoading(false)
@@ -209,6 +230,7 @@ const AddEnv = (props) => {
     const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setValues({ ...values, [name]: value });
+        console.log( name, value)
         setShowNote(false)
         if(name != "awsSecretKey" && name != "awsAccessKey")
         {
@@ -226,24 +248,24 @@ const AddEnv = (props) => {
 
             if(e.value === "sandbox")
             {
-                setValues({ ...values, envType: e.value, authUrl: "https://testoauth.expressauth.net/v2/tbsauth", apiUrl:"https://testapi.taxbandits.com/v1.6.1"});
-                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://testoauth.expressauth.net/v2/tbsauth", apiUrl:"https://testapi.taxbandits.com/v1.6.1"})
+                setValues({ ...values, envType: e.value, authUrl: "https://testoauth.expressauth.net/v2/tbsauth", apiUrl:`https://testapi.taxbandits.com/`});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://testoauth.expressauth.net/v2/tbsauth", apiUrl:`https://testapi.taxbandits.com/`})
             }
 
             if(e.value === "staging")
             {
-                setValues({ ...values, envType: e.value, authUrl: "https://oauth.expressauth.net/v2/tbsauth", apiUrl:"https://api.taxbandits.com/v1.6.1"});
-                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://oauth.expressauth.net/v2/tbsauth", apiUrl:"https://api.taxbandits.com/v1.6.1"})
+                setValues({ ...values, envType: e.value, authUrl: "https://oauth.expressauth.net/v2/tbsauth", apiUrl:`https://api.taxbandits.com/`});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://oauth.expressauth.net/v2/tbsauth", apiUrl:`https://api.taxbandits.com/`})
             }
             if(e.value === "uat")
             {
-                setValues({ ...values, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:"https://api.tbsuat.com/v1.6.1"});
-                setValidateValues({ ...validateValues, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:"https://api.tbsuat.com/v1.6.1"})
+                setValues({ ...values, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:`https://api.tbsuat.com/`});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "http://oauth.tbsuat.com/v2/tbsauth", apiUrl:`https://api.tbsuat.com/`})
             }
             if(e.value === "sprint")
             {
-                setValues({ ...values, envType: e.value, authUrl: "https://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"});
-                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://oauth.taxvari.com/v2/tbsauth", apiUrl:"https://api.taxvari.com/v1.6.1"})
+                setValues({ ...values, envType: e.value, authUrl: "https://oauth.taxvari.com/v2/tbsauth", apiUrl:`https://api.taxvari.com/`});
+                setValidateValues({ ...validateValues, envType: e.value, authUrl: "https://oauth.taxvari.com/v2/tbsauth", apiUrl:`https://api.taxvari.com/`})
             }
         }
         else
@@ -277,17 +299,25 @@ const AddEnv = (props) => {
             
             <div className="container bg-light my-3 py-3">
                 <form onSubmit={handleSubmit}>
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-4 offset-4">
                             <div className="form-group my-2">
                                 <label htmlFor="ein">Email</label>
                                 <input type="text" className="form-control" id="email" placeholder="Email" value={session != null ? session.user.email : ""} disabled />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="row">
                         <div className="col-6">
                             <div className="row">
+                                <div className="row">
+                                    <div className="col">
+                                        <div className="form-group my-2">
+                                            <label htmlFor="ein">Email</label>
+                                            <input type="text" className="form-control" id="email" placeholder="Email" value={session != null ? session.user.email : ""} disabled />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="businessName">Environment Type<span className="text-danger font-weight-bold">*</span></label>
@@ -380,8 +410,24 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="form-group my-2">
+                                        <label htmlFor="version">Version</label>
+                                        <input type="text" className="form-control" id="version" name="version" value={values.version} placeholder="Version" onChange={handleInputChange} />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    {/* <div className="row">
+                        <div className="col-4 offset-4">
+                            <div className="form-group my-2">
+                                <label htmlFor="version">Version</label>
+                                <input type="text" className="form-control" id="version" name="version" value={values.version} placeholder="Version" onChange={handleInputChange} />
+                            </div>
+                        </div>
+                    </div> */}
                     <br />
                     <div className="row">
                         <div className="offset-4 col-4 mb-3">
