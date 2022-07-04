@@ -34,19 +34,19 @@ export default async function handler(req,res)
 	// const authURL = process.env.authUrl
 	var accessToken = null
 
-	// console.log(`Auth URL : ${authUrl}`)
+	console.log(`Auth URL : ${authUrl}`)
 
 	//call the auth url using axios
 	try {
 		const res = await axios.get(authUrl, authOptions);
 		accessToken = res.data.AccessToken;
 	} catch (err) {
-        console.log(`Access Token error`)
+        	console.log(`Access Token error`)
 		console.log(err);
-        accessToken = null
+        	accessToken = null
 	}
-
-    const endPoint = `${apiUrl}/Business/Create`;
+	console.log(`Api URL : ${apiUrl}`)
+   	const endPoint = `${apiUrl}/Business/Create`;
 	const {
 		businessName,
 		ein,
@@ -79,7 +79,7 @@ export default async function handler(req,res)
 		},
 	};
 
-    const options = {
+    	const options = {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 			'Content-Type': 'application/json',
@@ -94,8 +94,9 @@ export default async function handler(req,res)
 
 	} catch (err) {
 		success = false
-		console.log(err.response.data.Errors)
+		console.log(err.response)
 		res.status(202).send(err.response.data.Errors);
+		return false;
 		// res.status(202).send(err);
 	}
 
@@ -126,7 +127,11 @@ export default async function handler(req,res)
 			}
 		});
 	}
-
+	else
+	{
+		console.log(`Business Creation fail`);
+		res.status(401).send(`Business Creation fail`);
+	}
     // console.log(`Pr${random}`)
     // console.log(`Sign Up`)
     // console.log(merchant)
