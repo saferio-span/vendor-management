@@ -195,11 +195,29 @@ const SignUp = () => {
 
     return (
         <>
-            <h1 className="d-flex justify-content-center align-items-center my-5 "> Sign Up</h1>
+
+            
+
             <div className="container bg-light">
+                <div className="row">
+                    <div className="col-4 offset-4 d-flex justify-content-center">
+                        <h1 className="d-flex justify-content-center align-items-center my-5 "> Sign Up</h1>
+                    </div>
+                    <div className="col-1 offset-3 mt-5">
+                    <Link href={{ pathname: '/merchant/login', query: { envName: envName}}}>
+                        <a className="btn btn-danger">Back</a>
+                    </Link>
+                    </div>
+                </div>
+                
+                
                 <br />
                 <ToastContainer />
-                <h3>Business Details</h3>
+                
+                    <h3 className='justify-content-center'>Business Details</h3>
+                    
+                
+                
                 <form onSubmit={handleSubmit} autoComplete="off">
                     <div className="row">
                         <div className="col-6">
