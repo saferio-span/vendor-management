@@ -66,8 +66,11 @@ const AddEnv = (props) => {
     const session = props.session
     const credentials = props.credentials
     const envName = credentials ? credentials.name : ""
-    // console.log(credentials)
+    // console.log(credentials)\
+    const versionRes = credentials.apiUrl.split('/');
+    const version = versionRes[versionRes.length-1]
     const [values, setValues] = useState({
+        // name:credentials ? credentials.name : "",
         clientId:credentials ? credentials.clientId : "",
         clientSecret:credentials ? credentials.clientSecret : "",
         userToken:credentials ? credentials.userToken : "",
@@ -76,15 +79,19 @@ const AddEnv = (props) => {
         pdfKey:credentials ? credentials.pdfKey : "",
         awsSecretKey:credentials ? credentials.awsSecretKey : "",
         awsAccessKey:credentials ? credentials.awsAccessKey : "",
+        version: version
+
 	});
 
     const [validateValues, setValidateValues] = useState({
+        // name:credentials ? credentials.name : "",
         clientId:credentials ? credentials.clientId : "",
         clientSecret:credentials ? credentials.clientSecret : "",
         userToken:credentials ? credentials.userToken : "",
         // authUrl:credentials ? credentials.authUrl : "",
         // apiUrl:credentials ? credentials.apiUrl : "",
-        pdfKey:credentials ? credentials.pdfKey : ""
+        pdfKey:credentials ? credentials.pdfKey : "",
+        version:credentials ? credentials.version : "",
 	});
     const [loading,setLoading] = useState(false)
 
@@ -116,6 +123,7 @@ const AddEnv = (props) => {
         const res = await axios.post(`/api/updateEnv`,{
             id: credentials._id,
             update:{
+                // name:values.name.trim(),
                 clientId:values.clientId.trim(),
                 clientSecret:values.clientSecret.trim(),
                 userToken:values.userToken.trim(),
@@ -124,6 +132,7 @@ const AddEnv = (props) => {
                 pdfKey:values.pdfKey.trim(),
                 awsSecretKey:values.awsSecretKey.trim(),
                 awsAccessKey:values.awsAccessKey.trim(),
+                version:values.version.trim()
             }
         })
 
@@ -203,6 +212,14 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
+                                        <label htmlFor="name">Environment name</label>
+                                        <input type="text" className="form-control" id="name" name="name" placeholder="Name" value={envName} disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="form-group my-2">
                                         <label htmlFor="ein">Client ID<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="clientId" placeholder="Client Id" value={values.clientId} name="clientId" onChange={handleInputChange} />
                                     </div>
@@ -234,14 +251,14 @@ const AddEnv = (props) => {
                             </div>
                         </div>
                         <div className="col-6">
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="name">Environment name</label>
+                                        <label htmlFor="name">Name<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="name" name="name" placeholder="Name" value={envName} disabled />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -271,6 +288,14 @@ const AddEnv = (props) => {
                                     <div className="form-group my-2">
                                         <label htmlFor="awsAccessKey">Aws Access Key </label>
                                         <input type="text" className="form-control" id="awsAccessKey" name="awsAccessKey" value={values.awsAccessKey} placeholder="Aws Access Key" onChange={handleInputChange} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="form-group my-2">
+                                        <label htmlFor="version">Version</label>
+                                        <input type="text" className="form-control" id="version" name="version" value={values.version} placeholder="Version" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
