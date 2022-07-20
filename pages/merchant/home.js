@@ -258,7 +258,7 @@ export default function Home(props) {
                     <tr key={details._id}>
                         <td>{details.name}</td>
                         <td>{details.payeeRef}</td>
-                        <td><i className="bi bi-currency-dollar"></i> {amount}</td>
+                        <td><i className="bi bi-currency-dollar"></i> {amount.toFixed(2)}</td>
                         <td>
                           <Link href={{ pathname: '/merchant/transactions', query: { payerRef:user_details ? user_details.payerRef:"",payeeRef: details.payeeRef,envName: envName } }} >
                             <a className="btn btn-link">{transactionCount}</a>
