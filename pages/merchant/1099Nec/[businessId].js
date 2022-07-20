@@ -90,7 +90,7 @@ const Records1099Nec = (props) => {
     const [loaders,setLoaders] = useState(initalLoaders)
 
     console.log(loaders)
-    // const payerRef = router.query.payerRef
+    const payerRef = router.query.payerRef
 
     const handleBtnClick =async(submissionId,recordId,payeeRef)=>{
         setLoaders({ ...loaders, [`${payeeRef}_get1099`] : true });
@@ -187,17 +187,17 @@ const Records1099Nec = (props) => {
         }
     }
 
-    const handleDistBtnClick = async(props)=>{
+    const handleDistBtnClick = async()=>{
 
         const payeeRef = props.payeeRef
         setLoaders({ ...loaders, [`${payeeRef}_dist`] : true });
         // console.log(user_details)
         const distData = {
-            businessId : user_details.businessID,
-            recordId : props.recordId,
+//             businessId : user_details.businessID,
+//             recordId : props.recordId,
             payeeRef : props.payeeRef,
-            // payerRef : payerRef,
-            logoUrl : `${origin}/yourLogo.png`,
+            payerRef : payerRef,
+//             logoUrl : `${origin}/yourLogo.png`,
             envName: envName
         }
 
@@ -278,11 +278,11 @@ const Records1099Nec = (props) => {
                                     }
                                 })
 
-                                const distProps = {
-                                    submissionId:details.SubmissionId,
-                                    payeeRef:record.PayeeRef,
-                                    recordId:record.RecordId
-                                }
+//                                 const distProps = {
+//                                     submissionId:details.SubmissionId,
+//                                     payeeRef:record.PayeeRef,
+//                                     recordId:record.RecordId
+//                                 }
 
                                 return (
                                 <tr key={details._id}>
@@ -293,7 +293,7 @@ const Records1099Nec = (props) => {
                                         {button != '' ? button : <button className="btn btn-primary mx-1" id={record.PayeeRef} onClick={async() => handleBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef)} disabled = {loaders[`${record.PayeeRef}_get1099`]}>Get 1099 Pdf {loaders[`${record.PayeeRef}_get1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>}
                                         <button className="btn btn-warning mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef,false)} disabled = {loaders[`${record.PayeeRef}_request1099`]}>Request 1099 Pdf {loaders[`${record.PayeeRef}_request1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                         <button className="btn btn-info mx-1" onClick={async() => handleAwsBtnClick(details.SubmissionId,record.RecordId,record.PayeeRef,true)} disabled = {loaders[`${record.PayeeRef}_draft1099`]}>Request Draft Pdf {loaders[`${record.PayeeRef}_draft1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
-                                        <button className="btn btn-success mx-1" onClick={async() => handleDistBtnClick(distProps)} disabled = {loaders[`${record.PayeeRef}_dist`]}>Get Dist 1099 Pdf {loaders[`${record.PayeeRef}_dist`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                        <button className="btn btn-success mx-1" onClick={handleDistBtnClick} disabled = {loaders[`${record.PayeeRef}_dist`]}>Get Dist 1099 Pdf {loaders[`${record.PayeeRef}_dist`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                         {/* <button className="btn btn-info mx-1" key={`${details.RecordId}1099`} onClick={async() => handleDistBtnClick(distProps)} data-bs-toggle="modal" data-bs-target={`#pdf${details.RecordId}`}>Distribution 1099 Pdf</button> */}
                                     </td>
                                 </tr>)
