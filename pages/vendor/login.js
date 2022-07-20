@@ -192,9 +192,7 @@ const Login = (props) => {
                             </h3>
                         </div>
                         <div className="col-2">
-                            <Link href='/'>
-                                <a className="btn btn-warning">Back</a>
-                            </Link>
+                            
                         </div>
                     </div>
 
@@ -228,11 +226,18 @@ const Login = (props) => {
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control my-2" id="password" name="password" placeholder="Password" onChange={handleInputChange} />
                         </div> */}
-                        <button type="submit" className="btn btn-success w-100 my-2 py-3" value="Submit" disabled={loading}>Sign In {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        <div className="d-flex justify-content-between mt-3">
+                            <Link href='/'>
+                                <a className="btn btn-danger">Back</a>
+                            </Link>
+                            <button type="submit" className="btn btn-success" value="Submit" disabled={loading}>Sign In {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        </div>
+                        
                         {/* <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" /> */}
                     </form>
                     <hr />
-                    <span>Don{`'`}t have an account ? -<Link href={
+                    <div className="text-center">
+                        <span>Don{`'`}t have an account ? -<Link href={
                                         {
                                             pathname: `/vendor/signUp`, 
                                             query: { 
@@ -242,6 +247,7 @@ const Login = (props) => {
                                     }>
                         <a className="btn btn-link">Sign Up !</a>
                     </Link></span>
+                    </div>
                 </div>
             </div>
         </>
