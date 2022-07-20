@@ -50,7 +50,7 @@ export default async function handler(req,res)
             payerRef = req.body.FormW8Ben.Requester.PayerRef
         }
 
-        const merchant = await Merchant.find({ payerRef: payerRef })
+        const merchant = await Merchant.findOne({ payerRef: payerRef })
         console.log(`payeeRef`,payeeRef);
         console.log(`affiliate`,affiliate);
         console.log(`merchant`,merchant);
