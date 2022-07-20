@@ -282,11 +282,6 @@ const AddEnv = (props) => {
                 <div className="col-9 offset-1">
                     <h1 className="my-3 mx-3">Add Environment</h1>
                 </div>
-                <div className="col-1">
-                    <Link href='/'>
-                        <a className="btn btn-danger my-4" >Back</a>
-                    </Link>
-                </div>
             </div>
             {/* <div className="row">
                 <div className="col-10">
@@ -336,11 +331,11 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+			    <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="ein">Client ID<span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="text" className="form-control" id="clientId" placeholder="Client Id" value={values.clientId} name="clientId" onChange={handleInputChange} />
+                                        <label htmlFor="city">Client Secret<span className="text-danger font-weight-bold">*</span> </label>
+                                        <input type="text" className="form-control" id="clientSecret" name="clientSecret" value={values.clientSecret} placeholder="Client Secret" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -381,8 +376,8 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="city">Client Secret<span className="text-danger font-weight-bold">*</span> </label>
-                                        <input type="text" className="form-control" id="clientSecret" name="clientSecret" value={values.clientSecret} placeholder="Client Secret" onChange={handleInputChange} />
+                                        <label htmlFor="ein">Client ID<span className="text-danger font-weight-bold">*</span></label>
+                                        <input type="text" className="form-control" id="clientId" placeholder="Client Id" value={values.clientId} name="clientId" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -413,7 +408,7 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="version">Version</label>
+                                        <label htmlFor="version">Version<span className="text-danger font-weight-bold">*</span></label>
                                         <input type="text" className="form-control" id="version" name="version" value={values.version} placeholder="Version" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -430,11 +425,16 @@ const AddEnv = (props) => {
                     </div> */}
                     <br />
                     <div className="row">
-                        <div className="offset-4 col-4 mb-3">
+			<div className="col-4">
+			    <Link href='/'>
+				<a className="btn btn-danger" >Back</a>
+			    </Link>
+			</div>
+                        <div className="col-4 mb-3">
                             {showEnvName && <p>Environment Name - {showEnvName}</p>}
                         </div>
                         <div className="offset-3 col-1 mb-3">
-                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                            <button type="submit" className="btn btn-success float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                             {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
                     </div>

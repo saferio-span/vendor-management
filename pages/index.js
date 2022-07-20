@@ -244,8 +244,6 @@ const Home=(props)=>{
 
   return (
     <div>
-      
-      <main>
         <ToastContainer />
         {
           !showEnvPage && <>
@@ -334,7 +332,7 @@ const Home=(props)=>{
             </div>
             <div className="row">
               <div className="col-12 text-center mt-4">
-                  <p>Didn{`'`}t set your environment? No worries you can do it from here! <Link href='/addEnv'><a>Click me</a></Link></p>
+                  <p>Not having set your environment? It can be done <Link href='/addEnv'><a>right here</a></Link>, so don{`'`}t worry! - Change the content</p>
               </div>
             </div>
             <hr />
@@ -441,7 +439,6 @@ const Home=(props)=>{
           </>
         }
         
-      </main>
     </div>
   )
 }
