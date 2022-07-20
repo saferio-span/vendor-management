@@ -85,7 +85,7 @@ export default async function handler(req,res)
 					IsTINMatching: tin,
 				},
 				Customization: {
-					BusinessLogoUrl:'https://www.spanenterprises.com/Content/Images/span-logo.png',
+					BusinessLogoUrl:'https://www.spanenterprises.com/Content/Images/span.png',
 				},
 				RedirectUrls: {
 					ReturnUrl:successUrl,
