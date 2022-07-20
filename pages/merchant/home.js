@@ -187,9 +187,11 @@ export default function Home(props) {
             <h4>Payee List</h4>
           </div>
           <div className="col-3 text-right d-flex flex-row-reverse">
+          {variation != "r0-1" &&
             <Link href={{ pathname: '/merchant/addAffiliates', query: { envName: envName } }} >
                 <a className="btn btn-primary text-right mr-1"><i className="bi bi-person-plus-fill"></i> Add Payees</a>
             </Link>
+          }
             <button className="btn btn-secondary mx-1" onClick={handleRefresh}>Refresh <i className="bi bi-arrow-clockwise"></i></button>
           </div>
         </div>
@@ -294,7 +296,7 @@ export default function Home(props) {
                                     }
                                     setLoaders({ ...loaders, [loaderName] : false });
                                     
-                                  }} disabled={loaders[`${details.payeeRef}_1099`]}><i className="bi bi-eye"></i> 1099-NEC {loaders[`${details.payeeRef}_1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                  }} disabled={loaders[`${details.payeeRef}_1099`]}><i className="bi bi-eye"></i> Merchant Portal {loaders[`${details.payeeRef}_1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                 
                               </>}
                             </div>
