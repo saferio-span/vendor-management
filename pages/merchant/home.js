@@ -228,7 +228,7 @@ export default function Home(props) {
                   <th>Payee Ref</th>
                   <th>Total Money</th>
                   <th>No of Transactions</th>
-                  <th>W9 Status</th>
+                  <th>W9/W8BEN Status</th>
                   <th>TIN matching Status</th>
                   <th>Action</th>
                 </tr>
@@ -256,7 +256,6 @@ export default function Home(props) {
                         }
                     })
                     return (
-                    <>
                     <tr key={details._id}>
                         <td>{details.name}</td>
                         <td>{details.payeeRef}</td>
@@ -271,7 +270,7 @@ export default function Home(props) {
                           <div className="row">
                             <div className="col p-0">
                               {details.w9Status !== "-" ? <>
-                                <button className="btn btn-sm btn-warning mx-1" onClick={()=>handleW9Click(details.payeeRef)} disabled={loaders[`${details.payeeRef}_w9`]}><i className="bi bi-file-earmark-pdf"></i> {w9ButtonName} {loaders[`${details.payeeRef}_w9`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button></> : <><button className="btn btn-sm btn-warning mx-1" disabled><i className="bi bi-file-earmark-pdf"></i> W9</button>
+                                <button className="btn btn-sm btn-warning mx-1" onClick={()=>handleW9Click(details.payeeRef)} disabled={loaders[`${details.payeeRef}_w9`]}><i className="bi bi-file-earmark-pdf"></i> {w9ButtonName} {loaders[`${details.payeeRef}_w9`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button></> : <><button className="btn btn-sm btn-warning mx-1" disabled><i className="bi bi-file-earmark-pdf"></i> W9/W8BEN</button>
                               </> 
                               }
                               <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
@@ -303,7 +302,6 @@ export default function Home(props) {
                           </div>
                         </td>
                     </tr>
-                    </>
                     )
                         }
                             
