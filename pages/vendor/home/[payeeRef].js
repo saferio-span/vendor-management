@@ -54,7 +54,7 @@ export const getServerSideProps = async (context)=>{
 export default function Home(props) {
     const transactions = props.transactions
     const businessId = props.merchant.businessId
-    // const payerRef = props.merchant.payerRef
+    const payerRef = props.merchant.payerRef
     const record = props.record
     const router = useRouter()
     const envName = router.query.envName
@@ -185,14 +185,14 @@ export default function Home(props) {
         }
     }
 
-    const handleDistBtnClick = async(props)=>{
+    const handleDistBtnClick = async()=>{
         // console.log(user_details)
         setDistUrlLoading(true)
         const distData = {
-            businessId : businessId,
-            recordId : props.recordId,
+//             businessId : businessId,
+//             recordId : props.recordId,
             payeeRef : user_details.payeeRef,
-            // payerRef : payerRef,
+            payerRef : payerRef,
             envName: envName
         }
 
@@ -295,13 +295,13 @@ export default function Home(props) {
                             return data.Form1099NECRecords.map((formRecord)=>{
                                 if(formRecord.PayeeRef == payeeRef)
                                 {
-                                    const distProps = {
-                                        submissionId:data.SubmissionId,
-                                        payeeRef:formRecord.PayeeRef,
-                                        recordId:formRecord.RecordId
-                                    }
+//                                     const distProps = {
+//                                         submissionId:data.SubmissionId,
+//                                         payeeRef:formRecord.PayeeRef,
+//                                         recordId:formRecord.RecordId
+//                                     }
                                     return (<> 
-                                        <button className="btn btn-success mx-1" onClick={()=>handleDistBtnClick(distProps)} disabled={distUrlLoading}><i className="bi bi-download"/> Get Dist 1099 Pdf {distUrlLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                                        <button className="btn btn-success mx-1" onClick={handleDistBtnClick} disabled={distUrlLoading}><i className="bi bi-download"/> Get Dist 1099 Pdf {distUrlLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                         <button className="btn btn-info mx-1" onClick={()=>handleAwsBtnClick(distProps,true)} disabled={draftPdfLoading}><i className="bi bi-download" /> Request Draft Pdf {draftPdfLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                         <button className="btn btn-warning mx-1" onClick={()=>handleAwsBtnClick(distProps,false)} disabled={requestPdfLoading}><i className="bi bi-download" /> Request 1099 Pdf {requestPdfLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                         <button className="btn btn-primary mx-1" onClick={()=>handle1099Click(distProps)} disabled={getPdfLoading}><i className="bi bi-download"></i> Get 1099 Pdf {getPdfLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button> 
@@ -313,6 +313,7 @@ export default function Home(props) {
                             })
                         })}
                     </>}
+                    {variation == "r0-1" && <button className="btn btn-success mx-1" onClick={handleDistBtnClick} disabled={distUrlLoading}><i className="bi bi-download"/> Get Dist Url {distUrlLoading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>}
                 </div>
             </div>
             <div className="row mx-2 mb-3">
