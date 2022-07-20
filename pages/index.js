@@ -244,8 +244,6 @@ const Home=(props)=>{
 
   return (
     <div>
-      
-      <main>
         <ToastContainer />
         {
           !showEnvPage && <>
@@ -441,7 +439,6 @@ const Home=(props)=>{
           </>
         }
         
-      </main>
     </div>
   )
 }
