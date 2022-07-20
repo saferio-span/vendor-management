@@ -182,6 +182,7 @@ export default function Home(props) {
     <>
         <MerchantNavBar />
         <ToastContainer />
+        <div className="container-fluid">
         <div className="row my-5 mx-2">
           <div className="col-9">
             <h4>Payee List</h4>
@@ -269,14 +270,13 @@ export default function Home(props) {
                         <td>  
                           <div className="row">
                             <div className="col p-0">
-                              {details.w9Status !== "-" ? <>
+                              {details.w9Status !== "-" ? <>  
                                 <button className="btn btn-sm btn-warning mx-1" onClick={()=>handleW9Click(details.payeeRef)} disabled={loaders[`${details.payeeRef}_w9`]}><i className="bi bi-file-earmark-pdf"></i> {w9ButtonName} {loaders[`${details.payeeRef}_w9`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button></> : <><button className="btn btn-sm btn-warning mx-1" disabled><i className="bi bi-file-earmark-pdf"></i> W9/W8BEN</button>
                               </> 
                               }
                               <button key={`${details._id}pay`} className="btn btn-sm btn-success mx-1" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${details.payeeRef}`}><i className="bi bi-currency-dollar"></i> Pay</button>
                             
-                              {variation != "t0-1" && <>
-                                <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
+                              {variation != "t0-1" && <button key={`${details._id}1099`} className="btn btn-sm btn-primary mx-1" onClick={async()=>{
                                     const loaderName = `${details.payeeRef}_1099`
                                     setLoaders({ ...loaders, [loaderName] : true });
                                     
@@ -297,7 +297,7 @@ export default function Home(props) {
                                     
                                   }} disabled={loaders[`${details.payeeRef}_1099`]}><i className="bi bi-eye"></i> Merchant Portal {loaders[`${details.payeeRef}_1099`] && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                                 
-                              </>}
+                              }
                             </div>
                           </div>
                         </td>
@@ -310,7 +310,7 @@ export default function Home(props) {
             </table>
         </div>
         <div className="row">
-            <div className="col offset-s4">
+            <div className="col-4 offset-4">
                 <ReactPaginate
                     previousLabel={"<"}
                     nextLabel={">"}
@@ -332,15 +332,12 @@ export default function Home(props) {
                 />
             </div>
         </div>
-        {limitAffiliates && limitAffiliates.map((details) => {
+        {limitAffiliates && limitAffiliates.map((details,index) => {
           // console.log(details)
-          return (
-            <>
-              <AddTransaction affiliates = {optionAff} defaultAffiliate = {details.payeeRef} />
-            </> 
-          )
+          return <AddTransaction key={`${details.payeeRef}_${index}`} affiliates = {optionAff} defaultAffiliate = {details.payeeRef} />
         }
-        )}                
+        )} 
+        </div>               
     </>
   )
 }
