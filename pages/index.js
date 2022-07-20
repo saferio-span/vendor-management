@@ -334,7 +334,7 @@ const Home=(props)=>{
             </div>
             <div className="row">
               <div className="col-12 text-center mt-4">
-                  <p>Not having set your environment? It can be done <Link href='/addEnv'><a>right here</a></Link>, so don't worry! - Change the content</p>
+                  <p>Not having set your environment? It can be done <Link href='/addEnv'><a>right here</a></Link>, so don{`'`}t worry! - Change the content</p>
               </div>
             </div>
             <hr />
