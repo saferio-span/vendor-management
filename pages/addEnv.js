@@ -21,7 +21,7 @@ export const getServerSideProps = async (context)=>{
     if(session !== null)
     {
         const envRes = await axios.post(`${origin}/api/getAllEnv`,{
-        email:session.user.email
+            email:null
         })
         const environCreds = await envRes.data
         return{
