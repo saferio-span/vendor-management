@@ -286,7 +286,7 @@ const AddAffiliates = (props) => {
                     {/* <div className="row"> */}
                         <div className="d-flex justify-content-between">
                             <Link href={{ pathname: '/merchant/home', query: { 
-                                payerRef: user_details.payerRef,
+                                payerRef: user_details?.payerRef,
                                 envName:envName
                             }}}>
                                 <a className="btn btn-danger">Back</a>
