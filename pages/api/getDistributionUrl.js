@@ -4,7 +4,8 @@ import Environment from "../../models/envModel"
 
 export default async function handler(req,res)
 {
-	const { businessId,recordId,payeeRef,logoUrl,envName } = req.body;
+// 	const { businessId,recordId,payeeRef,logoUrl,envName } = req.body;
+	const { payeeRef,payerRef,envName } = req.body;
     // const cred = credentials.filter((user)=>user.name===envName)
 	const cred = await Environment.find({name:envName})
     const apiUrl = cred[0].apiUrl
@@ -56,19 +57,17 @@ export default async function handler(req,res)
 				endPoint,
 				{
                     TaxYear: "2021",
-                    RecordId:recordId,
+                    RecordId:null,
                     Business: {
-                        BusinessId :businessId,
-                        // PayerRef: payerRef
+//                         BusinessId :businessId,
+                        PayerRef: payerRef
                      },
                     Recipient: {
                         PayeeRef: payeeRef,
                      },
                      Customization: {
-                        BusinessLogoUrl: logoUrl,
-                        ReturnUrl: "https://example.com",
-                        CancelUrl: "https://example.com",
-                        ExpiryTime: "5"
+                        BusinessLogoUrl: "https://www.spanenterprises.com/Content/Images/span.png",
+                        ExpiryTime: "10"
                     }
                 },
                 options
