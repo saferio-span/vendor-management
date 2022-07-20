@@ -51,7 +51,9 @@ export default async function handler(req,res)
         }
 
         const merchant = await Merchant.find({ payerRef: payerRef })
-        console.log(merchant);
+        console.log(`payeeRef`,payeeRef);
+        console.log(`affiliate`,affiliate);
+        console.log(`merchant`,merchant);
 
         if(affiliate)
         {
