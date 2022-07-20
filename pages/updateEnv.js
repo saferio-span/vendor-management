@@ -173,17 +173,7 @@ const AddEnv = (props) => {
 
     return (
         <>
-            <ToastContainer />
-            <div className="row">
-                <div className="col-9 offset-1">
-                    <h1 className="my-3 mx-3">Update Environment</h1>
-                </div>
-                <div className="col-1">
-                    <Link href='/'>
-                        <a className="btn btn-danger my-4" >Back</a>
-                    </Link>
-                </div>
-            </div>
+            
             {/* <div className="row">
                 <div className="col-10">
                     <h1 className="d-flex justify-content-center align-items-center my-2 ">Add Environment</h1>
@@ -194,6 +184,13 @@ const AddEnv = (props) => {
             </div> */}
             
             <div className="container bg-light my-3 py-3">
+                <ToastContainer />
+                <div className="row">
+                    <div className="col-9">
+                        <h1 className="my-3 ">Update Environment</h1>
+                    </div>
+                    
+                </div>
                 <form onSubmit={handleSubmit}>
                     {/* <div className="row">
                         <div className="col-4 offset-4">
@@ -209,14 +206,7 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col">
-                                    <div className="form-group my-2">
-                                        <label htmlFor="name">Environment name</label>
-                                        <input type="text" className="form-control" id="name" name="name" placeholder="Name" value={envName} disabled />
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -228,11 +218,12 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="userToken">User Token<span className="text-danger font-weight-bold">*</span></label>
-                                        <input type="text" className="form-control" id="userToken" name="userToken" value={values.userToken} placeholder="User Token" onChange={handleInputChange} />
+                                        <label htmlFor="pdfKey">Pdf Key<span className="text-danger font-weight-bold">*</span> </label>
+                                        <input type="text" className="form-control" id="pdfKey" name="pdfKey" placeholder="Pdf Key" value={values.pdfKey} onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
+                            
                             {/* <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
@@ -259,7 +250,16 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div> */}
+                             <div className="row">
+                                <div className="col">
+                                    <div className="form-group my-2">
+                                        <label htmlFor="name">Environment name</label>
+                                        <input type="text" className="form-control" id="name" name="name" placeholder="Name" value={envName} disabled />
+                                    </div>
+                                </div>
+                            </div>
                             <div className="row">
+                                
                                 <div className="col">
                                     <div className="form-group my-2">
                                         <label htmlFor="city">Client Secret<span className="text-danger font-weight-bold">*</span> </label>
@@ -278,8 +278,8 @@ const AddEnv = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="pdfKey">Pdf Key<span className="text-danger font-weight-bold">*</span> </label>
-                                        <input type="text" className="form-control" id="pdfKey" name="pdfKey" placeholder="Pdf Key" value={values.pdfKey} onChange={handleInputChange} />
+                                        <label htmlFor="userToken">User Token<span className="text-danger font-weight-bold">*</span></label>
+                                        <input type="text" className="form-control" id="userToken" name="userToken" value={values.userToken} placeholder="User Token" onChange={handleInputChange} />
                                     </div>
                                 </div>
                             </div>
@@ -291,10 +291,13 @@ const AddEnv = (props) => {
                                     </div>
                                 </div>
                             </div>
+                            
+                        </div>
+                        <div className="col-6 offset-3">
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="version">Version</label>
+                                        <label htmlFor="version">Version<span className="text-danger font-weight-bold">*</span> </label>
                                         <input type="text" className="form-control" id="version" name="version" value={values.version} placeholder="Version" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -303,8 +306,13 @@ const AddEnv = (props) => {
                     </div>
                     <br />
                     <div className="row">
-                        <div className="offset-11 col-1 mb-3">
-                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        <div className="col-1">
+                            <Link href='/'>
+                                <a className="btn btn-danger my-4" >Back</a>
+                            </Link>
+                        </div>
+                        <div className="offset-10 col-1 mb-3">
+                            <button type="submit" className="btn btn-success float-right" value="Submit" disabled={loading}>Update {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                             {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
                     </div>
