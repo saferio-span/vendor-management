@@ -204,16 +204,14 @@ const Login = (props) => {
             <div className={`${style.loginContainer} d-flex justify-content-center align-items-center my-5`}>
                 <div className={`${style.innerContainer} border border-1 max-auto p-4 shadow`}>
                     <div className="row">
-                        <div className="col-10">
+                        <div className="col-12">
                             <h3 className={`${style.heading} fw-bolder text-center text-uppercase`}>
                                      Payer Login
                             </h3>
                         </div>
-                        <div className="col-2">
-                            <Link href='/'>
-                                <a className="btn btn-warning">Back</a>
-                            </Link>
-                        </div>
+                        {/* <div className="col-2">
+                            
+                        </div> */}
                     </div>
                     
                     <form onSubmit={handleSubmit}>
@@ -236,12 +234,21 @@ const Login = (props) => {
                             <input type="password" className="form-control my-2" id="password" name="password" placeholder="Password" onChange={handleInputChange} />
                         </div> */}
                         {/* <input type="submit" className="btn btn-success w-100 my-2 py-3" value="Sign In" /> */}
-                        <button type="submit" className="btn btn-success w-100 my-2 py-3" value="Submit" disabled={loading}>Sign In {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        <div className="d-flex justify-content-between mt-3">
+                            <Link href='/'>
+                                <a className="btn btn-danger">Back</a>
+                            </Link>
+                            <button type="submit" className="btn btn-success" value="Submit" disabled={loading}>Sign In {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                        </div>
+                        
                     </form>
                     <hr />
-                    {variation == "t0-1" && <>Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}><a className="btn btn-link">Sign Up !</a></Link></>}
-                    {variation == "r0-1" && <>Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUpPif', query: { envName: envName}}}><a className="btn btn-link">Sign Up !</a></Link></>}
-                    {variation == "all" && <>Have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}><a className="btn btn-sm btn-link">Sign Up (BC)! </a></Link> | <Link href={{ pathname: '/merchant/signUpPif', query: { envName: envName}}}><a className="btn btn-sm btn-link">Sign Up (PIF)! </a></Link></>}
+                    <div className="text-center">
+                        {variation == "t0-1" && <>Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}><a className="btn btn-link">Sign Up !</a></Link></>}
+                        {variation == "r0-1" && <>Don{`'`}t have an account ? - <Link href={{ pathname: '/merchant/signUpPif', query: { envName: envName}}}><a className="btn btn-link">Sign Up !</a></Link></>}
+                        {variation == "all" && <>Don{`'`}t have an accoun    - <Link href={{ pathname: '/merchant/signUp', query: { envName: envName}}}><a className="btn btn-sm btn-link">Sign Up (BC)! </a></Link> | <Link href={{ pathname: '/merchant/signUpPif', query: { envName: envName}}}><a className="btn btn-sm btn-link">Sign Up (PIF)! </a></Link></>}
+                    </div>
+                    
                 </div>
             </div>
         </>   

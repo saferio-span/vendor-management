@@ -56,10 +56,6 @@ const SignUp = (props) => {
     const [validateValues, setValidateValues] = useState({
 		merchantId:'',
         name:'',
-        address1:'',
-        city:'',
-        state:'',
-        zip:'',
         email: '',
         payeeRef:`Pe${random}`
 		// password: '',
@@ -293,7 +289,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="address1">Address 1<span className="text-danger font-weight-bold">*</span></label>
+                                        <label htmlFor="address1">Address 1</label>
                                         <input type="text" className="form-control" id="address1" name="address1" placeholder="Address 1" value={values.address1} onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -301,7 +297,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="city">City <span className="text-danger font-weight-bold">*</span></label>
+                                        <label htmlFor="city">City</label>
                                         <input type="text" className="form-control" id="city" name="city" value={values.city} placeholder="City" onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -309,7 +305,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="zip">ZIP <span className="text-danger font-weight-bold">*</span></label>
+                                        <label htmlFor="zip">ZIP </label>
                                         <input type="number" className="form-control" id="zip" name="zip" placeholder="ZIP" value={values.zip} onChange={handleInputChange} />
                                     </div>
                                 </div>
@@ -335,7 +331,7 @@ const SignUp = (props) => {
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group my-2">
-                                        <label htmlFor="state">State<span className="text-danger font-weight-bold">*</span> </label>
+                                        <label htmlFor="state">State</label>
                                         <Select
                                             className="basic-single"
                                             classNamePrefix="select"
@@ -377,19 +373,23 @@ const SignUp = (props) => {
                         </div>
                     </div> */}
                     <br />
-                    <div className="row">
-                        <div className="offset-10 col-2">
-                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
+                    {/* <div className="row"> */}
+                        <div className="d-flex justify-content-between">
+                            <Link href={{ pathname: '/vendor/login', query: { envName: envName}}}>
+                                <a className="btn btn-danger">Back</a>
+                            </Link>
+                            <button type="submit" className="btn btn-success float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                             {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
                         </div>
-                    </div>
+                    {/* </div> */}
                 </form>
-                <br /><hr />
+                <br />
+                {/* <hr />
                 <div className="mb-5">
                     Already have an account ? -<Link href={{ pathname: '/vendor/login', query: { envName: envName}}}>
                         <a className="btn btn-link">Sign In !</a>
                     </Link>
-                </div>
+                </div> */}
             </div>
         </>
     )

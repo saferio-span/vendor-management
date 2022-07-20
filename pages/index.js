@@ -243,7 +243,7 @@ const Home=(props)=>{
   // console.log(variation)
 
   return (
-    <div>
+    <div className="container-fluid">
         <ToastContainer />
         {
           !showEnvPage && <>
@@ -337,7 +337,7 @@ const Home=(props)=>{
             </div>
             <hr />
             {
-              variation != "g0-1" && <>
+              variation != "g0-1" && 
               <div className="row my-5">
                 <div className="col-2 offset-4">
                   {/* <Link href='/merchant/login'> */}
@@ -359,11 +359,10 @@ const Home=(props)=>{
                   </Link>
                 </div> */}
               </div>
-            </>
             }
 
             {
-              variation == "g0-1" && <>
+              variation == "g0-1" && 
               <div className="row my-5">
                 <div className="col-4 d-flex justify-content-center">
                   {/* <Link href='/merchant/login'> */}
@@ -384,57 +383,60 @@ const Home=(props)=>{
                     <a className="btn btn-info mx-5" onClick={handleVendorLogin}>Payee Login</a>
                   {/* </Link> */}
                 </div>
-              </div></>
+              </div>
             }
               
 
               {showNote && 
-                    <div className="container">
-                        <div className="card">
-                          <div className="card-header">
-                              <h3>Webhook Configuration Note</h3>
-                          </div>
-                          <div className="card-body">
-                            <table className="table table-striped table-hover">
-                              <thead>
-                                <tr>
-                                  <th>Event Type</th>
-                                  <th>Callback URL</th>
-                                </tr>
-                              </thead>
-                              <tbody>
+              <div className="row">
+                <div className="col-10 offset-1">
+                  <div className="card">
+                      <div className="card-header">
+                          <h3>Webhook Configuration Note</h3>
+                      </div>
+                      <div className="card-body">
+                        <table className="table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>Event Type</th>
+                              <th>Callback URL</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <td>WhCertificate Status Change</td>
+                            <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></td>
+                          </tr>
+                          {
+                            variation != "r0-1" && <>
                               <tr>
-                                <td>WhCertificate Status Change</td>
-                                <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></td>
+                                  <td>Form 1099 Auto Generation</td>
+                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></td>
                               </tr>
-                              {
-                                variation != "r0-1" && <>
-                                  <tr>
-                                      <td>Form 1099 Auto Generation</td>
-                                      <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></td>
-                                  </tr>
-                                  <tr>
-                                      <td>PDF Complete</td>
-                                      <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></td>
-                                  </tr>
-                                </>
-                              }
-                              {
-                                variation != "t0-1" && <>
-                                  <tr>
-                                    <td>Business Complete</td>
-                                    <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/businessComplete</b></span></td>
-                                  </tr>
-                                </>
-                              }
-                              </tbody>
-                            </table>
-                                {/* <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
-                                <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></p>
-                                <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></p> */}
-                          </div>
-                        </div>
-                    </div>
+                              <tr>
+                                  <td>PDF Complete</td>
+                                  <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></td>
+                              </tr>
+                            </>
+                          }
+                          {
+                            variation != "t0-1" && <>
+                              <tr>
+                                <td>Business Complete</td>
+                                <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/businessComplete</b></span></td>
+                              </tr>
+                            </>
+                          }
+                          </tbody>
+                        </table>
+                            {/* <p>To configure webhook for <b>WhCertificate Status Change</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></p>
+                            <p>To configure webhook for <b>Form 1099 Auto Generation</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></p>
+                            <p>To configure webhook for <b>PDF Complete</b> in your taxbandits console use <span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></p> */}
+                      </div>
+                  </div>
+                </div>
+              </div>
+              
               }
           </>
         }
