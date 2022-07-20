@@ -186,13 +186,10 @@ const Login = (props) => {
                 <div className={`${style.innerContainer} border border-1 max-auto p-4 shadow`}>
                     
                 <div className="row">
-                        <div className="col-10">
+                        <div className="col-12">
                             <h3 className={`${style.heading} fw-bolder text-center text-uppercase`}>
                                      Payee Login
                             </h3>
-                        </div>
-                        <div className="col-2">
-                            
                         </div>
                     </div>
 
