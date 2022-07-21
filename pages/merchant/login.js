@@ -193,7 +193,7 @@ const Login = (props) => {
         }
         else
         {
-            setValues("");
+            setMerchantId("");
         }
     }
  
@@ -220,7 +220,6 @@ const Login = (props) => {
                             <Select
                                 className="basic-single"
                                 classNamePrefix="select"
-                                defaultValue="0"
                                 isSearchable="true"
                                 isClearable="true"
                                 name="payer"
