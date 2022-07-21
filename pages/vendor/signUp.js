@@ -32,9 +32,9 @@ export const getServerSideProps = async (context)=>{
   }
 
 const SignUp = (props) => {
-
+    // console.log(`Merchants`,props.merchants)
     var options = []
-    const variation = localStorage.getItem("variant")
+    // const variation = localStorage.getItem("variant")
     const [{user_details,environment},dispatch] = useUserValue();
     // console.log(environment)
     const [random,setRandom]=useState(Math.floor((Math.random() * 1000000000) + 1))
@@ -124,15 +124,18 @@ const SignUp = (props) => {
         }
         else
         {
-            if(values.zip.length < 9)
-            {
-                if(values.zip.length != 5)
+            if(values.zip!=""){
+                if(values.zip.length < 9)
                 {
-                    toast.error("Enter valid zipcode (5 or 9 digit)")
-                    setLoading(false)
-                    return false
+                    if(values.zip.length != 5)
+                    {
+                        toast.error("Enter valid zipcode (5 or 9 digit)")
+                        setLoading(false)
+                        return false
+                    }
                 }
             }
+            
         }
 
         const availablity = await axios.post(`/api/affiliate/findByEmail/${values.email}`,{
@@ -266,6 +269,7 @@ const SignUp = (props) => {
                                     id="business"
                                     instanceId="business"
                                     name="business"
+                                    value={props.merchants.filter(option=>option.value===values.merchantId)}
                                     options={props.merchants}
                                     onChange={handleBusinessChange}
                                 />
@@ -334,6 +338,7 @@ const SignUp = (props) => {
                                         <label htmlFor="state">State</label>
                                         <Select
                                             className="basic-single"
+                                            value={options.filter(option=>option.value===values.state)}
                                             classNamePrefix="select"
                                             defaultValue="0"
                                             isSearchable="true"

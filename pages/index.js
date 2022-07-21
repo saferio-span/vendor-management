@@ -12,6 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link"
 import style from "../styles/Login.module.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
+import {RiFileCopyLine} from 'react-icons/ri'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 export const getServerSideProps = async (context)=>{
 
@@ -400,22 +402,38 @@ const Home=(props)=>{
                             <tr>
                               <th>Event Type</th>
                               <th>Callback URL</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
                           <tr>
                             <td>WhCertificate Status Change</td>
                             <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/whCertificate</b></span></td>
+                            <td>
+                              <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/whCertificate`}>
+                                <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                              </CopyToClipboard>
+                            </td>
                           </tr>
                           {
                             variation != "r0-1" && <>
                               <tr>
                                   <td>Form 1099 Auto Generation</td>
                                   <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/1099Generation</b></span></td>
+                                  <td>
+                                    <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/1099Generation`}>
+                                      <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                                    </CopyToClipboard>
+                                  </td>
                               </tr>
                               <tr>
                                   <td>PDF Complete</td>
                                   <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/pdfUrl</b></span></td>
+                                  <td>
+                                    <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/pdfUrl`}>
+                                      <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                                    </CopyToClipboard>
+                                  </td>
                               </tr>
                             </>
                           }
@@ -424,6 +442,11 @@ const Home=(props)=>{
                               <tr>
                                 <td>Business Complete</td>
                                 <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{inputVal}/businessComplete</b></span></td>
+                                <td>
+                                  <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/businessComplete`}>
+                                    <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                                  </CopyToClipboard>
+                                </td>
                               </tr>
                             </>
                           }

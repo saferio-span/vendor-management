@@ -239,15 +239,15 @@ export default function Home(props) {
                     // console.log(details)
                     let amount = 0
                     let transactionCount = 0
-                    let w9ButtonName = "W9"
+                    let w9ButtonName = "W9/W8BEN"
 
-                    if(details.formType)
-                    {
-                      if(details.formType == "FormW8Ben")
-                      {
-                        w9ButtonName = "W8Ben"
-                      }
-                    }
+                    // if(details.formType)
+                    // {
+                    //   if(details.formType == "FormW8Ben")
+                    //   {
+                    //     w9ButtonName = "W8Ben"
+                    //   }
+                    // }
 
                     transactions.forEach(option => {
                         if(option.payeeRef === details.payeeRef)
