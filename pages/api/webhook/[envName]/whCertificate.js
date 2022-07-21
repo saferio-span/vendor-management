@@ -50,6 +50,9 @@ export default async function handler(req,res)
             payerRef = req.body.FormW8Ben.Requester.PayerRef
         }
 
+	if(req.body.FormW9.Requester.BusinessNm !== "Sample Business")
+	{
+		
         const merchant = await Merchant.findOne({ payerRef: payerRef })
         console.log(`payeeRef`,payeeRef);
         console.log(`affiliate`,affiliate);
@@ -70,6 +73,7 @@ export default async function handler(req,res)
 	} catch (err) {
 		console.error(err.message);
 		// res.status(500).send('server Error');
+	}
 	}
     res.status(200).json(whPost);
 }
