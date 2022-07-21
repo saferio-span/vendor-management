@@ -6,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link"
 import absoluteUrl from 'next-absolute-url'
 import { signOut,getSession } from "next-auth/client"
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {RiFileCopyLine} from 'react-icons/ri'
 
 export const getServerSideProps = async (context)=>{
 
@@ -453,25 +455,46 @@ const AddEnv = (props) => {
                             <tr>
                               <th>Event Type</th>
                               <th>Callback URL</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
-                              <td>WhCertificate Status Change</td>
-                              <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/whCertificate</b></span></td>
+                                <td>WhCertificate Status Change</td>
+                                <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/whCertificate</b></span></td>
+                                <td>
+                                    <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/whCertificate`}>
+                                        <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                                    </CopyToClipboard>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Form 1099 Auto Generation</td>
                                 <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/1099Generation</b></span></td>
+                                <td>
+                                    <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/1099Generation`}>
+                                        <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                                    </CopyToClipboard>
+                                </td>
                             </tr>
                             <tr>
                                 <td>PDF Complete</td>
                                 <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/pdfUrl</b></span></td>
+                                <td>
+                                    <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/pdfUrl`}>
+                                        <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                                    </CopyToClipboard>
+                                </td>
                             </tr>
     
                             <tr>
                               <td>Business Complete</td>
                               <td><span className="text-primary"><b>{props.url !== "" ?props.url:""}/api/webhook/{showEnvName}/businessComplete</b></span></td>
+                              <td>
+                                    <CopyToClipboard text={`${props.url !== "" ?props.url:""}/api/webhook/${inputVal}/businessComplete`}>
+                                        <button className="btn btn-secondary copyButton" data-bs-toggle="tooltip" data-bs-placement="right" title="Click to copy!"><RiFileCopyLine /></button>
+                                    </CopyToClipboard>
+                                </td>
                             </tr>
                           </tbody>
                         </table>
