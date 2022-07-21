@@ -11,7 +11,7 @@ import moment from 'moment'
 import $ from "jquery"
 
 const AddTransaction = ({affiliates,defaultAffiliate}) => {
-
+    console.log(`defaultAffiliate`,defaultAffiliate)
     const router = useRouter();
     const options = []
     const [{ user_details,environment }, dispatch] = useUserValue();
@@ -22,13 +22,14 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
     const [updateState,setUpdateState] = useState(false)
     const [transIndex,setTransIndex] = useState()
 
-    let affiliateName = affiliates.map(affiliate =>{
+    let affiliateDetails = affiliates.find(affiliate =>{
         if(affiliate.payeeRef === defaultAffiliate)
         {
             return affiliate.name
         }
     })
-    // console.log(user_details)
+    let affiliateName = affiliateDetails.name;
+    console.log(`affiliateName`,affiliateName)
     const [values, setValues] = useState({
 		amount:'',
         whAmount:'',
@@ -68,13 +69,23 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
     }, [multipleTransactions])
 
     const closeModel = (e)=>{
+        // setValues({
+        //     amount:'',
+        //     payeeRef : '',
+        //     description:'',
+        //     date: '',
+        // })
+        setMultipleTransactions([])
+        setUpdateState(false)
         setValues({
             amount:'',
-            payeeRef : '',
+            whAmount:'',
+            payeeRef : defaultAffiliate !== "" ? defaultAffiliate : '' ,
             description:'',
+            sequenceId: sequenceId,
             date: '',
         })
-        setMultipleTransactions([])
+        // console.log(`Clouse Model Data`)
     }
 
     const handleSelectChange = (e)=>{
@@ -306,7 +317,7 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                     <div className="col-4">
                                         <div className="form-group my-2">
                                             <label htmlFor="amount">Sequence Id<span className="text-danger font-weight-bold">*</span></label>
-                                            <input type="text" className="form-control" name="sequenceId" value={values.sequenceId} onChange={handleInputChange} />
+                                            <input type="text" className="form-control" name="sequenceId" defaultValue={values.sequenceId} onChange={handleInputChange} />
                                         </div>
                                     </div>
                                     <div className="col-4">
@@ -322,12 +333,14 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                             <>
                                                 <label htmlFor="state">Select Payee<span className="text-danger font-weight-bold">*</span></label>
                                                 <Select
-                                                    value = {
-                                                        options.filter(option => option.value === values.payeeRef)
-                                                    }
+                                                    // value = {
+                                                    //     options.filter(option => option.value === values.payeeRef)
+                                                    // }
                                                     className="basic-single"
                                                     classNamePrefix="select"
-                                                    defaultValue="0"
+                                                    defaultValue={
+                                                        options.filter(option => option.value === values.payeeRef)
+                                                    }
                                                     isSearchable="true"
                                                     isClearable="true"
                                                     name="affiliates"
@@ -342,25 +355,25 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                     <div className="col-4">
                                         <div className="form-group my-2">
                                             <label htmlFor="amount">Date<span className="text-danger font-weight-bold">*</span></label>
-                                            <DatePicker selected={values.date } className="form-control" onChange={handleDateChange} />
+                                            <DatePicker selected={values.date} className="form-control" onChange={handleDateChange} />
                                         </div>
                                     </div>
                                     <div className="col-4">
                                         <div className="form-group my-2">
                                             <label htmlFor="amount">Amount<span className="text-danger font-weight-bold">*</span></label>
-                                            <input type="text" className="form-control" name="amount" value={values.amount} onChange={handleInputChange} />
+                                            <input type="text" className="form-control" name="amount" id="amountData" defaultValue={values.amount} onChange={handleInputChange} />
                                         </div>    
                                     </div>
                                     <div className="col-4">
                                         <div className="form-group my-2">
                                             <label htmlFor="amount">Withheld Amount</label>
-                                            <input type="text" className="form-control" name="whAmount" value={values.whAmount} onChange={handleInputChange} />
+                                            <input type="text" className="form-control" name="whAmount" defaultValue={values.whAmount} onChange={handleInputChange} />
                                         </div>    
                                     </div>
                                     <div className="col-4">
                                         <div className="form-group my-2">
                                             <label htmlFor="description">Description</label>
-                                            <input type="text" className="form-control" name="description" value={values.description} onChange={handleInputChange} />
+                                            <input type="text" className="form-control" name="description" defaultValue={values.description} onChange={handleInputChange} />
                                             {/* <textarea className="form-control" name="description" rows="3" onChange={handleInputChange} value={values.description} ></textarea> */}
                                         </div>    
                                     </div>
@@ -401,11 +414,11 @@ const AddTransaction = ({affiliates,defaultAffiliate}) => {
                                                                 })
                                                             }
                                                             return(<>
-                                                                <tr>
+                                                                <tr key={`${trans.sequenceId}_${index}`}>
                                                                     <td>{index+1}</td>
                                                                     <td>{aff}</td>
                                                                     <td>{trans.sequenceId}</td>
-                                                                    <td>{trans.date ? moment(trans.date).format("Do MMM YYYY") : moment(trans.selectedDate).format("Do MMM YYYY")}</td>
+                                                                    <td>{trans.date ? moment(trans.date).format("MM/D/yy") : moment(trans.selectedDate).format("MM/D/yy")}</td>
                                                                     <td>{trans.amount}</td>
                                                                     <td>{trans.whAmount ? trans.whAmount : "-"}</td>
                                                                     <td>{trans.description ? trans.description : "-"}</td>
