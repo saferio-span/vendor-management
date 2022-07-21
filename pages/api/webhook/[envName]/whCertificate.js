@@ -76,5 +76,5 @@ export default async function handler(req,res)
 		// res.status(500).send('server Error');
 	}
 	
-    res.status(200).json(whPost);
+    res.status(200).json();
 }
