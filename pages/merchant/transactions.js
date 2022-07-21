@@ -53,6 +53,7 @@ const Transactions = (props) => {
 
     const router = useRouter()
     const paramPayeeRef = router.query.payeeRef ? router.query.payeeRef : ""
+    // console.log(`paramPayeeRef`,paramPayeeRef)
     const options = []
     const optionAff = props.affiliates
     const [transactions,setTrans] =  useState([])
@@ -131,7 +132,7 @@ const Transactions = (props) => {
         }
         
         //eslint-disable-next-line
-    },[transactions,payeeRef,pageNum,pageCount,searchValue])
+    },[payeeRef,pageNum,pageCount,searchValue])
 
     const handleSelectChange = (e)=>{
         if(e !== null)
@@ -162,7 +163,7 @@ const Transactions = (props) => {
                     <h4>Transactions List</h4>
                 </div>
                 <div className="col-2 text-right">
-                    <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
+                    <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target={`#addPaymentModal${paramPayeeRef}`}>
                         <i className="bi bi-person-plus-fill"></i> Add Payments
                     </button>                    
                 </div>
@@ -209,7 +210,7 @@ const Transactions = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {limitTransactions && limitTransactions.map((details) => {
+                    {limitTransactions && limitTransactions.map((details,index) => {
 
                         let name = ''
                         optionAff.forEach(option => {
@@ -218,7 +219,7 @@ const Transactions = (props) => {
                                 name = option.name
                             }
                         })
-                        return (<tr key={details._id}>
+                        return (<tr key={`${details._id}_${index}`}>
                             <td>{name}</td>
                             <td><i className="bi bi-currency-dollar"></i> {details.txnAmt}</td>
                             <td>{details.description}</td>
@@ -252,7 +253,7 @@ const Transactions = (props) => {
                     />
                 </div>
             </div>
-            <AddTransaction affiliates = {optionAff} defaultAffiliate = "" />
+            <AddTransaction affiliates = {optionAff} defaultAffiliate ={paramPayeeRef} />
         </>
     )
 }
