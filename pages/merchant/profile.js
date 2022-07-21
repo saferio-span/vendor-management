@@ -190,9 +190,6 @@ const MerchantProfile = () => {
                     <div className="col-4 offset-4">
                         <h1 className="d-flex justify-content-center align-items-center my-2 "> Profile</h1>
                     </div>
-                    <div className="col-4 text-end">
-                        <button className="btn btn-danger my-2 mx-2" onClick={()=>router.back()}><i className="bi bi-arrow-left-circle"></i> Back</button>
-                    </div>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -327,12 +324,12 @@ const MerchantProfile = () => {
                     </div> */}
 
                     <br />
-                    <div className="row">
-                        <div className="offset-10 col-2">
-                            <button type="submit" className="btn btn-danger float-right" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
-                            {/* <input type="submit" name="submit" className="btn btn-danger float-right" /> */}
+                    {/* <div className="row"> */}
+                        <div className="d-flex justify-content-between">
+                            <button className="btn btn-danger" onClick={()=>router.back()}><i className="bi bi-arrow-left-circle"></i> Back</button>
+                            <button type="submit" className="btn btn-success" value="Submit" disabled={loading}>Submit {loading && <span className='spinner-border spinner-border-sm' role="status" aria-hidden="true"></span>}</button>
                         </div>
-                    </div>
+                    {/* </div> */}
                 </form>
             </div>               
         </>
